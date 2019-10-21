@@ -12,7 +12,7 @@ class App extends Component {
           <Navbar />
           <Switch>
             <Route exact path='/' component={Home} />
-            <Route path='/a/' component={Area} />           
+            <Route path='/a/:area' component={Area} />           
           </Switch> 
         </div>
       </BrowserRouter>
