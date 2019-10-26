@@ -49,15 +49,25 @@ class Area extends Component {
    componentDidMount() {
     let collapsible = document.querySelectorAll(".collapsible");
     M.Collapsible.init(collapsible, {})
-}
+  }
+
+  scrollDown = e => {
+    //e.target.scrollIntoView(); 
+    const elem = e.target
+    const y = 0.6 * (elem.getBoundingClientRect().top + window.scrollY);
+    window.scroll({
+      top: y,
+      behavior: 'smooth'
+    }); 
+  }
 
   render() {
     const { posts } = this.state
     const postList = posts.length ? (
         posts.map(post => {
             return(
-              <li key = {post.id}>
-                <div className="collapsible-header" onClick = {this.expand}>{post.title}</div>
+              <li key = {post.id} onClick={this.scrollDown}>
+                <div className="collapsible-header">{post.title}</div>
                 <div className='collapsible-body'>
                   <p>{post.body}</p>
                   <button className="btn-small"><Link to= {'/' + post.id}></Link></button>
