@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 // import axios from 'axios'
 import { Link } from 'react-router-dom'
 import Background1 from '../background1.jpg'
+import People from './People'
 import '../index.css'
 import M from 'materialize-css'
 
@@ -46,7 +47,7 @@ class Area extends Component {
 
     */
 
-   componentDidMount() {
+  componentDidMount() {
     let collapsible = document.querySelectorAll(".collapsible");
     M.Collapsible.init(collapsible, {})
   }
@@ -70,7 +71,7 @@ class Area extends Component {
                 <div className="collapsible-header">{post.title}</div>
                 <div className='collapsible-body'>
                   <p>{post.body}</p>
-                  <button className="btn-small"><Link to= {'/' + post.id}></Link></button>
+                  <Link to= {'/' + post.id}><button className="btn btn-small indigo darken-4">Know more</button></Link>
                 </div>
               </li>
             )
@@ -78,6 +79,7 @@ class Area extends Component {
     ) : (
         <div className="center">No data yet</div>
     )
+
     return (
       <div className="container area">
         <img src={Background1} className='responsive-img' alt=""/> 
@@ -85,16 +87,11 @@ class Area extends Component {
           <ul className="collapsible">
             { postList }
           </ul>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus similique velit molestiae est dignissimos quaerat? Veniam hic, in quae ex id eos aperiam, similique enim quisquam autem rerum, iste temporibus!</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus similique velit molestiae est dignissimos quaerat? Veniam hic, in quae ex id eos aperiam, similique enim quisquam autem rerum, iste temporibus!</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus similique velit molestiae est dignissimos quaerat? Veniam hic, in quae ex id eos aperiam, similique enim quisquam autem rerum, iste temporibus!</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus similique velit molestiae est dignissimos quaerat? Veniam hic, in quae ex id eos aperiam, similique enim quisquam autem rerum, iste temporibus!</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus similique velit molestiae est dignissimos quaerat? Veniam hic, in quae ex id eos aperiam, similique enim quisquam autem rerum, iste temporibus!</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Necessitatibus similique velit molestiae est dignissimos quaerat? Veniam hic, in quae ex id eos aperiam, similique enim quisquam autem rerum, iste temporibus!</p>
+      <People />
       </div>
         
     )
-}
+  }
 }
             
 

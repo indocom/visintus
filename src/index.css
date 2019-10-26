@@ -11,3 +11,84 @@ body {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
       monospace;
   }
+
+/* People.js */
+  .people .card-image img{
+    min-height: 100px;
+  }
+  
+  .people .card:hover{
+    transform: scale(1.05);
+    transition: 0.7s;
+  }
+  
+  .people .team{
+    margin: 0 10px 20px;
+    position: relative;
+    width: 100%;
+    min-height: 250px;
+    float: left;
+    background: #fff;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  
+  .people .team img{
+    width: 100%;
+    transition: 0.7s;
+  }
+  .people .team:hover img{
+    transform: scale(1.15);
+  }
+  .people .team .details{
+    position: absolute;
+    bottom: -100%;
+    left: 0px;
+    padding: 0 10px 10px;
+    box-sizing: border-box;
+    background: rgba(0,0,0,.7);
+    width: 100%;
+    transition: .7s;
+    z-index: 2;
+  }
+  
+  .people .team:hover .details{
+    bottom: 0px;
+  }
+  
+  .people .team .details h3{
+    color: #fff;
+    text-align: right;
+    text-transform: uppercase;
+    text-align: right;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+  }
+  
+  .people .team .details h3 span{
+    margin: 0;
+    padding: 0;
+    font-size: 1.1rem;
+    color: #EFB61E;
+    font-weight: 900;
+    position: relative;
+    top: -2px;
+  }
+  
+  .people .team .details ul{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    float: right;
+  }
+  
+  .people .team .details ul li a{
+    padding: 0 10px;
+    color: #fff;
+  }
+  
+  .people .team .details ul li a:hover .fab{
+    transition: 0.5s;
+    transform: rotateY(360deg);
+    color: #EFB61E;
+  }
