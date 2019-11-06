@@ -92,3 +92,21 @@ body {
     transform: rotateY(360deg);
     color: #EFB61E;
   }
+
+/* Area.js */
+.collapsible-header{
+  display: inline-block;
+  width: 100%;
+}
+.collapsible-header span{
+  float: right;
+}
+.collapsible-header span i {
+  transition: all 0.3s ease;
+}
+
+.active .collapsible-header span i {
+  transition: all 0.3s ease;
+  transform: rotate(180deg);
+  color: #1a237e !important;
+}

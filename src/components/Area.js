@@ -68,7 +68,10 @@ class Area extends Component {
         posts.map(post => {
             return(
               <li key = {post.id} onClick={this.scrollDown}>
-                <div className="collapsible-header">{post.title}</div>
+                <div className="collapsible-header">
+                  {post.title}
+                  <span><i className="fas fa-angle-down grey-text text-lighten-1"></i></span>
+                </div>
                 <div className='collapsible-body'>
                   <p>{post.body}</p>
                   <Link to= {'/' + post.id}><button className="btn btn-small indigo darken-4">Know more</button></Link>
