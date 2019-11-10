@@ -106,7 +106,6 @@ body {
 }
 
 .active .collapsible-header span i {
-  transition: all 0.3s ease;
   transform: rotate(180deg);
   color: #1a237e !important;
 }
