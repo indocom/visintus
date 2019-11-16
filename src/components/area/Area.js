@@ -1,5 +1,6 @@
 import React from 'react'
-import '../index.css'
+import '../../index.css'
+import '../../css/area.css'
 import AreaCarousel from './AreaCarousel'
 import AreaDropdown from './AreaDropdown'
 import AreaPeople from './AreaPeople'
@@ -10,8 +11,7 @@ const Area = () => {
         <AreaCarousel />
         <AreaDropdown />
         <AreaPeople />
-      </div>
-        
+      </div>        
     )
   }
             
