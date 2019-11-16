@@ -42,7 +42,7 @@ const Footer = (props) => {
             </div>
                 
             <div className="col s2">
-              <h6><a href="#" className='white-text'><i className="fas fa-arrow-up"></i> Top</a></h6>
+              <h6><a href="#" className='white-text'><i className="fas fa-arrow-up" style={{paddingRight : "10px"}}></i> Top</a></h6>
             </div>
           </div>
         </div>

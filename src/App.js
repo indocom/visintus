@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Switch} from 'react-router-dom'
 import Home from './components/Home'
 import Area from './components/area/Area'
 import Footer from './components/layout/Footer'
+import Login from './components/auth/Login'
+import Signup from './components/auth/Signup'
 
 class App extends Component {
   render(){
@@ -13,7 +15,9 @@ class App extends Component {
           <Navbar />
           <Switch>
             <Route exact path='/' component={Home} />
-            <Route path='/a/:area' component={Area} />           
+            <Route path='/a/:area' component={Area} /> 
+            <Route path='/login' component={Login} />
+            <Route path='/signup' component={Signup} />    
           </Switch>
           <Footer /> 
         </div>
