@@ -7,7 +7,7 @@ const Footer = (props) => {
       <footer className="page-footer indigo darken-4">
         <div className="container">
           <div className="row">
-          	<div className="col s5">
+          	<div className="col s12 m4">
             	<h6>Perhimpunan Indonesia NUS</h6>
                 <ul>
                 	<li>National University of Singapore</li>
@@ -17,17 +17,17 @@ const Footer = (props) => {
                 </ul>
             </div>
 
-            <div className="col s5">
+            <div className="col s12 m6">
               <div className="row">
-                <div className="col s6" >
+                <div className="col s12 m5" >
                   <h6>Contact Us</h6>
                   <ul>
                     <li><i className="fas fa-phone"></i>  1234567</li>
                     <li><i className="fas fa-envelope"></i>  pinus@pohon.id</li>
                   </ul>
   	            </div>
-                <div className="col s6" >
-                  <h6 className="white-text" id='social'>Follow us</h6>
+                <div className="col s12 m7" id='social'>
+                  <h6 className="white-text">Follow us</h6>
                   <a href="https://www.facebook.com/PerhimpunanIndonesiaNUS/" className="btn-floating btn indigo darken-3">
                       <i className="fab fa-facebook-f"></i>
                   </a>
