@@ -21,7 +21,7 @@ class Login extends Component {
     }
     render() {
         const { authError, auth } = this.props
-        if (auth.uid) return <Redirect to='/' />
+        //if (auth.uid) return <Redirect to='/' />
 
         return (
             <div className="container">
@@ -36,7 +36,7 @@ class Login extends Component {
                         <input type="password" id="password" onChange={this.handleChange}/>
                     </div>
                     <div className="input-field">
-                        <button className="btn pink lighten-1 z-depth-0">Login</button>
+                        <button className="btn z-depth-0">Login</button>
                         <div className="red-text center">
                             { authError ? <p> { authError }</p> : null }
                         </div>
