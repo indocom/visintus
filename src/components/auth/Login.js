@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { signInUser } from '../../store/actions/authActions'
 
 class Login extends Component {
     state = {
@@ -48,11 +49,13 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    
+    authError : state.auth.authError
 })
 
-const mapDispatchToProps = {
-    
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signInUser : credentials => { dispatch(signInUser(credentials)) }
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
