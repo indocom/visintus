@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { addPlan } from '../../store/actions/planActions'
 import M from 'materialize-css'
 
 class AreaDropdown extends Component {
@@ -44,6 +46,10 @@ class AreaDropdown extends Component {
   }
 */
 
+  handleAdd = post => {
+    console.log(post);
+  }
+
   scrollDown = e => {
     //e.target.scrollIntoView(); 
     const elem = e.target
@@ -66,7 +72,8 @@ class AreaDropdown extends Component {
                 </div>
                 <div className='collapsible-body'>
                   <p>{post.body}</p>
-                  <Link to= {'/' + post.id}><button className="btn btn-small indigo darken-4">Know more</button></Link>
+                  <Link to= {'/' + post.id }><button className="btn btn-small indigo darken-4">Know more</button></Link>
+                  <button className="btn btn-small indigo darken-4" onClick = { () => this.handleAdd(post) }>Add to your plan!</button>
                 </div>
               </li>
             )
@@ -86,6 +93,15 @@ class AreaDropdown extends Component {
     )
   }
 }
-            
 
-export default AreaDropdown;
+const mapStateToProps = (state) => ({
+  plan: state.plan
+})
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addPlan : plan => { dispatch(addPlan(plan)) }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AreaDropdown);
