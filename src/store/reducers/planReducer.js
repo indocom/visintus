@@ -1,13 +1,12 @@
 const initState = {
-    plan : ["testing"]
+    plan : ["intro"]
 }
 
 const planReducer = (state = initState, action) => {
-    if(action.type == 'ADD_PLAN'){
-        let newPlan = [...state.plan, action.plan];
+    if(action.type === 'ADD_PLAN'){
         return{
             ...state,
-            plan: newPlan
+            plan: [...state.plan, action.plan]
         } 
     } else {
         return state

@@ -97,9 +97,9 @@ class AreaDropdown extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({ plan }) => {
   return {
-    plan: state.plan.plan
+    plan
   }
 }
 

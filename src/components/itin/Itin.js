@@ -2,19 +2,26 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 class Itin extends Component {
-    planList = this.props.itin
     render() {
-        console.log(this.planList);
+        let planList = this.props.itin.length ? (
+            this.props.itin.map(plan => {
+                return(
+                    <p>{ plan }</p>
+                )
+            })
+        ) : (
+            <p> You haven't make any plans yet </p>
+        ) 
         return (
-            <div>
-                Hello World!
+            <div className='container'>
+                { planList }
             </div>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-    itin : state.plan
+const mapStateToProps = ({ plan }) => ({
+    itin: plan.plan
 })
 
 const mapDispatchToProps = {
