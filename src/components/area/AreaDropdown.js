@@ -48,6 +48,8 @@ class AreaDropdown extends Component {
 
   handleAdd = post => {
     console.log(post);
+    this.props.addPlan(post.title);
+    console.log(this.props);
   }
 
   scrollDown = e => {
@@ -61,6 +63,7 @@ class AreaDropdown extends Component {
   }
 
   render() {
+    console.log(this.props)
     const { posts } = this.state
     const postList = posts.length ? (
         posts.map(post => {
@@ -94,9 +97,11 @@ class AreaDropdown extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  plan: state.plan
-})
+const mapStateToProps = (state) => {
+  return {
+    plan: state.plan.plan
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -104,4 +109,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AreaDropdown);
+export default connect(mapStateToProps, mapDispatchToProps)(AreaDropdown)

@@ -1,4 +1,6 @@
-export const addPlan = (plan) => ({
-    type: 'ADD_PLAN',
-    plan
-})
+export const addPlan = (plan) => {
+    return {
+        type: 'ADD_PLAN',
+        plan
+    }
+}
