@@ -48,7 +48,7 @@ class AreaDropdown extends Component {
 
   handleAdd = post => {
     console.log(post);
-    this.props.addPlan(post.title);
+    this.props.addPlan(post);
     console.log(this.props);
   }
 

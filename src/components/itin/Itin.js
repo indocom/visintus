@@ -1,12 +1,23 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { removePlan } from '../../store/actions/planActions'
 
 class Itin extends Component {
+
+    handleRemove = (id) => {
+        console.log(id)
+        this.props.removePlan(id);
+    }
+
     render() {
         let planList = this.props.itin.length ? (
             this.props.itin.map(plan => {
                 return(
-                    <p>{ plan }</p>
+                    <li key={ plan.id }>
+                        { plan.title }
+                        <br/>
+                        <button onClick = { () => this.handleRemove(plan.id) }> Remove this plan </button>
+                    </li>
                 )
             })
         ) : (
@@ -14,18 +25,25 @@ class Itin extends Component {
         ) 
         return (
             <div className='container'>
-                { planList }
+                <ul>
+                    { planList }
+                </ul>
             </div>
         )
     }
 }
 
-const mapStateToProps = ({ plan }) => ({
-    itin: plan.plan
-})
-
-const mapDispatchToProps = {
-    
+const mapStateToProps = (state) => {
+    console.log(state)
+    return {
+        itin: state.plan.plan
+    }
 }
 
-export default connect(mapStateToProps)(Itin)
+const mapDispatchToProps = dispatch => {
+    return{
+        removePlan : id => { dispatch(removePlan(id)) }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Itin)
