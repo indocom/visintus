@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Navbar from './components/layout/Navbar'
 import { BrowserRouter, Route, Switch} from 'react-router-dom'
-import Home from './components/Home'
+import Home from './components/Home/Home.js'
 import Area from './components/area/Area'
 import Footer from './components/layout/Footer'
 import Login from './components/auth/Login'

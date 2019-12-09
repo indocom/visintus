@@ -27,6 +27,7 @@ class AreaPeople extends Component {
                     <div className="card ayellow team">
                         <div className="card-image">
                             <img src={Stars} alt="" />
+                            <h3>Card Title</h3>
                         </div>
                         <div className="details">
                             <h3>{person.name}</h3>
