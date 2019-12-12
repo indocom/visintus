@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { removePlan } from '../../store/actions/planActions'
+import { removePlan } from '../store/actions/planActions'
 
 class Itin extends Component {
 
