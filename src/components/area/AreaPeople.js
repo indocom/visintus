@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import Stars from '../../stars.jpg'
+import Stars from '../../assets/stars.jpg'
 
 class AreaPeople extends Component {
     state = {
