@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import M from 'materialize-css'
-import Image from '../../background1.jpg'
-import Axios from 'axios'
+import Image from '../../assets/background1.jpg'
+import axios from 'axios'
 
 class InterestingArea extends Component {
     state = {
@@ -9,16 +8,11 @@ class InterestingArea extends Component {
     }
     
     componentDidMount() {
-        Axios.get('https://jsonplaceholder.typicode.com/users')
+        axios.get('https://jsonplaceholder.typicode.com/users')
             .then(res => {
                 this.setState({
                     areas: res.data.slice(0,6)
                 })
-            })
-            .then(() => {let elems = document.querySelectorAll(".modal");
-                M.Modal.init(elems, {
-                    opacity: 1
-                });
             })
     }
 

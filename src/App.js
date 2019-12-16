@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Navbar from './components/layout/Navbar'
 import { BrowserRouter, Route, Switch} from 'react-router-dom'
 
-import Home from './components/Home/Home.js'
+import Home from './pages/Home'
 import Area from './pages/Category'
 import Footer from './components/layout/Footer'
 import Login from './pages/Login'
