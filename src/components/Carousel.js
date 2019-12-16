@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import Image1 from "../../background1.jpg";
-import Image2 from '../../background2.jpg';
-import Image3 from '../../background3.jpg';
-import left from '../../left.png';
-import right from '../../right.png';
-import './Carousel.css';
+import Image1 from "../assets/background1.jpg";
+import Image2 from '../assets/background2.jpg';
+import Image3 from '../assets/background3.jpg';
+import '../css/Carousel.css';
 
 
 class Carousel extends Component {
@@ -151,7 +149,7 @@ class Carousel extends Component {
             <div className="carousel">
 
                 <button className="carousel__button carousel__button--left">
-                    <i class="fas fa-chevron-left"></i>
+                    <i class="fas fa-chevron-left" style={{fontSize : '2rem'}}></i>
                 </button>
 
                 <div className="carousel__track-container">
@@ -169,7 +167,7 @@ class Carousel extends Component {
                 </div>
 
                 <button className="carousel__button carousel__button--right">
-                    <i class="fas fa-chevron-right"></i>
+                    <i class="fas fa-chevron-right" style={{fontSize : '2rem'}}></i>
                 </button>
 
                 <div className="carousel__nav">
@@ -183,3 +181,21 @@ class Carousel extends Component {
 }
 
 export default Carousel;
+
+// render(){
+//     const { pics } = this.props
+//     const picCarousel = pics.length ? (
+//         pics.map(pic => {
+//             return(
+//             <img  key={pic.id} src={pic.url} className='carousel-item' alt={pic.title} /> 
+//             )
+//         })
+//     ) : (
+//         <div className="center">No data yet</div>
+//     )
+//     return (
+//         <div className="carousel carousel-slider">
+//             { picCarousel }
+//         </div>   
+//     )
+// }

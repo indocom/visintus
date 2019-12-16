@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import M from 'materialize-css';
-import InterestingArea from './InterestingArea.js';
-import Carousel from '../carousel/Carousel.js';
-import HomeCarousel from './HomeCarousel.js';
-import PlanAVisit from './PlanAVisit.js';
-//import axios from 'axios';
-//import { Link } from 'react-router-dom';
+import InterestingArea from '../components/home/InterestingArea.js';
+import Carousel from '../components/Carousel.js';
+import PlanAVisit from '../components/home/PlanAVisit.js';
+
 
 class Home extends Component {
     render() {

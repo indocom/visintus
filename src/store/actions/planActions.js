@@ -4,3 +4,10 @@ export const addPlan = (plan) => {
         plan
     }
 }
+
+export const removePlan = (id) => {
+    return {
+        type: 'REMOVE_PLAN',
+        id
+    }
+}

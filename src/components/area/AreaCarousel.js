@@ -17,23 +17,16 @@ class AreaCarousel extends Component {
     }
     
  
-    componentDidMount(){
-        axios.get('https://jsonplaceholder.typicode.com/photos')
-            .then(res => {
-                this.setState({
-                    pics: res.data.slice(0,5)
-                });
-            })
-            .then(() => {let carousel = document.querySelectorAll(".carousel");
-                M.Carousel.init(carousel, {
-                    fullWidth: true,
-                    indicators: true
-                });
-            })       
-    }
+  componentDidMount(){
+    let carousel = document.querySelectorAll(".carousel");
+        M.Carousel.init(carousel, {
+            fullWidth: true,
+            indicators: true
+        });
+    }      
 
   render() {
-    const { pics } = this.state
+    const { pics } = this.state;
     const picCarousel = pics.length ? (
         pics.map(pic => {
             return(
@@ -43,7 +36,6 @@ class AreaCarousel extends Component {
     ) : (
         <div className="center">No data yet</div>
     )
-
     return (
       <div className="carousel carousel-slider">
         { picCarousel }
