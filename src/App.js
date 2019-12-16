@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import Navbar from './components/layout/Navbar'
 import { BrowserRouter, Route, Switch} from 'react-router-dom'
-import Home from './components/Home'
+
+import Home from './components/Home/Home.js'
 import Area from './pages/Category'
 import Footer from './components/layout/Footer'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Itin from './pages/Itin'
 import Admin from './pages/Admin'
+
 
 class App extends Component {
   render(){
