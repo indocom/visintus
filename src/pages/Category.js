@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import '../index.css'
 import '../css/area.css'
+import axios from 'axios'
 import AreaDropdown from '../components/area/AreaDropdown'
 import AreaPeople from '../components/area/AreaPeople'
 import Carousel from '../components/Carousel'
@@ -22,11 +23,11 @@ class Area extends Component {
     })
   }
   render() {
-    console.log(this.state);
+    console.log(this.props);
     return (
       <div className="container area">        
         <Carousel pics={this.state.pics}/>
-        <AreaDropdown />
+        <AreaDropdown area={this.props.match.params.area} />
         <AreaPeople />
       </div> 
     )

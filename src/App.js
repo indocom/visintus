@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Navbar from './components/layout/Navbar'
 import { BrowserRouter, Route, Switch} from 'react-router-dom'
 import Home from './components/Home'
-import Area from './pages/Area'
+import Area from './pages/Category'
 import Footer from './components/layout/Footer'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -18,7 +18,7 @@ class App extends Component {
           <div className="main-container">
             <Switch>
               <Route exact path='/' component={Home} />
-              <Route path='/a/:area' component={Area} /> 
+              <Route path='/category/:area' component={Area} /> 
               <Route path='/login' component={Login} />
               <Route path='/signup' component={Signup} />  
               <Route path='/itin' component={Itin} />

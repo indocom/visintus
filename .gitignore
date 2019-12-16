@@ -24,3 +24,4 @@ yarn-error.log*
 
 #design
 /draft_design
+.notes.txt

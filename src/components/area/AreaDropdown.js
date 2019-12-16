@@ -55,6 +55,7 @@ class AreaDropdown extends Component {
   scrollDown = e => {
     //e.target.scrollIntoView(); 
     const elem = e.target
+    console.log(elem.getBoundingClientRect().top, window.scrollY, elem.getBoundingClientRect().top + window.scrollY )
     const y = 0.6 * (elem.getBoundingClientRect().top + window.scrollY);
     window.scroll({
       top: y,
@@ -87,7 +88,7 @@ class AreaDropdown extends Component {
 
     return (
       <div className="dropdown">
-        <h4 className="center">Area</h4>
+        <h4 className="center">Area {this.props.area}</h4>
         <ul className="collapsible">
           { postList }
         </ul>
