@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Footer = (props) => {
-    console.log(props.history);
     return (
       <footer className="page-footer indigo darken-4">
         <div className="container">
