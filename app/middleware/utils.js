@@ -6,14 +6,23 @@
 exports.handleError = (res, err) => {
   // Prints error in console
   if (process.env.NODE_ENV === 'development') {
-    console.log(err)
+    console.log(err);
   }
   // Sends error to user
   res.status(err.code).json({
     errors: {
-      msg: err.message
+      message: err.message
     }
-  })
+  });
+}
+
+exports.handleSuccess = (res, obj) => {
+  // Prints obj in console
+  if (process.env.NODE_ENV === 'development') {
+    console.log(obj);
+  }
+  // Sends obj to user
+  res.status(200).json(obj);
 }
 
 /**
@@ -34,6 +43,6 @@ exports.buildErrObject = (code, message) => {
  */
 exports.buildSuccObject = message => {
   return {
-    msg: message
+    message: message
   }
 }

@@ -1,3 +1,2 @@
 db:
-  uri: "${DB_URL}"
   name: "visintus_production"

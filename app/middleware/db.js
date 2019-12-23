@@ -4,6 +4,7 @@ const connect = (config) => {
   var uri = config.url + '/' + config.name;
 
   mongoose.connect(uri, {
+    useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true
   }).then(

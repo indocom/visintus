@@ -11,8 +11,8 @@ var CategorySchema = new mongoose.Schema({
   },
   slug: {
     type      : String,
-    match     : /[a-z0-9-]+/,
-    required  : [true, "Slug must be provided with only 'a'-'z', '0'-'9', and '-' characters."]
+    required  : true,
+    unique    : true
   },
   logo_url        : String,
   description     : String,
