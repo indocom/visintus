@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { signInUser } from '../store/actions/authActions'
 
@@ -43,6 +43,7 @@ class Login extends Component {
                         </div>
                     </div>
                 </form>
+                <Link to='/signup'>Do not have an account?</Link>
             </div>
         )
     }
@@ -53,9 +54,9 @@ const mapStateToProps = ({ auth }) => ({
 })
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        signInUser : credentials => { dispatch(signInUser(credentials)) }
-    }
+  return {
+    signInUser : credentials => { dispatch(signInUser(credentials)) }
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
