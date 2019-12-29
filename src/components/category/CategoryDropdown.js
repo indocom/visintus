@@ -26,7 +26,7 @@ const AreaDropdown = (props) => {
 
   // console.log(props)
   const { plans } = props
-  const postList = plans.length ? (
+  const postList = plans ? (
     plans.map(plan => {
         return(
           <li key = {plan._id} onClick={scrollDown}>

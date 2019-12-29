@@ -8,7 +8,8 @@ import Footer from './components/layout/Footer'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Itin from './pages/Itin'
-import Admin from './pages/Admin'
+import * as Admin from './pages/Admin'
+import Checkout from './pages/Checkout'
 // import reactAdmin from './pages/reactAdmin'
 
 
@@ -25,7 +26,12 @@ class App extends Component {
               <Route path='/login' component={Login} />
               <Route path='/signup' component={Signup} />  
               <Route path='/itin' component={Itin} />
-              <Route path='/admin' component={Admin} />  
+              <Route path='/checkout' component={Checkout} />  
+              <Route exact path='/admin' component={Admin.Dashboard} />  
+              <Route exact path='/admin/categories' component={Admin.Components.Category} />  
+              <Route exact path='/admin/banners' component={Admin.Components.Banner} />  
+              <Route exact path='/admin/plans' component={Admin.Components.Plan} />  
+              <Route exact path='/admin/reps' component={Admin.Components.Representative} />  
               {/* <Route path='/testadmin' component={reactAdmin} />   */}
             </Switch>
           </div>

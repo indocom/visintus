@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react'
-import Image from '../../assets/background1.jpg'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 const InterestingArea = (props) => {
@@ -15,7 +14,7 @@ const InterestingArea = (props) => {
                 <span className="card-title">
                     {category.name}
                 </span>
-                <img src={Image}/>
+                <img src={category.logo_url} alt="logo"/>
               </Link>
             }
           </div>

@@ -53,7 +53,7 @@ const planReducer = (state = initState, action) => {
       if (sameSlug.filter(plan => plan._id === action.plan._id).length > 0){
         return state
       } else {
-        let newPlan = [...sameSlug, action.plan ];
+        let newPlan = [...sameSlug, action.plan];
         let newPlanInfo = {
           ...state,
           itin : {

@@ -8,6 +8,15 @@ const Itin = (props) => {
 		props.removePlan(id, slug);
 	}
 
+	const handleCheckout = (e) => {
+		e.preventDefault();
+		console.log(props);
+
+		/* TODO: POST itin data to backend */
+
+		props.history.push('/checkout')
+	}
+
 	console.log(props.itin)
 	let planList = Object.keys(props.itin).length > 0 ? (
 		Object.entries(props.itin).map(([slug, plans]) => {
@@ -35,12 +44,12 @@ const Itin = (props) => {
 	) 
 
 	return (
-		<div className='container'>
+		<Fragment className='container'>
 			{ planList }
-		</div>
+			<div className="btn" onClick={handleCheckout}>Checkout</div>
+		</Fragment>
 	)
-	{/* return(<div>Hello World</div>) */}
-	}
+}
 
 const mapStateToProps = (state) => {
     console.log(state)

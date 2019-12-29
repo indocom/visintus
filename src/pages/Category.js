@@ -8,41 +8,32 @@ import Carousel from '../components/Carousel'
 
 class Category extends Component {
   state = {
-    banners: [],
-    reps: [],
-    plans: [{
-      "_id": 1,
-      "name": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-      "description": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-    }]
+    banners: null,
+    reps: null,
+    plans: null
+    // [{
+    //   "_id": 1,
+    //   "name": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+    //   "description": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+    // }]
   }
 
-  // async componentDidMount(){
-  //   let photos = await (await fetch('https://jsonplaceholder.typicode.com/photos')).json();
-  //   let users = await (await fetch('https://jsonplaceholder.typicode.com/users')).json();
-  //   let posts = await( await fetch('https://jsonplaceholder.typicode.com/posts')).json();
-  //   this.setState({
-  //     pics: photos.slice(0,5),
-  //     reps: users.slice(0,4),
-  //     plans: posts.slice(0,7)
-  //   })
-  // }
-
-  async componentDidUpdate(){
+  async componentDidMount(){
     const slug = this.props.match.params.area
     let { data, status } = await axios.get(`/categories/${slug}`).catch(err => console.log(err));
+    console.log(data)
     if(data){
       if(!data.message) return;
       this.setState({
-        banners: data.message.banners || [],
-        reps: data.message.representatives || [],
-        plans: data.message.plans || [],
+        banners: data.message.banners || null,
+        reps: data.message.representatives || null,
+        plans: data.message.plans || null,
       })
     } else {
       console.log(`Error ${status} in loading /pages/category`)
     }
-  }
-
+  }  
+  
   render() {
     return (
       <div className="container area">        

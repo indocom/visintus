@@ -3,17 +3,17 @@ import Stars from '../../assets/stars.jpg'
 
 const AreaPeople = (props) => {
   const { reps } = props
-  const peopleList = reps.length ? (
+  const peopleList = reps ? (
     reps.map(person => {
       return(
-      <div className="col s12 m4 l3" key={person.id}>
+      <div className="col s12 m4 l3" key={person._id}>
         <div className="card ayellow team">
           <div className="card-image">
-              <img src={Stars} alt="" />
+              <img src={person.photo_url} alt="Representative photo" />
           </div>
           <div className="details">
               <h3>{person.name}</h3>
-              <p style={{color: 'white'}}>{person.desc}</p>
+              <p style={{color: 'white'}}>{person.description}</p>
               <ul>
                 <li><a href="/"><i className="fab fa-facebook-f" aria-hidden="true"></i></a></li>
                 <li><a href="/"><i className="fab fa-instagram" aria-hidden="true"></i></a></li>
@@ -34,7 +34,7 @@ const AreaPeople = (props) => {
         <h3>Our Representative</h3>
         <div className="col s12">
             <div className="row">
-                {peopleList}
+              {peopleList}
             </div>
         </div>
       </div>
