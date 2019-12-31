@@ -1,13 +1,15 @@
-export const addPlan = (plan) => {
+export const addPlan = (plan, slug) => {
     return {
         type: 'ADD_PLAN',
-        plan
+        plan,
+        slug
     }
 }
 
-export const removePlan = (id) => {
+export const removePlan = (id, slug) => {
     return {
         type: 'REMOVE_PLAN',
-        id
+        id,
+        slug
     }
 }

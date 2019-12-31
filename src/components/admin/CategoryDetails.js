@@ -1,0 +1,52 @@
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import BannerDetails from './Banner'
+import PlanDetails from './Plan'
+import RepDetails from './Reps'
+
+export default (props) => {
+  let slug = props.match.params.slug;
+	let [details, setDetails] = useState([]);
+	let [detailType, setDetailType] = useState('plans');
+	
+	useEffect(() => {
+		async function FetchAllDetails(){
+			let {data} = await axios.get(`/categories/${slug}`).catch(err => console.log(err));
+			if(data){
+        if(!data.message) return;
+				setDetails(data.message);
+			} else {
+        console.log(`Error in loading /admin/categories/${slug}`)
+			}
+      console.log(details)
+		};
+		FetchAllDetails();
+	}, [details.length])
+
+	return(
+		<div className="container">
+			<h4>Category Details Page <div className="btn right" onClick={() => {props.history.push('/admin/categories')} }>Back to all categories</div></h4>
+			<div className="row">
+				<div className="col s2" style={{borderRight : "1px solid black"}}>
+					<p className='btn white black-text z-depth-0' style={{display: "block"}} onClick={() => setDetailType('banners')}>Banners</p>
+					<p className='btn white black-text z-depth-0' style={{display: "block"}} onClick={() => setDetailType('plans')}>plans</p>
+					<p className='btn white black-text z-depth-0' style={{display: "block"}} onClick={() => setDetailType('reps')}>reps</p>
+				</div>
+				<div className="col s9 offset-s1">
+					{ (() => {
+					switch (detailType) {
+						case 'banners':
+							return <BannerDetails banners={details.banners} setDetails={setDetails} slug={slug}/>
+						case 'plans':
+							return <PlanDetails plans={details.plans} setDetails={setDetails} slug={slug}/>
+						case 'reps':
+							return <RepDetails reps={details.representatives} setDetails={setDetails} slug={slug}/>	
+						default:
+							return null
+						}
+					})()}
+				</div>
+			</div>
+		</div>
+	)
+}

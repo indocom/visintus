@@ -149,7 +149,7 @@ class Carousel extends Component {
             <div className="carousel">
 
                 <button className="carousel__button carousel__button--left">
-                    <i class="fas fa-chevron-left" style={{fontSize : '2rem'}}></i>
+                    <i className="fas fa-chevron-left" style={{fontSize : '2rem'}}></i>
                 </button>
 
                 <div className="carousel__track-container">
@@ -167,7 +167,7 @@ class Carousel extends Component {
                 </div>
 
                 <button className="carousel__button carousel__button--right">
-                    <i class="fas fa-chevron-right" style={{fontSize : '2rem'}}></i>
+                    <i className="fas fa-chevron-right" style={{fontSize : '2rem'}}></i>
                 </button>
 
                 <div className="carousel__nav">
