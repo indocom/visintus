@@ -18,21 +18,37 @@ class Category extends Component {
     // }]
   }
 
-  async componentDidMount(){
+  async fetchCategoryData(){
     const slug = this.props.match.params.area
     let { data, status } = await axios.get(`/categories/${slug}`).catch(err => console.log(err));
-    console.log(data)
     if(data){
-      if(!data.message) return;
-      this.setState({
-        banners: data.message.banners || null,
-        reps: data.message.representatives || null,
-        plans: data.message.plans || null,
-      })
+      if(!data.message){
+        this.setState({
+          banners: '',
+          reps: '',
+          plans: '',
+        })
+      } else {
+        this.setState({
+          banners: data.message.banners || null,
+          reps: data.message.representatives || null,
+          plans: data.message.plans || null,
+        })
+      }
     } else {
       console.log(`Error ${status} in loading /pages/category`)
     }
+  }
+
+  componentDidMount(){
+    this.fetchCategoryData();
   }  
+
+  componentDidUpdate(prevProps){
+    if(prevProps.match.params.area !== this.props.match.params.area){
+      this.fetchCategoryData();
+    }
+  }
   
   render() {
     return (

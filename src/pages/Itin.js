@@ -44,10 +44,10 @@ const Itin = (props) => {
 	) 
 
 	return (
-		<Fragment className='container'>
+		<div className='container'>
 			{ planList }
 			<div className="btn" onClick={handleCheckout}>Checkout</div>
-		</Fragment>
+		</div>
 	)
 }
 
