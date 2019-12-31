@@ -28,10 +28,8 @@ class App extends Component {
               <Route path='/itin' component={Itin} />
               <Route path='/checkout' component={Checkout} />  
               <Route exact path='/admin' component={Admin.Dashboard} />  
+              <Route exact path='/admin/categories/:slug' component={Admin.Components.CategoryDetails} />
               <Route exact path='/admin/categories' component={Admin.Components.Category} />  
-              <Route exact path='/admin/banners' component={Admin.Components.Banner} />  
-              <Route exact path='/admin/plans' component={Admin.Components.Plan} />  
-              <Route exact path='/admin/reps' component={Admin.Components.Representative} />  
               {/* <Route path='/testadmin' component={reactAdmin} />   */}
             </Switch>
           </div>

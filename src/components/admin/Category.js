@@ -1,4 +1,5 @@
 import React, { Component, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 const Category = (props) => {
@@ -36,13 +37,14 @@ const Category = (props) => {
 	const categoriesList = categories.length > 0 ? (
     categories.map((category, index) => {
       return (
-        <li key={index}>
-					{/* <Link to={`/category/${category.slug}`}> */}
+        <li key={index} style={{minHeight: 50}}>
+					<Link to={props.baseURL + `/${category.slug}`}>
 						<span>{category.name}</span>
-						<p>{category.description}</p>
-						<button data-target="update" className="btn" onClick={() => props.handleUpsert(category.slug)}>Update Category</button>
-						<button className="btn red" onClick={() => handleRemove(category.slug)}>Remove Category</button>
-					{/* </Link> */}
+					</Link>
+					<div className="right">
+						<button data-target="update" className="btn" onClick={() => props.handleUpsert(category.slug)}>Update</button>
+						<button className="btn red" onClick={() => handleRemove(category.slug)}>Remove</button>
+					</div>
         </li>
       )
     })
@@ -51,12 +53,9 @@ const Category = (props) => {
 	)
 	
 	return(
-		<>
-			<button onClick={() => props.handleUpsert('')} className="btn">Add new category</button>
-			<ul>
-				{ categoriesList }
-			</ul>
-		</>
+		<ul>
+			{ categoriesList }
+		</ul>
 	)
 }
 
@@ -67,7 +66,8 @@ class UpsertCategory extends Component {
 		description: '',
 	}
 
-	title = this.props.slug === '' ? 'Add Category' : 'Upsert Category'
+	title= this.props.slug === '' ? 'Add Category' : 'Update Category';
+	endpoint= this.props.slug === '' ? '' :  `/${this.props.slug}`;
 
 	handleChange = e => {
 		this.setState({
@@ -82,7 +82,7 @@ class UpsertCategory extends Component {
 		})
 		console.log(data)
 
-		await axios.post('/categories'+ this.props.slug , data, {
+		await axios.post('/categories'+ this.endpoint , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				'Content-Type': 'application/json',				
@@ -92,78 +92,50 @@ class UpsertCategory extends Component {
 	}
 	render() {
 	// const { auth, authError } = this.props
-	// if (auth.uid) return <Redirect to='/' />
+	// if (auth.uid) return <Redirect to='/admin' />
 
 		return (
-			<form className="white" onSubmit = {this.handleSubmit}>
+			<>
+			<form onSubmit = {this.handleSubmit}  style={{padding: 15, backgroundColor: "#eee"}}>
 				<h5 className="grey-text text-darken-3">{this.title}</h5>
-					<div className="input-field">
-						<label htmlFor="name">Category Name</label>
-						<input type="text" id="name" onChange={this.handleChange} required/>
-					</div>
+				<div className="input-field">
+					<label htmlFor="name">Category Name</label>
+					<input type="text" id="name" onChange={this.handleChange} required/>
+				</div>
 
-					<div className="input-field">
-						<label htmlFor="logo_url">Logo URL</label>
-						<input type="text" id="logo_url" onChange={this.handleChange}/>
-					</div>
+				<div className="input-field">
+					<label htmlFor="logo_url">Logo URL</label>
+					<input type="text" id="logo_url" onChange={this.handleChange}/>
+				</div>
 
-					<div className="input-field">
-						<label htmlFor="description">Description</label>
-						<input type="text" id="description" onChange={this.handleChange}/>
-					</div>
-	{/* 
-						<h6>Banner</h6>
-						<div className="input-field">
-							<label htmlFor="banner_image_url">Image URL</label>
-							<input type="text" id="banner_image_url" onChange={this.handleChange} required/>
-						</div>
-					</div>
-					<div className="col l5 offset-l1 m12">
-						<h6>Plans</h6>
-						<div className="input-field">
-							<label htmlFor="plan_name">Plan Name</label>
-							<input type="text" id="plan_name" onChange={this.handleChange} required/>
-						</div>
-						<div className="input-field">
-							<label htmlFor="plan_desc">Plan Desc</label>
-							<input type="text" id="plan_desc" onChange={this.handleChange}/>
-						</div>
-
-						<h6>Representatives</h6>
-						<div className="input-field">
-							<label htmlFor="reps_name">Reps Name</label>
-							<input type="text" id="reps_name" onChange={this.handleChange} required/>
-						</div>
-						<div className="input-field">
-							<label htmlFor="reps_desc">Reps Desc</label>
-							<input type="text" id="reps_desc" onChange={this.handleChange}/>
-						</div>
-						<div className="input-field">
-							<label htmlFor="reps_photo_url">Reps Photo URL</label>
-							<input type="text" id="reps_photo_url" onChange={this.handleChange}/>
-						</div>
-					</div>
-				</div> */}
+				<div className="input-field">
+					<label htmlFor="description">Description</label>
+					<input type="text" id="description" onChange={this.handleChange}/>
+				</div>
 				<button className="btn">{this.title}</button>
-					{/* <div className="red-text center">
-							{ authError ? <p>{ authError }</p> : null }
-					</div> */}
+				<div className="btn" onClick={() => {this.props.closeForm()}}>Cancel</div>
 			</form>
+			</>
 		)
 	}
 }
 
-export default () => {
+export default (props) => {
 	let [isActive, setIsActive] = useState(false);
 	let [slug, setSlug] = useState(''); //'' -> add category
+	let handleUpsert = (slug) => {
+		setIsActive(!isActive);
+		setSlug(slug);
+	}
+
 	return(
 		<div className="container">
 			<h4>Category Admin Page</h4>
-			{ isActive && <UpsertCategory slug={slug} />}
-			<Category handleUpsert={(slug) => {
-				setIsActive(!isActive);
-				setSlug(slug)
-			}}/>
+
+			{/* Input form to add or update. slug property to determine API endpoint */}
+			{ isActive && <UpsertCategory slug={slug} closeForm={() => setIsActive(!isActive)}/>}
+			{ !isActive && <button onClick={() => handleUpsert('')} className="btn">Add category</button> }
+			<Category handleUpsert={handleUpsert} baseURL={props.match.path}/>
 		</div>
 	)
 }
