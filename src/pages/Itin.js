@@ -18,6 +18,20 @@ const Itin = (props) => {
 		props.history.push('/checkout')
 	}
 
+	const display = (value) => {
+		const id = '#' + value.slug;
+		const getElem = document.querySelector(id);
+		if(getElem.style.position === 'relative') {
+			getElem.style.position = 'absolute';
+			getElem.style.opacity = '0';
+			getElem.style.transition = 'all 0s linear';
+		} else {
+			getElem.style.position = 'relative';
+			getElem.style.opacity = '1';
+			getElem.style.transition = 'all 0.3s linear';
+		}
+	}
+	
 	console.log(props.itin)
 	let planList = Object.keys(props.itin).length > 0 ? (
 		Object.entries(props.itin).map(([slug, plans]) => {
@@ -25,9 +39,9 @@ const Itin = (props) => {
 				<Fragment key={slug}>
 					<div className='dropdownItin__title'>
 						<h6 className="red-text">{ slug }</h6>
-						<button>Click Me!</button>
+						<button onClick={() => display({slug})}>Click Me!</button>
 					</div>
-					<div className='dropdownItin__content'>
+					<div className='dropdownItin__content' id={slug}>
 						<ul>
 						{
 							plans.length > 0 

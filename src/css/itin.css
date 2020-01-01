@@ -4,7 +4,7 @@
     border: 1px solid palegoldenrod;
 }
 .dropdownItin__title {
-    background-color: palevioletred;
+    background-color: aquamarine;
     position: relative;
     padding: 1rem;
     left: 5%;
@@ -30,8 +30,9 @@
 }
 
 .dropdownItin__content {
-    position: relative;
-    opacity: 1;
+    position: absolute;
+    opacity: 0;
+    transition: all 0.3s linear;
 }
 
 .dropdownItin__content ul {
