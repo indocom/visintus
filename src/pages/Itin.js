@@ -39,7 +39,7 @@ const Itin = (props) => {
 				<Fragment key={slug}>
 					<div className='dropdownItin__title'>
 						<h6 className="red-text">{ slug }</h6>
-						<button onClick={() => display({slug})}>Click Me!</button>
+						<button onClick={() => display({slug})}><i class="fas fa-chevron-down"></i></button>
 					</div>
 					<div className='dropdownItin__content' id={slug}>
 						<ul>
@@ -65,7 +65,11 @@ const Itin = (props) => {
 	return (
 		<div className='dropdownItin'>
 			{ planList }
-			<div className="btn" onClick={handleCheckout}>Checkout</div>
+			<br/>
+			<div className='dropdownButtonContainer'>
+				<button className='dropdownButton' onClick={handleCheckout}>Checkout</button>
+				<button className='dropdownButton' onClick={handleCheckout}>Save and Checkout</button>
+			</div>
 		</div>
 	)
 }

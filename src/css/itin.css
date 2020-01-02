@@ -4,7 +4,7 @@
     border: 1px solid palegoldenrod;
 }
 .dropdownItin__title {
-    background-color: aquamarine;
+    background-color: lightskyblue;
     position: relative;
     padding: 1rem;
     left: 5%;
@@ -15,11 +15,10 @@
 }
 
 .dropdownItin__title button {
-    width: 20%;
+    width: 5%;
     text-transform: uppercase;
-    background: aqua;
+    background: lightskyblue;
     border: 4px solid lightskyblue;
-    border-radius: 1rem;
 }
 
 .dropdownItin__title button:hover {
@@ -42,7 +41,7 @@
 }
 
 .dropdownItin__content li {
-    background-color: palegoldenrod;
+    background-color: skyblue;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -69,4 +68,65 @@
     background: palevioletred;
     border-color: pink;
     transition: all 0.4s ease 0s;
+}
+
+.dropdownButtonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.dropdownButton {
+    position: relative;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0 16px;
+    width: 40%;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+    background-color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 2.5rem;
+    overflow: hidden;
+    outline: none;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.dropdownButton::-moz-focus-inner {
+    border: none;
+}
+
+/* Overlay */
+.dropdownButton::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+/* Hover, Focus */
+.dropdownButton:hover,
+.dropdownButton:focus {
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.dropdownButton:hover::before {
+    opacity: 0.08;
+}
+
+.dropdownButton:focus::before {
+    opacity: 0.24;
+}
+
+.dropdownButton:hover:focus::before {
+    opacity: 0.3;
 }
