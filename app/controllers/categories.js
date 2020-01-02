@@ -1,6 +1,5 @@
 const Category = require("../models/category");
 const slugify = require('slugify');
-const mongoose = require('mongoose');
 
 const {
   handleError,
@@ -28,11 +27,11 @@ exports.createCategory = async (req, res) => {
     banners         : [],
     plans           : [],
     representatives : []
-  });
+   });
 
   newCategory.save()
     .then((category) => handleSuccess(res, buildSuccObject('New category created')))
-    .catch(error => handleError(res, buildErrObject(422, error)));
+    .catch(error => handleError(res, buildErrObject(422, error.message)));
 }
 
 exports.updateCategory = async (req, res) => {
@@ -47,7 +46,7 @@ exports.updateCategory = async (req, res) => {
       }
       else handleError(res, buildErrObject(422, 'Category not found'));
     })
-    .catch(error => handleError(res, buildErrObject(422, error)));
+    .catch(error => handleError(res, buildErrObject(422, error.message)));
 }
 
 exports.deleteCategory = async (req, res) => {
@@ -56,7 +55,7 @@ exports.deleteCategory = async (req, res) => {
       if (result.n) handleSuccess(res, buildSuccObject('Category deleted'));
       else handleError(res, buildErrObject(422, 'Category not found'));
     })
-    .catch(error => handleError(res, buildErrObject(422, error)));
+    .catch(error => handleError(res, buildErrObject(422, error.message)));
 }
 
 exports.getCategoryList = async (req, res) => {
@@ -64,15 +63,18 @@ exports.getCategoryList = async (req, res) => {
     .select('-_id name slug logo_url')
     .lean()
     .then(categoryList => handleSuccess(res, buildSuccObject(categoryList)))
-    .catch(error => handleError(res, buildErrObject(422, error)));
+    .catch(error => handleError(res, buildErrObject(422, error.message)));
 }
 
 exports.getCategoryInfo = async (req, res) => {
   Category.findOne({ slug: req.params.slug })
     .select('-_id name slug logo_url description banners plans representatives')
     .lean()
-    .then(category => handleSuccess(res, buildSuccObject(category)))
-    .catch(error => handleError(res, buildErrObject(422, error)));
+    .then(category => {
+      if (category) handleSuccess(res, buildSuccObject(category));
+      else handleError(res, buildErrObject(422, 'Category not found'));
+    })
+    .catch(error => handleError(res, buildErrObject(422, error.message)));
 }
 
 exports.getPlansInfo = async (req, res) => {
@@ -96,5 +98,5 @@ exports.getPlansInfo = async (req, res) => {
       { $project: { _id: 0 } }
     ])
     .then(result => handleSuccess(res, buildSuccObject(result)))
-    .catch(error => handleError(res, buildErrObject(422, error)));
+    .catch(error => handleError(res, buildErrObject(422, error.message)));
 }

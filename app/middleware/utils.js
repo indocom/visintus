@@ -46,3 +46,35 @@ exports.buildSuccObject = message => {
     message: message
   }
 }
+
+/**
+ * Item not found
+ * @param {Object} err - error object
+ * @param {Object} item - item result object
+ * @param {Object} reject - reject object
+ * @param {string} message - message
+ */
+exports.itemNotFound = (err, item, reject, message) => {
+  if (err) {
+    reject(this.buildErrObject(422, err.message))
+  }
+  if (!item) {
+    reject(this.buildErrObject(404, message))
+  }
+}
+
+/**
+ * Item already exists
+ * @param {Object} err - error object
+ * @param {Object} item - item result object
+ * @param {Object} reject - reject object
+ * @param {string} message - message
+ */
+exports.itemAlreadyExists = (err, item, reject, message) => {
+  if (err) {
+    reject(this.buildErrObject(422, err.message))
+  }
+  if (item) {
+    reject(this.buildErrObject(422, message))
+  }
+}

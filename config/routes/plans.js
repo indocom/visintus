@@ -1,10 +1,25 @@
-var express = require('express');
-var router = express.Router({ mergeParams: true });
+const express = require('express');
 
+const router = express.Router({ mergeParams: true });
+const usersController = require('../../app/controllers/users.js');
 const plansController = require('../../app/controllers/plans.js');
 
-router.post('/', plansController.createPlan);
-router.post('/:planId', plansController.updatePlan);
-router.delete('/:planId', plansController.deletePlan);
+router.post('/',
+  usersController.requireAuth,
+  usersController.roleAuthorization(['admin']),
+  plansController.createPlan
+);
+
+router.post('/:planId',
+  usersController.requireAuth,
+  usersController.roleAuthorization(['admin']),
+  plansController.updatePlan
+);
+
+router.delete('/:planId',
+  usersController.requireAuth,
+  usersController.roleAuthorization(['admin']),
+  plansController.deletePlan
+);
 
 module.exports = router;

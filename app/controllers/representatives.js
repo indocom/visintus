@@ -34,7 +34,7 @@ exports.createRepresentative = async (req, res) => {
     if (result.n) handleSuccess(res, buildSuccObject('New representative added'));
     else handleError(res, buildErrObject(422, 'Category not found'));
   })
-  .catch(error => handleError(res, buildErrObject(422, error)));
+  .catch(error => handleError(res, buildErrObject(422, error.message)));
 }
 
 exports.updateRepresentative = async (req, res) => {
@@ -52,7 +52,7 @@ exports.updateRepresentative = async (req, res) => {
     }
     else handleError(res, buildErrObject(422, 'Not found'));
   })
-  .catch(error => handleError(res, buildErrObject(422, error)));
+  .catch(error => handleError(res, buildErrObject(422, error.message)));
 }
 
 exports.deleteRepresentative = async (req, res) => {
@@ -68,5 +68,5 @@ exports.deleteRepresentative = async (req, res) => {
     }
     else handleError(res, buildErrObject(422, 'Category not found'));
   })
-  .catch(error => handleError(res, buildErrObject(422, error)));
+  .catch(error => handleError(res, buildErrObject(422, error.message)));
 }

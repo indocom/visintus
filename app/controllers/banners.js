@@ -32,7 +32,7 @@ exports.createBanner = async (req, res) => {
     if (result.n) handleSuccess(res, buildSuccObject('New banner added'));
     else handleError(res, buildErrObject(422, 'Category not found'));
   })
-  .catch(error => handleError(res, buildErrObject(422, error)));
+  .catch(error => handleError(res, buildErrObject(422, error.message)));
 }
 
 exports.deleteBanner = async (req, res) => {
@@ -48,5 +48,5 @@ exports.deleteBanner = async (req, res) => {
     }
     else handleError(res, buildErrObject(422, 'Category not found'));
   })
-  .catch(error => handleError(res, buildErrObject(422, error)));
+  .catch(error => handleError(res, buildErrObject(422, error.message)));
 }

@@ -15,8 +15,10 @@ router.get('/', (req, res) => {
   res.send('Welcome to visintus API!\n');
 })
 
-router.get('/plan-info', categoriesController.getPlansInfo);
+router.use('/users', require('./routes/users'));
 
 router.use('/categories', require('./routes/categories'));
+
+router.get('/plan-info', categoriesController.getPlansInfo);
 
 module.exports = router;

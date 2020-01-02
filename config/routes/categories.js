@@ -1,14 +1,30 @@
-var express = require('express');
-var router = express.Router();
+const express   = require('express');
 
-const categoriesController = require('../../app/controllers/categories.js');
+const router = express.Router();
+const usersController = require('../../app/controllers/users.js');
+const categoriesController = require('../../app/controllers/categories');
 
 router.get('/', categoriesController.getCategoryList);
-router.post('/', categoriesController.createCategory);
 
 router.get('/:slug', categoriesController.getCategoryInfo);
-router.post('/:slug', categoriesController.updateCategory);
-router.delete('/:slug', categoriesController.deleteCategory);
+
+router.post('/', 
+  usersController.requireAuth, 
+  usersController.roleAuthorization(['admin']), 
+  categoriesController.createCategory
+);
+
+router.post('/:slug', 
+  usersController.requireAuth, 
+  usersController.roleAuthorization(['admin']), 
+  categoriesController.updateCategory
+);
+
+router.delete('/:slug',
+  usersController.requireAuth,
+  usersController.roleAuthorization(['admin']),
+  categoriesController.deleteCategory
+);
 
 const bannersRouter = require('./banners.js');
 const plansRouter = require('./plans.js');

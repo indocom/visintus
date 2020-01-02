@@ -1,9 +1,15 @@
-var express = require('express');
-var router = express.Router({ mergeParams: true });
+const express = require('express');
 
-const bannersController = require('../../app/controllers/banners.js');
+const router = express.Router({ mergeParams: true });
+const usersController = require('../../app/controllers/users.js');
+const bannersController = require('../../app/controllers/banners');
 
-router.post('/', bannersController.createBanner);
+router.post('/', 
+  usersController.requireAuth, 
+  usersController.roleAuthorization(['admin']),
+  bannersController.createBanner
+);
+
 router.delete('/:bannerId', bannersController.deleteBanner);
 
 module.exports = router;
