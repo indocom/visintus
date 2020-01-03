@@ -9,9 +9,9 @@ import Fourofour from './404'
 
 class Category extends Component {
   state = {
-    banners: '',
-    reps: '',
-    plans: '',
+    banners: [],
+    reps: [],
+    plans: [],
     isError: false,
   }
 
@@ -22,16 +22,16 @@ class Category extends Component {
       console.log(res);
       let data = res.data
       this.setState({
-        banners: data.message.banners || '',
-        reps: data.message.representatives || '',
-        plans: data.message.plans || '',
+        banners: data.message.banners,
+        reps: data.message.representatives,
+        plans: data.message.plans,
         isError: false,
       })
     } catch {
       this.setState({
-        banners: '',
-        reps: '',
-        plans: '',
+        banners: [],
+        reps: [],
+        plans: [],
         isError: true,
       })
     }
@@ -51,11 +51,11 @@ class Category extends Component {
     return !this.state.isError ? (
       <div className="container area">        
         <Carousel banners={this.state.banners}/>
-        <CategoryDropdown plans={this.state.plans} slug={this.props.match.params.area} />
+        <CategoryDropdown plans={this.state.plans} slug={this.props.match.params.area}/>
         <CategoryPeople reps={this.state.reps}/>
       </div> 
     ) : ( <Fourofour />)
   }
-}            
+}
 
-export default Category;
+export default Category

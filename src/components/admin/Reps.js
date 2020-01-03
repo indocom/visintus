@@ -1,8 +1,7 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useState } from 'react'
 import axios from 'axios'
 
 const RepDetails = ({reps, handleUpsert, slug, setDetails}) => { 
-  console.log(reps)
 	const handleRemove = async (_id) => {
 		const data = JSON.stringify({
 			authToken: 'visintus',

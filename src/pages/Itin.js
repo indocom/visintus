@@ -1,15 +1,10 @@
-import React, {Fragment, useState, useEffect} from 'react'
+import React, {Fragment} from 'react'
 import { connect } from 'react-redux'
 import { removePlan, removeCategory } from '../store/actions/planActions'
 import { Link } from 'react-router-dom'
 import M from 'materialize-css'
 
 const Itin = (props) => {
-	// const [itin, setItin]= useState(props.itin);
-	// useEffect(()=> {
-
-	// },[itin.length])
-
 	const handleRemovePlan = (id, slug) => {
 		props.removePlan(id, slug);
 	}
@@ -31,7 +26,6 @@ const Itin = (props) => {
 		props.removeCategory(slug);
 	}
 
-	console.log(props.itin)
 	let planList = Object.keys(props.itin).length > 0 ? (
 		Object.entries(props.itin).map(([slug, plans]) => {
 			return(
@@ -71,7 +65,6 @@ const Itin = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         itin: state.plan.itin
     }

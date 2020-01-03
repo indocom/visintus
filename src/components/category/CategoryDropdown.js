@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import M from 'materialize-css'
 // import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { addPlan } from '../../store/actions/planActions'
+import { addPlan, removePlan } from '../../store/actions/planActions'
 
 const AreaDropdown = (props) => {
+  const [isAdded, setIsAdded] = useState([])
+  console.log(isAdded);
+  console.log(props);
+  const { plans, itin, slug, addPlan, removePlan } = props
 
-  const handleAdd = plan => {
-    console.log(plan, props.slug);
-    props.addPlan(plan, props.slug);
-    // console.log(this.props);
+  const toggleButtonMessage = (index) => {
+    let newIsAdded = [...isAdded];
+    newIsAdded[index] = !newIsAdded[index]
+    setIsAdded(newIsAdded);
   }
   
   const scrollDown = e => {
@@ -23,10 +27,19 @@ const AreaDropdown = (props) => {
     }); 
   }
 
-  // console.log(props)
-  const { plans } = props
-  const postList = plans !== '' ? (
-    plans.map(plan => {
+
+  useEffect(() => {
+    try {
+      let idsInItin = itin[slug].map(plan => plan._id)
+      let status = plans.map(plan => idsInItin.includes(plan._id))
+      setIsAdded(status)
+    } catch {
+
+    }
+  },[plans.length])
+
+  const postList = plans && plans.length && plans.length > 0 ? (
+    plans.map((plan, index) => {
         return(
           <li key = {plan._id} onClick={scrollDown}>
             <div className="collapsible-header">
@@ -36,7 +49,11 @@ const AreaDropdown = (props) => {
             <div className='collapsible-body'>
               <p>{plan.description}</p>
               {/* <Link to= {'/' + plan._id }><button className="btn btn-small indigo darken-4">Know more</button></Link> */}
-              <button className="btn btn-small indigo darken-4" onClick = { () => handleAdd(plan, props.slug) }>Add to your plan!</button>
+              {
+                isAdded[index] 
+                  ? <button className="btn btn-small" onClick = { () => {toggleButtonMessage(index); removePlan(plan._id, slug) }}>Added succesfully!</button>
+                  : <button className="btn btn-small indigo darken-4" onClick = { () => {toggleButtonMessage(index); addPlan(plan, slug) }}>Add to your plan!</button>
+              }
             </div>
           </li>
         )
@@ -64,13 +81,14 @@ const AreaDropdown = (props) => {
 const mapStateToProps = ({ plan }) => {
   console.log(plan)
   return {
-    plan
+    itin: plan.itin
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addPlan : (plan, slug) => { dispatch(addPlan(plan, slug)) }
+    addPlan : (plan, slug) => { dispatch(addPlan(plan, slug)) },
+    removePlan: (id, slug) => { dispatch(removePlan(id, slug)) }
   }
 }
 
