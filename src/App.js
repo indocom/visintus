@@ -10,7 +10,7 @@ import Signup from './pages/Signup'
 import Itin from './pages/Itin'
 import * as Admin from './pages/Admin'
 import Checkout from './pages/Checkout'
-// import reactAdmin from './pages/reactAdmin'
+import Fourofour from './pages/404'
 
 
 class App extends Component {
@@ -19,7 +19,7 @@ class App extends Component {
       <BrowserRouter>
         <div className="App">
           <Navbar />
-          <div className="main-container">
+          <div className="main-container grey lighten-4">
             <Switch>
               <Route exact path='/' component={Home} />
               <Route path='/category/:area' component={Category} /> 
@@ -30,7 +30,7 @@ class App extends Component {
               <Route exact path='/admin' component={Admin.Dashboard} />  
               <Route exact path='/admin/categories/:slug' component={Admin.Components.CategoryDetails} />
               <Route exact path='/admin/categories' component={Admin.Components.Category} />  
-              {/* <Route path='/testadmin' component={reactAdmin} />   */}
+              <Route component={Fourofour} />  
             </Switch>
           </div>
           <Footer /> 

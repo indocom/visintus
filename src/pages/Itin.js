@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import { connect } from 'react-redux'
 import { removePlan } from '../store/actions/planActions'
+import M from 'materialize-css'
 
 const Itin = (props) => {
 	const handleRemove = (id, slug) => {
@@ -17,6 +18,9 @@ const Itin = (props) => {
 		props.history.push('/checkout')
 	}
 
+	const handleSave = (e) => {
+		M.toast({ html : 'Data saved!', classes: 'teal rounded center top'});
+	}
 	console.log(props.itin)
 	let planList = Object.keys(props.itin).length > 0 ? (
 		Object.entries(props.itin).map(([slug, plans]) => {
@@ -46,7 +50,8 @@ const Itin = (props) => {
 	return (
 		<div className='container'>
 			{ planList }
-			<div className="btn" onClick={handleCheckout}>Checkout</div>
+			<div className="btn" onClick={handleSave}>Save</div>
+			<div className="btn" onClick={handleCheckout}>Save &amp; Checkout</div>
 		</div>
 	)
 }
