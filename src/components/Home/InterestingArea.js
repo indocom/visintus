@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const InterestingArea = (props) => {
   const { categories } = props
-  console.log(categories)
+  // console.log(categories)
   const categoriesList = categories.length > 0 ? (
     categories.map((category, index) => {
       return (

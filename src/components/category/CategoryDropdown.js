@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import M from 'materialize-css'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { addPlan } from '../../store/actions/planActions'
-
 
 const AreaDropdown = (props) => {
 
@@ -26,7 +25,7 @@ const AreaDropdown = (props) => {
 
   // console.log(props)
   const { plans } = props
-  const postList = plans ? (
+  const postList = plans !== '' ? (
     plans.map(plan => {
         return(
           <li key = {plan._id} onClick={scrollDown}>
@@ -36,14 +35,14 @@ const AreaDropdown = (props) => {
             </div>
             <div className='collapsible-body'>
               <p>{plan.description}</p>
-              <Link to= {'/' + plan._id }><button className="btn btn-small indigo darken-4">Know more</button></Link>
+              {/* <Link to= {'/' + plan._id }><button className="btn btn-small indigo darken-4">Know more</button></Link> */}
               <button className="btn btn-small indigo darken-4" onClick = { () => handleAdd(plan, props.slug) }>Add to your plan!</button>
             </div>
           </li>
         )
       })
     ) : (
-        <div className="center">No data yet</div>
+      <div className="center">No data yet</div>
     )
 
   useEffect(() => {

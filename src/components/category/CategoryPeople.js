@@ -14,12 +14,12 @@ const AreaPeople = (props) => {
           <div className="details">
               <h3>{person.name}</h3>
               <p style={{color: 'white'}}>{person.description}</p>
-              <ul>
+              {/* <ul>
                 <li><a href="/"><i className="fab fa-facebook-f" aria-hidden="true"></i></a></li>
                 <li><a href="/"><i className="fab fa-instagram" aria-hidden="true"></i></a></li>
                 <li><a href="/"><i className="fab fa-telegram-plane" aria-hidden="true"></i></a></li>
                 <li><a href="/"><i className="fab fa-linkedin-in" aria-hidden="true"></i></a></li>
-              </ul>
+              </ul> */}
             </div>
           </div>
         </div>

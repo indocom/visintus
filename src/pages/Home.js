@@ -3,25 +3,31 @@ import InterestingArea from '../components/home/InterestingArea.js';
 import Carousel from '../components/Carousel.js';
 import PlanAVisit from '../components/home/PlanAVisit.js';
 import axios from 'axios';
+import Fourofour from './404.js';
 
 
 class Home extends Component {
   state = {
-    categories: []
+    categories: [],
+    isError: false,
   }
   async componentDidMount(){
-    let {status, data} = await axios.get('/categories').catch(err => console.log(err));
-    if(data){
-      if(!data.message) return;
+    try {
+      let res = await axios.get('/categories')
+      let data = res.data
       this.setState({
-        categories: data.message.length > 0 ? data.message : []
+        categories: data.message.length > 0 ? data.message : [],
+        isError: false
       })
-    } else {
-      console.log(`Error ${status} in loading /pages/category`)
+    } catch {
+      this.setState({
+        categories: [],
+        isError: true,
+      })
     }
   }
   render() {
-    return (
+    return !this.state.isError ? (
       <div className="Home">
         <Carousel />
         <div className="container area">
@@ -29,7 +35,7 @@ class Home extends Component {
         </div>
         <PlanAVisit />
       </div>
-    ) 
+    ) : (<Fourofour />)
   }
 }
 

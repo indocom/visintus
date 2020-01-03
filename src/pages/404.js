@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom'
 
 function Fourofour() {
   return (
-    <div className="container">
+    <div className="container center">
       <div style={{minHeight: 50}}></div>
-      <h4>Uh oh.</h4>
-      <p>That page you requested could not be found.</p>
-      <p>Are you looking for your <Link to='/itin'>plan</Link>, instead?</p>
+      <h2>Uh oh.</h2>
+      <h6>It's not your fault! The page you requested might have been removed, had its name changed or temporarily unavailable</h6>
+      <h6>Are you looking for your <Link to='/itin'>plan</Link>, instead?</h6>
+      <div style={{minHeight: 30}}></div>
+      <Link to='/' className="btn">Go to homepage</Link>
     </div>
   )
 }

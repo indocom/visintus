@@ -132,7 +132,7 @@ export default ({reps, slug, setDetails}) => {
           _id: '',
           name: '',
           description: '',
-        })} className="btn btn-small right">Add Plan</button> 
+        })} className="btn btn-small right">Add Representative</button> 
       </h5>
 			{/* Input form to add or update. slug property to determine API endpoint */}
       { isActive && <UpsertRep repData={repData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}
