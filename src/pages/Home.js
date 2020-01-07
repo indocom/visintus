@@ -29,7 +29,7 @@ class Home extends Component {
   render() {
     return !this.state.isError ? (
       <div className="Home">
-        <Carousel />
+        <Carousel banners={[]} />
         <div className="container area">
           <InterestingArea categories={this.state.categories} />
         </div>

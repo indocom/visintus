@@ -6,10 +6,10 @@ const AreaPeople = (props) => {
   const peopleList = reps ? (
     reps.map(person => {
       return(
-      <div className="col s12 m4 l3" key={person._id}>
+      <div className="col s12 m4 l3 z-depth-0 grey lighten-4" key={person._id}>
         <div className="card ayellow team">
           <div className="card-image">
-              <img src={person.photo_url} alt="Representative photo" />
+            <img src={person.photo_url} alt="Representative photo"/>
           </div>
           <div className="details">
               <h3>{person.name}</h3>
