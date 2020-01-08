@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { signInUser } from '../store/actions/authActions'
+import { signInUser, logOutUser } from '../store/actions/authActions'
 
 class Login extends Component {
     state = {
@@ -17,11 +17,12 @@ class Login extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        this.props.signInUser(this.state);
-        console.log(this.props);
+        return this.props.isLoggedIn
+            ? this.props.logOutUser(this.props.token)
+            : this.props.signInUser(this.state);
     }
     render() {
-        const { authError, auth } = this.props
+        const { authError, isLoggedIn, auth } = this.props
         //if (auth.uid) return <Redirect to='/' />
 
         return (
@@ -37,9 +38,11 @@ class Login extends Component {
                         <input type="password" id="password" onChange={this.handleChange}/>
                     </div>
                     <div className="input-field">
-                        <button className="btn z-depth-0">Login</button>
+                        <button className="btn z-depth-0">
+                            {isLoggedIn ? "Logout" : "Login"}
+                        </button>
                         <div className="red-text center">
-                            { authError ? <p> { authError }</p> : null }
+                            { authError ? <p> { authError } </p> : null }
                         </div>
                     </div>
                 </form>
@@ -52,13 +55,16 @@ class Login extends Component {
 const mapStateToProps = (state) => {
     console.log("mapStateToProps", state.auth);
     return {
-        authError : state.auth.authError
+        authError : state.auth.authError,
+        isLoggedIn: state.auth.isLoggedIn,
+        token: state.auth.token
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    signInUser : credentials => { dispatch(signInUser(credentials)) }
+    signInUser : credentials => { dispatch(signInUser(credentials)) },
+    logOutUser : (token) => { dispatch(logOutUser(token)) }
   }
 }
 

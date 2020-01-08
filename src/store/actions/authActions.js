@@ -1,8 +1,9 @@
 import axios from 'axios';
 
-const loginSuccess = () => {
+const loginSuccess = (token) => {
     return {
-        type: "LOGIN_SUCCESS"
+        type: "LOGIN_SUCCESS",
+        payload: token
     }
 }
 
@@ -12,9 +13,21 @@ const loginFailed = () => {
     }
 }
 
+const logOutSuccess = () => {
+    return {
+        type: "LOGOUT_SUCCESS"
+    }
+}
+
+const logOutFailed = () => {
+    return {
+        type: "LOGOUT_ERROR"
+    }
+}
+
 const signUpSuccess = () => {
     return {
-        type: "SIGNUP_SUCCESS"
+        type: "SIGNUP_SUCCESS",
     }
 }
 
@@ -36,11 +49,31 @@ export const signInUser = ({ email, password }) => {
             })
             .then( response => {
                 console.log("signInUser",response);
-                dispatch(loginSuccess());
+                dispatch(loginSuccess(response.data.message.token));
             })
             .catch( error => {
                 console.log("signInUser", error);
                 dispatch(loginFailed());
+            })
+    }
+}
+
+export const logOutUser = (token) => {
+    console.log('logOutUser', token);
+    return (dispatch) => {
+        axios.post('/users/logout', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                }
+            })
+            .then( response => {
+                console.log('logOutUser', response);
+                dispatch(logOutSuccess());
+            })
+            .catch( error => {
+                console.log('logOutUser', error);
+                dispatch(logOutFailed());
             })
     }
 }
