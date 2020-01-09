@@ -60,18 +60,21 @@ export const signInUser = ({ email, password }) => {
 
 export const logOutUser = (token) => {
     console.log('logOutUser', token);
+    const header = JSON.stringify({
+        "Content-Type": "application/json",
+        Authorization: token
+    });
+    console.log(header);
     return (dispatch) => {
-        axios.post('/users/logout', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                }
+        axios.post('/users/logout', {}, {
+                headers: header
             })
             .then( response => {
                 console.log('logOutUser', response);
                 dispatch(logOutSuccess());
             })
             .catch( error => {
+                console.log(token);
                 console.log('logOutUser', error);
                 dispatch(logOutFailed());
             })
