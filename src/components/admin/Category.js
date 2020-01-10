@@ -97,11 +97,11 @@ class UpsertCategory extends Component {
 			category: this.state
 		})
 		console.log(data)
-
 		await axios.post('/categories'+ this.endpoint , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json',				
+				'Content-Type': 'application/json',
+				'Authorization': `${this.props.token}`				
 			},
 			crossdomain: true,
 		}).catch((err) => console.log(err));
@@ -136,6 +136,8 @@ class UpsertCategory extends Component {
 	}
 }
 
+const ConnectUpsertCategoryToRedux = connect(mapStateToProps)(UpsertCategory);
+
 export default (props) => {
 	let [isActive, setIsActive] = useState(false);
 	let [slug, setSlug] = useState(''); //'' -> add category
@@ -149,7 +151,7 @@ export default (props) => {
 			<h4>Category Admin Page</h4>
 
 			{/* Input form to add or update. slug property to determine API endpoint */}
-			{ isActive && <UpsertCategory slug={slug} closeForm={() => setIsActive(!isActive)}/>}
+			{ isActive && <ConnectUpsertCategoryToRedux slug={slug} closeForm={() => setIsActive(!isActive)}/>}
 			{ !isActive && <button onClick={() => handleUpsert('')} className="btn">Add category</button> }
 			<ConnectCategoryToRedux handleUpsert={handleUpsert} baseURL={props.match.path}/>
 		</div>
