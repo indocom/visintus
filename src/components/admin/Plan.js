@@ -1,15 +1,20 @@
 import React, { Component, useEffect, useState } from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
-const PlanDetails = ({plans, handleUpsert, slug, setDetails}) => { 
+const PlanDetails = ({plans, handleUpsert, slug, setDetails, token}) => { 
 	const handleRemove = async (_id) => {
 		const data = JSON.stringify({
 			authToken: 'visintus',
 		})
+
+		console.log(token);
+
 		await axios.delete(`/categories/${slug}/plans/${_id}`, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json',				
+				'Content-Type': 'application/json',
+				'Authorization': `${token}`				
 			},
 			crossdomain: true,
 		})
@@ -18,20 +23,20 @@ const PlanDetails = ({plans, handleUpsert, slug, setDetails}) => {
 	}
 
 	const planList = plans && plans.length && plans.length > 0 ? (
-    plans.map((plan, index) => {
-      return (
-        <li key={index} style={{minHeight: 50}}>
-          <span style={{fontSize : "1.2em"}}>{plan.name}</span>
-					<div className="right">
-						<button data-target="update" className="btn" onClick={() => handleUpsert(plan)}>Update</button>
-						<button className="btn red" onClick={() => handleRemove(plan._id)}>Remove</button>
-					</div>
-          <p>{plan.description}</p>
-        </li>
-      )
-    })
-  ) : (
-    <div className="center">No data yet :(</div>
+    	plans.map((plan, index) => {
+			return (
+				<li key={index} style={{minHeight: 50}}>
+					<span style={{fontSize : "1.2em"}}>{plan.name}</span>
+							<div className="right">
+								<button data-target="update" className="btn" onClick={() => handleUpsert(plan)}>Update</button>
+								<button className="btn red" onClick={() => handleRemove(plan._id)}>Remove</button>
+							</div>
+					<p>{plan.description}</p>
+				</li>
+			)
+    	})
+  	) : (
+    	<div className="center">No data yet :(</div>
 	)
 	
 	return(
@@ -43,19 +48,19 @@ const PlanDetails = ({plans, handleUpsert, slug, setDetails}) => {
 
 class UpsertPlan extends Component {
 	state = {
-    _id: '',
+    	_id: '',
 		name: '',
 		description: '',
-  }
+  	}
   
 
 	title= this.props.planData._id === '' ? 'Add Plan' : 'Update Plan';
-  endpoint= this.props.planData._id === '' ? '' :  `/${this.props.planData._id}`;
+  	endpoint= this.props.planData._id === '' ? '' :  `/${this.props.planData._id}`;
   
-  componentDidMount(){
-    this.setState(this.props.planData);
-    window.scrollTo(0,0);
-  }
+	componentDidMount(){
+		this.setState(this.props.planData);
+		window.scrollTo(0,0);
+	}
 
 	handleChange = e => {
 		this.setState({
@@ -69,18 +74,19 @@ class UpsertPlan extends Component {
 			plan: this.state
 		})
 		console.log(data)
-
+		console.log(this.props.token);
 		await axios.post(`/categories/${this.props.slug}/plans`+ this.endpoint , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json',				
+				'Content-Type': 'application/json',
+				'Authorization': `${this.props.token}`				
 			},
 			crossdomain: true,
 		}).catch((err) => console.log(err));
 	}
 	render() {
-	// const { auth, authError } = this.props
-  // if (auth.uid) return <Redirect to='/admin' />
+		// const { auth, authError } = this.props
+  		// if (auth.uid) return <Redirect to='/admin' />
 		return (
 			<>
 			<form onSubmit = {this.handleSubmit}  style={{padding: 15, backgroundColor: "#eee"}}>
@@ -102,6 +108,19 @@ class UpsertPlan extends Component {
 	}
 }
 
+const mapStateToProps = (state) => {
+	return {
+		token: state.auth.token
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+
+}
+
+const ConnectPlanDetailsToRedux = connect(mapStateToProps)(PlanDetails);
+const ConnectUpsertPlanToRedux = connect(mapStateToProps)(UpsertPlan);
+
 export default ({plans, slug, setDetails}) => {
 	let [isActive, setIsActive] = useState(false);
 	let [planData, setPlanData] = useState({
@@ -116,17 +135,17 @@ export default ({plans, slug, setDetails}) => {
 	}
 	return(
 		<>
-      <h5 id="header">
-        Plan Details 
-        <button onClick={() => handleUpsert({
-          _id: '',
-          name: '',
-          description: '',
-        })} className="btn btn-small right">Add Plan</button> 
-      </h5>
+      	<h5 id="header">
+        	Plan Details 
+        	<button onClick={() => handleUpsert({
+          		_id: '',
+          		name: '',
+          		description: '',
+        	})} className="btn btn-small right">Add Plan</button> 
+      	</h5>
 			{/* Input form to add or update. slug property to determine API endpoint */}
-      { isActive && <UpsertPlan planData={planData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}
-			<PlanDetails plans={plans} slug={slug} handleUpsert={handleUpsert} setDetails={setDetails}/>
+      		{ isActive && <ConnectUpsertPlanToRedux planData={planData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}
+			<ConnectPlanDetailsToRedux plans={plans} slug={slug} handleUpsert={handleUpsert} setDetails={setDetails}/>
 		</>
 	)
 }
