@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
 const Category = (props) => {
 	const [categories, setCategories] = useState([]);
@@ -20,13 +21,14 @@ const Category = (props) => {
 
 	const handleRemove = async (slug) => {
 		const data = JSON.stringify({
-			authToken: 'visintus',
+			"token": props.token,
 		})
 		console.log(data)
 		await axios.delete(`/categories/${slug}`, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json',				
+				'Content-Type': 'application/json',
+				'Authorization': `${props.token}`				
 			},
 			crossdomain: true,
 		})
@@ -58,6 +60,20 @@ const Category = (props) => {
 		</ul>
 	)
 }
+
+const mapStateToProps = (state) => {
+	console.log(state);
+	return {
+		token: state.auth.token
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+
+}
+
+const ConnectCategoryToRedux = connect(mapStateToProps)(Category);
+
 
 class UpsertCategory extends Component {
 	state = {
@@ -135,7 +151,7 @@ export default (props) => {
 			{/* Input form to add or update. slug property to determine API endpoint */}
 			{ isActive && <UpsertCategory slug={slug} closeForm={() => setIsActive(!isActive)}/>}
 			{ !isActive && <button onClick={() => handleUpsert('')} className="btn">Add category</button> }
-			<Category handleUpsert={handleUpsert} baseURL={props.match.path}/>
+			<ConnectCategoryToRedux handleUpsert={handleUpsert} baseURL={props.match.path}/>
 		</div>
 	)
 }
