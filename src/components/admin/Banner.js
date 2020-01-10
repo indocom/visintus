@@ -1,5 +1,6 @@
 import React, { Component, useEffect, useState } from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux' 
 
 const BannerDetails = ({banners, slug, setDetails}) => {
 	const [isActive, setIsActive] = useState(false)
@@ -25,14 +26,14 @@ const BannerDetails = ({banners, slug, setDetails}) => {
 	return(
 		<>
       <h5>Banner Details <div className="btn right btn-small" onClick={handleAdd}>Add banner</div></h5>
-			{ isActive && <UpsertBanner slug={slug}/>}
+			{ isActive && <ConnectUpsertBannerToRedux slug={slug}/>}
 			<ul>
 				{ banners && banners.length && banners.map((detail, index) => (
-          <li key={index} style={{minHeight: 50}}>
+          			<li key={index} style={{minHeight: 50}}>
 						{detail.image_url}
 						<div className="btn btn-small right red" onClick={() => handleRemove(detail._id, slug)}>Remove</div>
 					</li>
-        ))}
+        		))}
 			</ul>
 		</>
 	)
@@ -55,11 +56,13 @@ class UpsertBanner extends Component {
 			banner: this.state
 		})
 		console.log(data)
+		console.log(this.props.token);
 
 		await axios.post(`/categories/${this.props.slug}/banners` , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json',				
+				'Content-Type': 'application/json',	
+				'Authorization': `${this.props.token}`			
 			},
 			crossdomain: true,
 		}).catch((err) => console.log(err));
@@ -79,5 +82,17 @@ class UpsertBanner extends Component {
 		)
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		token: state.auth.token
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+
+}
+
+const ConnectUpsertBannerToRedux = connect(mapStateToProps)(UpsertBanner);
 
 export default BannerDetails
