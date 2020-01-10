@@ -83,12 +83,13 @@ Real plan info of multiple categories:
 Body:
 ```
 {
-  "categories": [ {
-    "slug"    : ...,
-    "planIds" : [ ... ] 
-  } ]
+  "categories": {
+    $slug: [ plan ids ]
+  }
 }
 ```
+
+`$slug` represents category slug that is used as the key for a particular array of plan ids. You may pass arbitrary number of slugs and plan ids for the API query.
 
 #### Response 
 
@@ -96,14 +97,16 @@ Body:
 ```
 {
   "message": {
-    "categories" : [ {
-      "name"  : ...,
-      "plans" : [ {
-        "_id"         : ...,
-        "name"        : ...,
-        "description" : ...,
-      } ]
-    } ]
+    "categories" : {
+      $slug: {
+        "name"  : ...,
+        "plans" : [ {
+          "_id"         : ...,
+          "name"        : ...,
+          "description" : ...,
+        } ]
+      }
+    }
   }
 }
 ```
@@ -186,6 +189,8 @@ Update category
 
 ### POST `/categories/:slug/banners`
 
+> :warning: **Requires authorization**
+
 Add a banner for a category
 
 #### Request
@@ -206,6 +211,8 @@ Add a banner for a category
 
 ### DELETE `/categories/:slug/banners/:bannerId`
 
+> :warning: **Requires authorization**
+
 Remove a banner for a category
 
 #### Request
@@ -223,6 +230,8 @@ Remove a banner for a category
 ## Plans for Categories
 
 ### POST `/categories/:slug/plans`
+
+> :warning: **Requires authorization**
 
 Add a plan for a category
 
@@ -245,6 +254,8 @@ Add a plan for a category
 
 ### POST `/categories/:slug/plans/:planId`
 
+> :warning: **Requires authorization**
+
 Update a plan for a category
 
 #### Request
@@ -266,6 +277,8 @@ Update a plan for a category
 
 ### DELETE `/categories/:slug/plans/:planId`
 
+> :warning: **Requires authorization**
+
 Remove a plan for a category
 
 #### Request
@@ -283,6 +296,8 @@ Remove a plan for a category
 ## Representatives for Categories
 
 ### POST `/categories/:slug/representatives`
+
+> :warning: **Requires authorization**
 
 Add a representative for a category
 
@@ -306,6 +321,8 @@ Add a representative for a category
 
 ### POST `/categories/:slug/representatives/:representativeId`
 
+> :warning: **Requires authorization**
+
 Update a representative for a category
 
 #### Request
@@ -327,6 +344,8 @@ Update a representative for a category
 ```
 
 ### DELETE `/categories/:slug/representatives/:representativeId`
+
+> :warning: **Requires authorization**
 
 Remove a representative for a category
 

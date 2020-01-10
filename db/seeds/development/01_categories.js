@@ -22,7 +22,8 @@ for (var i = 0; i < 5; ++i) {
 
     representatives.push({
       name: faker.name.firstName(),
-      description: faker.lorem.paragraphs()
+      description: faker.lorem.sentence(),
+      photo_url: faker.image.imageUrl()
     });
   }
 

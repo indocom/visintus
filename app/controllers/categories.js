@@ -1,5 +1,7 @@
-const Category = require("../models/category");
+const mongoose = require('mongoose');
 const slugify = require('slugify');
+
+const Category = require("../models/category");
 
 const {
   handleError,
@@ -78,12 +80,15 @@ exports.getCategoryInfo = async (req, res) => {
 }
 
 exports.getPlansInfo = async (req, res) => {
-  var queries = req.body.categories.map(category => {
-    return {
-      slug        : category.slug,
-      'plans._id' : { $in : category.planIds.map(id => mongoose.Types.ObjectId(id)) }
-    }
-  });
+  const categories = req.body.categories;
+  const queries = [];
+
+  for (slug in categories) { 
+    queries.push({
+      slug        : slug,
+      'plans._id' : { $in : categories[slug].map(id => mongoose.Types.ObjectId(id)) }
+    });
+  };
 
   Category.aggregate([
       { $project: { name: 1, slug: 1, plans: 1 } },
@@ -97,6 +102,16 @@ exports.getPlansInfo = async (req, res) => {
       } },
       { $project: { _id: 0 } }
     ])
-    .then(result => handleSuccess(res, buildSuccObject(result)))
+    .then(result => {
+      var resultObj = {};
+      result.forEach((element) => {
+        resultObj[element.slug] = {
+          name: element.name,
+          plans: element.plans
+        }
+      });
+
+      handleSuccess(res, buildSuccObject(resultObj));
+    })
     .catch(error => handleError(res, buildErrObject(422, error.message)));
 }
