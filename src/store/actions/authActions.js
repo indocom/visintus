@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getParsedCommandLineOfConfigFile } from 'typescript';
 
 const loginSuccess = (token) => {
     return {
@@ -40,11 +41,16 @@ const signUpFailed = () => {
 export const signInUser = ({ email, password }) => {
     console.log("signInUser", email);
     console.log("signInUser", password);
+    const data = JSON.stringify({
+        user: {
+            "email": email,
+            "password": password
+        }
+    })
     return (dispatch) => {
-        axios.post('users/login',{
-                "user": {
-                    "email": email,
-                    "password": password
+        axios.post('users/login', data, {
+                headers: {
+                    "Content-Type": "application/json"
                 }
             })
             .then( response => {
@@ -60,14 +66,16 @@ export const signInUser = ({ email, password }) => {
 
 export const logOutUser = (token) => {
     console.log('logOutUser', token);
-    const header = JSON.stringify({
-        "Content-Type": "application/json",
-        Authorization: token
-    });
-    console.log(header);
+    const data = JSON.stringify({
+        "token": token
+    })
     return (dispatch) => {
-        axios.post('/users/logout', {}, {
-                headers: header
+        axios.post('/users/logout', data, {
+                headers: {
+                    "Access-Control-Allow-Origin": '*',
+                    "Content-Type": "application/json",
+                    "Authorization": `${token}`
+                }
             })
             .then( response => {
                 console.log('logOutUser', response);
