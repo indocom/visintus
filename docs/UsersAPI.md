@@ -67,12 +67,15 @@ Body:
 ### POST `/logout`
 
 Logout.
+> :warning: **Requires authorization**
 
 #### Request:
 
 Body: 
 ```
-{}
+{
+  "token": ...
+}
 ```
 
 #### Response 
