@@ -2,12 +2,13 @@ import React, { Component, useEffect, useState } from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
 
-const RepDetails = ({reps, handleUpsert, slug, setDetails, token}) => { 
+const RepDetails = ({reps, handleUpsert, slug, setDetails}) => { 
   console.log(reps)
 	const handleRemove = async (_id) => {
 		const data = JSON.stringify({
 			authToken: 'visintus',
 		})
+		const token = localStorage.getItem('token');
 		await axios.delete(`/categories/${slug}/representatives/${_id}`, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
@@ -74,12 +75,13 @@ class UpsertRep extends Component {
 			representative: this.state
 		})
 		console.log(data)
-		console.log(this.props.token);
+		const token = localStorage.getItem('token');
+		console.log(token);
 		await axios.post(`/categories/${this.props.slug}/representatives`+ this.endpoint , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				'Content-Type': 'application/json',
-				'Authorization': `${this.props.token}`				
+				'Authorization': `${token}`				
 			},
 			crossdomain: true,
 		}).catch((err) => console.log(err));
@@ -114,18 +116,18 @@ class UpsertRep extends Component {
 	}
 }
 
-const mapStateToProps = (state) => {
-	return {
-		token: state.auth.token
-	}
-}
+// const mapStateToProps = (state) => {
+// 	return {
+// 		token: state.auth.token
+// 	}
+// }
 
-const mapDispatchToProps = (dispatch) => {
+// const mapDispatchToProps = (dispatch) => {
 
-}
+// }
 
-const ConnectRepDetailsToRedux = connect(mapStateToProps)(RepDetails);
-const ConnectUpsertRepToRedux = connect(mapStateToProps)(UpsertRep);
+// const ConnectRepDetailsToRedux = connect(mapStateToProps)(RepDetails);
+// const ConnectUpsertRepToRedux = connect(mapStateToProps)(UpsertRep);
 
 export default ({reps, slug, setDetails}) => {
 	let [isActive, setIsActive] = useState(false);
@@ -151,8 +153,8 @@ export default ({reps, slug, setDetails}) => {
         	})} className="btn btn-small right">Add Plan</button> 
       	</h5>
 			{/* Input form to add or update. slug property to determine API endpoint */}
-      		{ isActive && <ConnectUpsertRepToRedux repData={repData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}
-			<ConnectRepDetailsToRedux reps={reps} slug={slug} handleUpsert={handleUpsert} setDetails={setDetails}/>
+      		{ isActive && <UpsertRep repData={repData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}
+			<RepDetails reps={reps} slug={slug} handleUpsert={handleUpsert} setDetails={setDetails}/>
 		</>
 	)
 }

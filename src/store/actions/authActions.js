@@ -55,6 +55,10 @@ export const signInUser = ({ email, password }) => {
             })
             .then( response => {
                 console.log("signInUser",response);
+                const {token} = response.data.message;
+                console.log(token);
+                localStorage.setItem('token', token);
+                localStorage.setItem('isLoggedIn', true);
                 dispatch(loginSuccess(response.data.message.token));
             })
             .catch( error => {

@@ -9,6 +9,15 @@ class Login extends Component {
         password: ''
     }
 
+    // componentDidMount() {
+    //     const isLoggedIn = localStorage.getItem('isLoggedIn');
+    //     console.log(isLoggedIn);
+    //     this.setState({
+    //         isLoggedIn: isLoggedIn
+    //     });
+    //     console.log(this.state);
+    // }
+
     handleChange = e => {
         this.setState({
             [e.target.id] : e.target.value
@@ -17,9 +26,15 @@ class Login extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        return this.props.isLoggedIn
-            ? this.props.logOutUser(this.props.token)
-            : this.props.signInUser(this.state);
+        if(this.props.isLoggedIn){
+            const token = localStorage.getItem('token');
+            console.log('handleSubmit', token);
+            this.props.logOutUser(token);
+            localStorage.setItem('token', null);
+            localStorage.setItem('isLoggedIn', false);
+        } else {
+            this.props.signInUser(this.state);
+        }
     }
     render() {
         const { authError, isLoggedIn, auth } = this.props
@@ -39,7 +54,7 @@ class Login extends Component {
                     </div>
                     <div className="input-field">
                         <button className="btn z-depth-0">
-                            {isLoggedIn ? "Logout" : "Login"}
+                            {(isLoggedIn) ? "Logout" : "Login"}
                         </button>
                         <div className="red-text center">
                             { authError ? <p> { authError } </p> : null }
@@ -56,8 +71,7 @@ const mapStateToProps = (state) => {
     console.log("mapStateToProps", state.auth);
     return {
         authError : state.auth.authError,
-        isLoggedIn: state.auth.isLoggedIn,
-        token: state.auth.token
+        isLoggedIn: state.auth.isLoggedIn
     }
 }
 

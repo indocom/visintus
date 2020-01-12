@@ -23,12 +23,14 @@ const Category = (props) => {
 		const data = JSON.stringify({
 			"token": props.token,
 		})
+
+		const token = localStorage.getItem('token');
 		console.log(data)
 		await axios.delete(`/categories/${slug}`, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				'Content-Type': 'application/json',
-				'Authorization': `${props.token}`				
+				'Authorization': `${token}`				
 			},
 			crossdomain: true,
 		})
@@ -61,18 +63,6 @@ const Category = (props) => {
 	)
 }
 
-const mapStateToProps = (state) => {
-	console.log(state);
-	return {
-		token: state.auth.token
-	}
-}
-
-const mapDispatchToProps = (dispatch) => {
-
-}
-
-const ConnectCategoryToRedux = connect(mapStateToProps)(Category);
 
 
 class UpsertCategory extends Component {
@@ -96,12 +86,13 @@ class UpsertCategory extends Component {
 			authToken: 'visintus',
 			category: this.state
 		})
+		const token = localStorage.getItem('token');
 		console.log(data)
 		await axios.post('/categories'+ this.endpoint , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				'Content-Type': 'application/json',
-				'Authorization': `${this.props.token}`				
+				'Authorization': `${token}`				
 			},
 			crossdomain: true,
 		}).catch((err) => console.log(err));
@@ -136,8 +127,6 @@ class UpsertCategory extends Component {
 	}
 }
 
-const ConnectUpsertCategoryToRedux = connect(mapStateToProps)(UpsertCategory);
-
 export default (props) => {
 	let [isActive, setIsActive] = useState(false);
 	let [slug, setSlug] = useState(''); //'' -> add category
@@ -151,9 +140,9 @@ export default (props) => {
 			<h4>Category Admin Page</h4>
 
 			{/* Input form to add or update. slug property to determine API endpoint */}
-			{ isActive && <ConnectUpsertCategoryToRedux slug={slug} closeForm={() => setIsActive(!isActive)}/>}
+			{ isActive && <UpsertCategory slug={slug} closeForm={() => setIsActive(!isActive)}/>}
 			{ !isActive && <button onClick={() => handleUpsert('')} className="btn">Add category</button> }
-			<ConnectCategoryToRedux handleUpsert={handleUpsert} baseURL={props.match.path}/>
+			<Category handleUpsert={handleUpsert} baseURL={props.match.path}/>
 		</div>
 	)
 }

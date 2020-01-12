@@ -2,12 +2,13 @@ import React, { Component, useEffect, useState } from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
 
-const PlanDetails = ({plans, handleUpsert, slug, setDetails, token}) => { 
+const PlanDetails = ({plans, handleUpsert, slug, setDetails}) => { 
 	const handleRemove = async (_id) => {
 		const data = JSON.stringify({
 			authToken: 'visintus',
 		})
 
+		const token = localStorage.getItem('token');
 		console.log(token);
 
 		await axios.delete(`/categories/${slug}/plans/${_id}`, {
@@ -74,12 +75,13 @@ class UpsertPlan extends Component {
 			plan: this.state
 		})
 		console.log(data)
-		console.log(this.props.token);
+		const token = localStorage.getItem('token');
+		console.log(token);
 		await axios.post(`/categories/${this.props.slug}/plans`+ this.endpoint , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				'Content-Type': 'application/json',
-				'Authorization': `${this.props.token}`				
+				'Authorization': `${token}`				
 			},
 			crossdomain: true,
 		}).catch((err) => console.log(err));
@@ -108,18 +110,6 @@ class UpsertPlan extends Component {
 	}
 }
 
-const mapStateToProps = (state) => {
-	return {
-		token: state.auth.token
-	}
-}
-
-const mapDispatchToProps = (dispatch) => {
-
-}
-
-const ConnectPlanDetailsToRedux = connect(mapStateToProps)(PlanDetails);
-const ConnectUpsertPlanToRedux = connect(mapStateToProps)(UpsertPlan);
 
 export default ({plans, slug, setDetails}) => {
 	let [isActive, setIsActive] = useState(false);
@@ -144,8 +134,8 @@ export default ({plans, slug, setDetails}) => {
         	})} className="btn btn-small right">Add Plan</button> 
       	</h5>
 			{/* Input form to add or update. slug property to determine API endpoint */}
-      		{ isActive && <ConnectUpsertPlanToRedux planData={planData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}
-			<ConnectPlanDetailsToRedux plans={plans} slug={slug} handleUpsert={handleUpsert} setDetails={setDetails}/>
+      		{ isActive && <UpsertPlan planData={planData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}
+			<PlanDetails plans={plans} slug={slug} handleUpsert={handleUpsert} setDetails={setDetails}/>
 		</>
 	)
 }

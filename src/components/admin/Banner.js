@@ -26,7 +26,7 @@ const BannerDetails = ({banners, slug, setDetails}) => {
 	return(
 		<>
       <h5>Banner Details <div className="btn right btn-small" onClick={handleAdd}>Add banner</div></h5>
-			{ isActive && <ConnectUpsertBannerToRedux slug={slug}/>}
+			{ isActive && <UpsertBanner slug={slug}/>}
 			<ul>
 				{ banners && banners.length && banners.map((detail, index) => (
           			<li key={index} style={{minHeight: 50}}>
@@ -55,14 +55,16 @@ class UpsertBanner extends Component {
 			authToken: 'visintus',
 			banner: this.state
 		})
-		console.log(data)
-		console.log(this.props.token);
+
+		const token = localStorage.getItem('token');
+
+		console.log(data);
 
 		await axios.post(`/categories/${this.props.slug}/banners` , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				'Content-Type': 'application/json',	
-				'Authorization': `${this.props.token}`			
+				'Authorization': `${token}`			
 			},
 			crossdomain: true,
 		}).catch((err) => console.log(err));
@@ -83,16 +85,5 @@ class UpsertBanner extends Component {
 	}
 }
 
-const mapStateToProps = (state) => {
-	return {
-		token: state.auth.token
-	}
-}
-
-const mapDispatchToProps = (dispatch) => {
-
-}
-
-const ConnectUpsertBannerToRedux = connect(mapStateToProps)(UpsertBanner);
 
 export default BannerDetails
