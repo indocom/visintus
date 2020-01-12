@@ -134,15 +134,24 @@ export default (props) => {
 		setIsActive(!isActive);
 		setSlug(slug);
 	}
-
-	return(
-		<div className="container">
-			<h4>Category Admin Page</h4>
-
-			{/* Input form to add or update. slug property to determine API endpoint */}
-			{ isActive && <UpsertCategory slug={slug} closeForm={() => setIsActive(!isActive)}/>}
-			{ !isActive && <button onClick={() => handleUpsert('')} className="btn">Add category</button> }
-			<Category handleUpsert={handleUpsert} baseURL={props.match.path}/>
-		</div>
-	)
+	const token = localStorage.getItem('token');
+	console.log(token);
+	if(token !== "null" && token !== null) {
+		return(
+			<div className="container">
+				<h4>Category Admin Page</h4>
+	
+				{/* Input form to add or update. slug property to determine API endpoint */}
+				{ isActive && <UpsertCategory slug={slug} closeForm={() => setIsActive(!isActive)}/>}
+				{ !isActive && <button onClick={() => handleUpsert('')} className="btn">Add category</button> }
+				<Category handleUpsert={handleUpsert} baseURL={props.match.path}/>
+			</div>
+		)
+	} else {
+		return (
+			<div>
+				<h1>You Are Not Authorized!</h1>
+			</div>
+		)
+	} 
 }

@@ -19,7 +19,6 @@ const Navbar = (props) => {
       <div className="container">
         <Link to='/' className="brand-logo">Visit NUS by PINUS</Link>
         <ul className = 'right'>
-          <li><NavLink to='/admin/categories'>Admin</NavLink></li>
           <li><Link to={pathname} data-target='categoriesDropdown' className='dropdown-trigger'>Areas</Link></li>
           <li><NavLink to='/login'>Login</NavLink></li>
           <li><NavLink to='/itin'>Itin</NavLink></li>
