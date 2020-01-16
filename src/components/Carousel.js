@@ -1,183 +1,57 @@
 import React, { Component } from 'react';
-import Image1 from "../assets/background1.jpg";
-import Image2 from '../assets/background2.jpg';
-import Image3 from '../assets/background3.jpg';
+import Loading from './Loading'
 import '../css/Carousel.css';
+import carouselUtils from './carouselUtils';
 
 
 class Carousel extends Component {
-
     componentDidMount() {
-        const track = document.querySelector('.carousel__track');
-        const slides = Array.from(track.children);
-        const nextButton = document.querySelector('.carousel__button--right');
-        const prevButton = document.querySelector('.carousel__button--left');
-        const dotsNav = document.querySelector('.carousel__nav');
-        const dots = Array.from(dotsNav.children);
-        const beginningSlide = slides[0];
-        const lastSlide = slides[slides.length-1];
-        const beginningDot = dots[0];
-        const lastDot = dots[dots.length-1];
+			if(this.props.banners && this.props.banners.length > 0){
+				carouselUtils();
+			}
+		}
+		
+		componentDidUpdate(prevProps) {
+			if(prevProps.banners.length !== this.props.banners.length){
+				carouselUtils();
+			}
+		}
 
-        const slideSize = slides[0].getBoundingClientRect();
-        const slideWidth = slideSize.width;
-        //arrange the slides next to each other
-        const setSlidePosition = (slide,index) => {
-            slide.style.left = slideWidth * index + 'px';
-        };
-        slides.forEach(setSlidePosition);
+	render() {
+		const { banners } = this.props 
+		return banners && banners.length > 0 ? (
+			<div className="carousel">
+				<button className="carousel__button carousel__button--left">
+						<i className="fas fa-chevron-left" style={{fontSize : '2rem'}}></i>
+				</button>
 
-        const moveToSlide = (track, currentSlide, targetSlide) => {
-            track.style.transform = 'translateX(-' + targetSlide.style.left + ')';
-            currentSlide.classList.remove('current-slide');
-            targetSlide.classList.add('current-slide');
-        };
+				<div className="carousel__track-container">
+					<ul className="carousel__track">
+						{
+							banners.map((banner, index) => (
+								<li className="carousel__slide current-slide" key={index}>
+									<img className="carousel__image" src={banner.image_url} alt={`banner${index + 1}`}/>
+								</li>
+							))
+						}
+					</ul>
+					</div>
 
-        const updateDots = (currentDot, targetDot) => {
-            currentDot.classList.remove('current-slide');
-            targetDot.classList.add('current-slide');
-        }
+					<button className="carousel__button carousel__button--right">
+						<i className="fas fa-chevron-right" style={{fontSize : '2rem'}}></i>
+					</button>
 
-        const hideShowArrows = (slides, prevButton, nextButton, targetIndex) => {
-            if(targetIndex === 0) {
-                prevButton.classList.add('is-hidden');
-                nextButton.classList.remove('is-hidden');
-            } else if (targetIndex === slides.length-1) {
-                prevButton.classList.remove('is-hidden');
-                nextButton.classList.add('is-hidden');
-            } else {
-                prevButton.classList.remove('is-hidden');
-                nextButton.classList.remove('is-hidden');
-            }
-        }
-        //when click right, move slides to the right
-        nextButton.addEventListener('click', e =>{
-            const currentSlide = track.querySelector('.current-slide');
-            const nextSlide = currentSlide.nextElementSibling;
-            const currentDot = dotsNav.querySelector('.current-slide');
-            const nextDot = currentDot.nextElementSibling;
-            const currentIndex = slides.findIndex(slide => slide === currentSlide);
-
-            if(currentIndex !== slides.length - 1) {
-                //move to next slide
-                moveToSlide(track, currentSlide, nextSlide);
-                //move dot
-                updateDots(currentDot, nextDot);
-            } else {
-                //move to beginning slide
-                moveToSlide(track, currentSlide, beginningSlide);
-                //move dot
-                updateDots(currentDot, beginningDot);
-            }
-            //restart automatic movement
-            clearInterval(timer);
-            setTimer(3000);
-        });
-
-        //when clickleft, move slides to the left
-        prevButton.addEventListener('click', e =>{
-            const currentSlide = track.querySelector('.current-slide');
-            const prevSlide = currentSlide.previousElementSibling;
-            const currentDot = dotsNav.querySelector('.current-slide');
-            const prevDot = currentDot.previousElementSibling;
-            const currentIndex = slides.findIndex(slide => slide === currentSlide);
-
-            if(currentIndex !== 0) {
-                //move to previous slide
-                moveToSlide(track, currentSlide, prevSlide);
-                //move dot
-                updateDots(currentDot, prevDot);
-            } else {
-                //move to last slide
-                moveToSlide(track, currentSlide, lastSlide);
-                //move dot
-                updateDots(currentDot, lastDot);
-            }
-            clearInterval(timer);
-            setTimer(3000);
-        });
-        
-        //when click small navigator circle, move to that slide
-        dotsNav.addEventListener('click', e => {
-            //what was clicked?
-            const targetDot = e.target.closest('button');
-
-            const currentSlide = track.querySelector('.current-slide');
-            const currentDot = dotsNav.querySelector('.current-slide');
-            const targetIndex = dots.findIndex(dot => dot === targetDot);
-            const targetSlide = slides[targetIndex];
-            
-            if(targetDot !== null) {
-                //move to target slide
-                moveToSlide(track, currentSlide, targetSlide);
-                //move dot
-                updateDots(currentDot, targetDot);
-            }
-            clearInterval(timer);
-            setTimer(3000);
-        })
-
-        //make slide automatic
-        function moveToNextSlide() {
-            const currentSlide = track.querySelector('.current-slide');
-            const nextSlide = currentSlide.nextElementSibling;
-            const currentDot = dotsNav.querySelector('.current-slide');
-            const nextDot = currentDot.nextElementSibling;
-            const currentIndex = slides.findIndex(slide => slide === currentSlide);
-            if(currentIndex !== slides.length - 1) {
-                //move to next slide
-                moveToSlide(track, currentSlide, nextSlide);
-                //move dot
-                updateDots(currentDot, nextDot);
-            } else {
-                //move to beginning slide
-                moveToSlide(track, currentSlide, beginningSlide);
-                //move dot
-                updateDots(currentDot, beginningDot);
-            }
-        }
-        let timer = null
-        const setTimer = n => {
-            timer = setInterval(moveToNextSlide,n);
-        }
-        //initialize automatic movement
-        setTimer(3000);
-    }
-
-    render() {
-        return (
-            <div className="carousel">
-
-                <button className="carousel__button carousel__button--left">
-                    <i className="fas fa-chevron-left" style={{fontSize : '2rem'}}></i>
-                </button>
-
-                <div className="carousel__track-container">
-                    <ul className="carousel__track">
-                        <li className="carousel__slide current-slide">
-                            <img className="carousel__image" src={Image1} alt=""/>
-                        </li>
-                        <li className="carousel__slide">
-                            <img className="carousel__image" src={Image2} alt=""/>
-                        </li>
-                        <li className="carousel__slide">
-                            <img className="carousel__image" src={Image3} alt=""/>
-                        </li>
-                    </ul>
-                </div>
-
-                <button className="carousel__button carousel__button--right">
-                    <i className="fas fa-chevron-right" style={{fontSize : '2rem'}}></i>
-                </button>
-
-                <div className="carousel__nav">
-                    <button className="carousel__indicator current-slide"></button>
-                    <button className="carousel__indicator"></button>
-                    <button className="carousel__indicator"></button>
-                </div>
-            </div>
-        )
-    }
+					<div className="carousel__nav">
+						<button className="carousel__indicator current-slide"></button>
+						{
+							banners.slice(1).map((banner, index) => (
+								<button className="carousel__indicator" key={index}></button>
+							))
+						}
+					</div>
+			</div>
+		) : (<div className="carousel"></div>)
+	}
 }
 
 export default Carousel;

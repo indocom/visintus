@@ -7,14 +7,15 @@ body {
     -moz-osx-font-smoothing: grayscale;
   }
   
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-      monospace;
-  }
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
 
 .App {
   position: relative;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-container{
@@ -22,12 +23,11 @@ body {
   overflow: hidden;
   display: block;
   position: relative;
-  padding-top: 20px;
-  padding-bottom: 230px; /* height of your footer */
+  flex: 1;
 }
 
-.page-footer{
+/* .page-footer{
   position: absolute;
   bottom: 0;
   width: 100%;
-}
+} */

@@ -1,68 +1,35 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with React and Redux.
 
-## Available Scripts
+This project is still in development.
 
-In the project directory, you can run:
+### Running it locally
+You can run the project locally by:
 
-### `npm start`
+#### To run the front-end:
+1. Go to this repository (https://github.com/indocom/visintus-client) and clone the repo.
+2. Navigate to the folder where you clone the front-end.
+3. run ```npm start``` on this folder
+4. Visit https://localhost:3001 to view the web.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### Setting up the back-end (if it's your first time)
+1. Go to https://github.com/indocom/visintus-backend and clone the repository
+2. Install mongoDB and run ```sudo service mongodb start``` and wait until [OK].
+3. Create "visintus_development" database
+4. Create a user for the db
+5. Follow the instructions for running the backend (see below)
+6. When you're done, go to your favorite code editor and create a .env file. To do so, copy from the .env.example file and specify the DB_URL, JWT_SECRET and JWT_EXPIRATION_IN_MINUTES
+7. If you would like to disable authentication, go to config/routes/ and for each route, comment the following 2 lines: 
+```
+ usersController.requireAuth,
+ usersController.roleAuthorization(['admin'])
+```
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+#### Running your back-end
+1. Run ```sudo service mongodb start``` and wait until [OK]. If so, your database is running.
+2. Navigate to the folder you clone the back-end. 
+3. If it's not your first time, go straight to step 4. Otherwise, run ```npm run dev:db:seed``` to seed the database. When you get [OK], just ^C to stop server.
+4. Run ```npm run dev``` on the back-end folder and make sure you get db connection [OK]
+5. To test if all you've done correctly, visit https://localhost:3000 and you should see "Welcome to Visintus API"
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### Admin routes
+To visit admin page, you can go directly to https://localhost:3001/admin from your browser's address bar.

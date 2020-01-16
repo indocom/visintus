@@ -1,8 +1,7 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useState } from 'react'
 import axios from 'axios'
 
 const RepDetails = ({reps, handleUpsert, slug, setDetails}) => { 
-  console.log(reps)
 	const handleRemove = async (_id) => {
 		const data = JSON.stringify({
 			authToken: 'visintus',
@@ -132,7 +131,7 @@ export default ({reps, slug, setDetails}) => {
           _id: '',
           name: '',
           description: '',
-        })} className="btn btn-small right">Add Plan</button> 
+        })} className="btn btn-small right">Add Representative</button> 
       </h5>
 			{/* Input form to add or update. slug property to determine API endpoint */}
       { isActive && <UpsertRep repData={repData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}

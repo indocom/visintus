@@ -27,12 +27,14 @@ export default (props) => {
 		<div className="container">
 			<h4>Category Details Page <div className="btn right" onClick={() => {props.history.push('/admin/categories')} }>Back to all categories</div></h4>
 			<div className="row">
-				<div className="col s2" style={{borderRight : "1px solid black"}}>
-					<p className='btn white black-text z-depth-0' style={{display: "block"}} onClick={() => setDetailType('banners')}>Banners</p>
-					<p className='btn white black-text z-depth-0' style={{display: "block"}} onClick={() => setDetailType('plans')}>plans</p>
-					<p className='btn white black-text z-depth-0' style={{display: "block"}} onClick={() => setDetailType('reps')}>reps</p>
+				<div className="col s2">
+					<p className='btn-large white black-text' style={
+						detailType === 'banners' ? {display: "block"} : { display: "block", boxShadow: "none"}
+						} onClick={() => setDetailType('banners')}>Banners</p>
+					<p className='btn-large white black-text' style={detailType === 'plans' ? {display: "block"} : { display: "block", boxShadow: "none"}} onClick={() => setDetailType('plans')}>plans</p>
+					<p className='btn-large white black-text' style={detailType === 'reps' ? {display: "block"} : { display: "block", boxShadow: "none"}} onClick={() => setDetailType('reps')}>reps</p>
 				</div>
-				<div className="col s9 offset-s1">
+				<div className="col s9 offset-s1 white z-depth-1">
 					{ (() => {
 					switch (detailType) {
 						case 'banners':

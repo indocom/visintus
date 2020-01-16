@@ -46,7 +46,6 @@ const initState = {
 }
 
 const planReducer = (state = initState, action) => {
-  console.log(state)
   if(action.type === 'ADD_PLAN'){
     const sameSlug = state.itin[action.slug];
     if(typeof sameSlug !== 'undefined'){
@@ -87,6 +86,16 @@ const planReducer = (state = initState, action) => {
         [action.slug]: newPlan
       }
     }
+    localStorage.setItem('plan-info', JSON.stringify(newPlanInfo));
+    return newPlanInfo
+  } else if (action.type === 'REMOVE_CATEGORY') {
+    let newPlanInfo = {
+      ...state,
+      itin: {
+        ...state.itin
+      }
+    }
+    delete newPlanInfo.itin[action.slug]
     localStorage.setItem('plan-info', JSON.stringify(newPlanInfo));
     return newPlanInfo
   } else {
