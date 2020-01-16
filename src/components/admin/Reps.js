@@ -1,15 +1,18 @@
 import React, { Component, useState } from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
 const RepDetails = ({reps, handleUpsert, slug, setDetails}) => { 
 	const handleRemove = async (_id) => {
 		const data = JSON.stringify({
 			authToken: 'visintus',
 		})
+		const token = localStorage.getItem('token');
 		await axios.delete(`/categories/${slug}/representatives/${_id}`, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json',				
+				'Content-Type': 'application/json',
+				'Authorization': `${token}`				
 			},
 			crossdomain: true,
 		})
@@ -18,21 +21,21 @@ const RepDetails = ({reps, handleUpsert, slug, setDetails}) => {
 	}
 
 	const repList = reps && reps.length && reps.length > 0 ? (
-    reps.map((rep, index) => {
-      return (
-        <li key={index} style={{minHeight: 50}}>
-          <span style={{fontSize : "1.2em"}}>{rep.name}</span>
-					<div className="right">
-						<button data-target="update" className="btn" onClick={() => handleUpsert(rep)}>Update</button>
-						<button className="btn red" onClick={() => handleRemove(rep._id)}>Remove</button>
-					</div>
-          <p>{rep.description}</p>
-          <p>{rep.photo_url}</p>
-        </li>
-      )
-    })
-  ) : (
-    <div className="center">No data yet :(</div>
+		reps.map((rep, index) => {
+			return (
+				<li key={index} style={{minHeight: 50}}>
+				<span style={{fontSize : "1.2em"}}>{rep.name}</span>
+							<div className="right">
+								<button data-target="update" className="btn" onClick={() => handleUpsert(rep)}>Update</button>
+								<button className="btn red" onClick={() => handleRemove(rep._id)}>Remove</button>
+							</div>
+				<p>{rep.description}</p>
+				<p>{rep.photo_url}</p>
+				</li>
+			)
+		})
+  	) : (
+    	<div className="center">No data yet :(</div>
 	)
 	
 	return(
@@ -44,20 +47,20 @@ const RepDetails = ({reps, handleUpsert, slug, setDetails}) => {
 
 class UpsertRep extends Component {
 	state = {
-    _id: '',
+    	_id: '',
 		name: '',
-    description: '',
-    photo_url: '',
-  }
+    	description: '',
+    	photo_url: '',
+  	}
   
 
 	title= this.props.repData._id === '' ? 'Add Representative' : 'Update Representative';
-  endpoint= this.props.repData._id === '' ? '' :  `/${this.props.repData._id}`;
+  	endpoint= this.props.repData._id === '' ? '' :  `/${this.props.repData._id}`;
   
-  componentDidMount(){
-    this.setState(this.props.repData);
-    window.scrollTo(0,0);
-  }
+  	componentDidMount(){
+    	this.setState(this.props.repData);
+    	window.scrollTo(0,0);
+  	}
 
 	handleChange = e => {
 		this.setState({
@@ -71,11 +74,13 @@ class UpsertRep extends Component {
 			representative: this.state
 		})
 		console.log(data)
-
+		const token = localStorage.getItem('token');
+		console.log(token);
 		await axios.post(`/categories/${this.props.slug}/representatives`+ this.endpoint , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json',				
+				'Content-Type': 'application/json',
+				'Authorization': `${token}`				
 			},
 			crossdomain: true,
 		}).catch((err) => console.log(err));
@@ -110,6 +115,19 @@ class UpsertRep extends Component {
 	}
 }
 
+// const mapStateToProps = (state) => {
+// 	return {
+// 		token: state.auth.token
+// 	}
+// }
+
+// const mapDispatchToProps = (dispatch) => {
+
+// }
+
+// const ConnectRepDetailsToRedux = connect(mapStateToProps)(RepDetails);
+// const ConnectUpsertRepToRedux = connect(mapStateToProps)(UpsertRep);
+
 export default ({reps, slug, setDetails}) => {
 	let [isActive, setIsActive] = useState(false);
 	let [repData, setRepData] = useState({
@@ -125,16 +143,16 @@ export default ({reps, slug, setDetails}) => {
 	}
 	return(
 		<>
-      <h5 id="header">
-        Representatives Details 
-        <button onClick={() => handleUpsert({
-          _id: '',
-          name: '',
-          description: '',
-        })} className="btn btn-small right">Add Representative</button> 
-      </h5>
+      	<h5 id="header">
+        	Representatives Details 
+        	<button onClick={() => handleUpsert({
+          		_id: '',
+          		name: '',
+          		description: '',
+        	})} className="btn btn-small right">Add Plan</button> 
+      	</h5>
 			{/* Input form to add or update. slug property to determine API endpoint */}
-      { isActive && <UpsertRep repData={repData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}
+      		{ isActive && <UpsertRep repData={repData} slug={slug} closeForm={() => setIsActive(!isActive)}/>}
 			<RepDetails reps={reps} slug={slug} handleUpsert={handleUpsert} setDetails={setDetails}/>
 		</>
 	)

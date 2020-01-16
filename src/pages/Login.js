@@ -1,13 +1,22 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { signInUser } from '../store/actions/authActions'
+import { signInUser, logOutUser } from '../store/actions/authActions'
 
 class Login extends Component {
     state = {
         email: '',
         password: ''
     }
+
+    // componentDidMount() {
+    //     const isLoggedIn = localStorage.getItem('isLoggedIn');
+    //     console.log(isLoggedIn);
+    //     this.setState({
+    //         isLoggedIn: isLoggedIn
+    //     });
+    //     console.log(this.state);
+    // }
 
     handleChange = e => {
         this.setState({
@@ -17,11 +26,18 @@ class Login extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        this.props.signInUser(this.state);
-        console.log(this.props);
+        if(this.props.isLoggedIn){
+            const token = localStorage.getItem('token');
+            console.log('handleSubmit', token);
+            this.props.logOutUser(token);
+            localStorage.setItem('token', null);
+            localStorage.setItem('isLoggedIn', false);
+        } else {
+            this.props.signInUser(this.state);
+        }
     }
     render() {
-        const { authError, auth } = this.props
+        const { authError, isLoggedIn, auth } = this.props
         //if (auth.uid) return <Redirect to='/' />
 
         return (
@@ -37,9 +53,11 @@ class Login extends Component {
                         <input type="password" id="password" onChange={this.handleChange}/>
                     </div>
                     <div className="input-field">
-                        <button className="btn z-depth-0">Login</button>
+                        <button className="btn z-depth-0">
+                            {(isLoggedIn) ? "Logout" : "Login"}
+                        </button>
                         <div className="red-text center">
-                            { authError ? <p> { authError }</p> : null }
+                            { authError ? <p> { authError } </p> : null }
                         </div>
                     </div>
                 </form>
@@ -49,13 +67,18 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = ({ auth }) => ({
-    authError : auth.authError
-})
+const mapStateToProps = (state) => {
+    console.log("mapStateToProps", state.auth);
+    return {
+        authError : state.auth.authError,
+        isLoggedIn: state.auth.isLoggedIn
+    }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    signInUser : credentials => { dispatch(signInUser(credentials)) }
+    signInUser : credentials => { dispatch(signInUser(credentials)) },
+    logOutUser : (token) => { dispatch(logOutUser(token)) }
   }
 }
 

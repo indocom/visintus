@@ -1,5 +1,6 @@
 import React, { Component, useEffect, useState } from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux' 
 
 const BannerDetails = ({banners, slug, setDetails}) => {
 	const [isActive, setIsActive] = useState(false)
@@ -28,11 +29,11 @@ const BannerDetails = ({banners, slug, setDetails}) => {
 			{ isActive && <UpsertBanner slug={slug}/>}
 			<ul>
 				{ banners && banners.length && banners.map((detail, index) => (
-          <li key={index} style={{minHeight: 50}}>
+          			<li key={index} style={{minHeight: 50}}>
 						{detail.image_url}
 						<div className="btn btn-small right red" onClick={() => handleRemove(detail._id, slug)}>Remove</div>
 					</li>
-        ))}
+        		))}
 			</ul>
 		</>
 	)
@@ -54,12 +55,16 @@ class UpsertBanner extends Component {
 			authToken: 'visintus',
 			banner: this.state
 		})
-		console.log(data)
+
+		const token = localStorage.getItem('token');
+
+		console.log(data);
 
 		await axios.post(`/categories/${this.props.slug}/banners` , data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
-				'Content-Type': 'application/json',				
+				'Content-Type': 'application/json',	
+				'Authorization': `${token}`			
 			},
 			crossdomain: true,
 		}).catch((err) => console.log(err));
@@ -79,5 +84,6 @@ class UpsertBanner extends Component {
 		)
 	}
 }
+
 
 export default BannerDetails
