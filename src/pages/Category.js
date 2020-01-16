@@ -5,38 +5,35 @@ import axios from 'axios'
 import CategoryDropdown from '../components/category/CategoryDropdown'
 import CategoryPeople from '../components/category/CategoryPeople'
 import Carousel from '../components/Carousel'
+import Fourofour from './404'
 
 class Category extends Component {
   state = {
-    banners: null,
-    reps: null,
-    plans: null
-    // [{
-    //   "_id": 1,
-    //   "name": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    //   "description": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-    // }]
+    banners: [],
+    reps: [],
+    plans: [],
+    isError: false,
   }
 
   async fetchCategoryData(){
     const slug = this.props.match.params.area
-    let { data, status } = await axios.get(`/categories/${slug}`).catch(err => console.log(err));
-    if(data){
-      if(!data.message){
-        this.setState({
-          banners: '',
-          reps: '',
-          plans: '',
-        })
-      } else {
-        this.setState({
-          banners: data.message.banners || null,
-          reps: data.message.representatives || null,
-          plans: data.message.plans || null,
-        })
-      }
-    } else {
-      console.log(`Error ${status} in loading /pages/category`)
+    try {
+      let res = await axios.get(`/categories/${slug}`)
+      console.log(res);
+      let data = res.data
+      this.setState({
+        banners: data.message.banners,
+        reps: data.message.representatives,
+        plans: data.message.plans,
+        isError: false,
+      })
+    } catch {
+      this.setState({
+        banners: [],
+        reps: [],
+        plans: [],
+        isError: true,
+      })
     }
   }
 
@@ -51,14 +48,14 @@ class Category extends Component {
   }
   
   render() {
-    return (
+    return !this.state.isError ? (
       <div className="container area">        
         <Carousel banners={this.state.banners}/>
-        <CategoryDropdown plans={this.state.plans} slug={this.props.match.params.area} />
+        <CategoryDropdown plans={this.state.plans} slug={this.props.match.params.area}/>
         <CategoryPeople reps={this.state.reps}/>
       </div> 
-    )
+    ) : ( <Fourofour />)
   }
-}            
+}
 
-export default Category;
+export default Category

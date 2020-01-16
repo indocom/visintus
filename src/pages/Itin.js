@@ -1,11 +1,13 @@
-import React, {Fragment} from 'react';
-import { connect } from 'react-redux';
-import { removePlan } from '../store/actions/planActions';
+import React, {Fragment} from 'react'
+import { connect } from 'react-redux'
+import { removePlan, removeCategory } from '../store/actions/planActions'
+import { Link } from 'react-router-dom'
+import M from 'materialize-css'
 import '../css/itin.css';
 
+
 const Itin = (props) => {
-	const handleRemove = (id, slug) => {
-		console.log(id, slug)
+	const handleRemovePlan = (id, slug) => {
 		props.removePlan(id, slug);
 	}
 
@@ -33,10 +35,19 @@ const Itin = (props) => {
 	}
 	
 	console.log(props.itin)
+	const handleSave = (e) => {
+		M.toast({ html : 'Data saved!', classes: 'teal rounded center top'});
+	}
+
+	const handleRemoveCategory = (slug) => {
+		props.removeCategory(slug);
+	}
+
 	let planList = Object.keys(props.itin).length > 0 ? (
 		Object.entries(props.itin).map(([slug, plans]) => {
 			return(
 				<Fragment key={slug}>
+
 					<div className='dropdownItin__title'>
 						<h6 className="red-text">{ slug }</h6>
 						<button onClick={() => display({slug})}><i class="fas fa-chevron-down"></i></button>
@@ -45,13 +56,18 @@ const Itin = (props) => {
 						<ul>
 						{
 							plans.length > 0 
-								? plans.map(plan => (
-									<li key={ plan._id }>
+								? plans.map((plan) => (
+									<li key={ plan._id } style={{minHeight: 50}}>
 										<p>{ plan.name }</p>
-										<button onClick = { () => handleRemove(plan._id, slug) }> Remove this plan </button>
+										{ slug !== "intro" && <div className="btn btn-small right red" onClick = { () => handleRemovePlan(plan._id, slug) }> Remove </div>}
 									</li>
 								))
-								: <li>You have deleted all plans for this area</li>
+								: (
+									<>
+										<p>You have deleted all plans for this area.</p> 
+										<div>You can either find out more <Link to={`/category/${slug}`}>interesting items here</Link> or delete <div style={{color: "#039be5", cursor: "pointer", display: "inline"}} onClick={() => handleRemoveCategory(slug)}>the area</div> from your itinerary</div>
+									</>
+								)
 						}
 						</ul>
 					</div>
@@ -67,15 +83,14 @@ const Itin = (props) => {
 			{ planList }
 			<br/>
 			<div className='dropdownButtonContainer'>
-				<button className='dropdownButton' onClick={handleCheckout}>Checkout</button>
-				<button className='dropdownButton' onClick={handleCheckout}>Save and Checkout</button>
+				<div className="btn" style={{marginRight: 10}} onClick={handleSave}>Save</div>
+				<div className="btn" onClick={handleCheckout}>Save &amp; Checkout</div>
 			</div>
 		</div>
 	)
 }
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         itin: state.plan.itin
     }
@@ -83,7 +98,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return{
-        removePlan : (id, slug) => { dispatch(removePlan(id, slug)) }
+				removePlan : (id, slug) => { dispatch(removePlan(id, slug)) },
+				removeCategory: (slug) => { dispatch(removeCategory(slug)) }
     }
 }
 

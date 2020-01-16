@@ -13,3 +13,10 @@ export const removePlan = (id, slug) => {
         slug
     }
 }
+
+export const removeCategory = (slug) => {
+    return {
+        type: 'REMOVE_CATEGORY',
+        slug
+    }
+}
