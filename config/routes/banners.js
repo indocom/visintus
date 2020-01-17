@@ -10,6 +10,10 @@ router.post('/',
   bannersController.createBanner
 );
 
-router.delete('/:bannerId', bannersController.deleteBanner);
+router.delete('/:bannerId', 
+  usersController.requireAuth,
+  usersController.roleAuthorization(['admin']),
+  bannersController.deleteBanner
+);
 
 module.exports = router;
