@@ -14,7 +14,7 @@ const InterestingArea = props => {
               style={{ borderRadius: 5, boxShadow: '1px 3px 10px #aaa' }}
             >
               {
-                <Link to={`/category/${category.slug}`}>
+                <Link to={`/categories/${category.slug}`}>
                   <span className="card-title">{category.name}</span>
                   <img src={category.logo_url} alt="logo" />
                 </Link>
