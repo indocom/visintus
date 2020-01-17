@@ -1,101 +1,115 @@
-import React, { useState, useEffect } from 'react'
-import M from 'materialize-css'
+import React, { useState, useEffect } from 'react';
+import M from 'materialize-css';
 // import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { addPlan, removePlan } from '../../store/actions/planActions'
+import { connect } from 'react-redux';
+import { addPlan, removePlan } from '../../store/actions/planActions';
 
-const AreaDropdown = (props) => {
-  const [isAdded, setIsAdded] = useState([])
+const AreaDropdown = props => {
+  const [isAdded, setIsAdded] = useState([]);
   console.log(isAdded);
   console.log(props);
-  const { plans, itin, slug, addPlan, removePlan } = props
+  const { plans, itin, slug, addPlan, removePlan } = props;
 
-  const toggleButtonMessage = (index) => {
+  const toggleButtonMessage = index => {
     let newIsAdded = [...isAdded];
-    newIsAdded[index] = !newIsAdded[index]
+    newIsAdded[index] = !newIsAdded[index];
     setIsAdded(newIsAdded);
-  }
-  
+  };
+
   const scrollDown = e => {
-    //e.target.scrollIntoView(); 
-    const elem = e.target
+    //e.target.scrollIntoView();
+    const elem = e.target;
     // console.log(elem.getBoundingClientRect().top, window.scrollY, elem.getBoundingClientRect().top + window.scrollY )
     const y = 0.6 * (elem.getBoundingClientRect().top + window.scrollY);
     window.scroll({
       top: y,
       behavior: 'smooth'
-    }); 
-  }
-
+    });
+  };
 
   useEffect(() => {
     try {
-      let idsInItin = itin[slug].map(plan => plan._id)
-      let status = plans.map(plan => idsInItin.includes(plan._id))
-      setIsAdded(status)
-    } catch {
+      let idsInItin = itin[slug].map(plan => plan._id);
+      let status = plans.map(plan => idsInItin.includes(plan._id));
+      setIsAdded(status);
+    } catch {}
+  }, [plans.length]);
 
-    }
-  },[plans.length])
-
-  const postList = plans && plans.length && plans.length > 0 ? (
-    plans.map((plan, index) => {
-        return(
-          <li key = {plan._id} onClick={scrollDown}>
+  const postList =
+    plans && plans.length && plans.length > 0 ? (
+      plans.map((plan, index) => {
+        return (
+          <li key={plan._id} onClick={scrollDown}>
             <div className="collapsible-header">
               {plan.name}
-              <span><i className="fas fa-angle-down grey-text text-lighten-1"></i></span>
+              <span>
+                <i className="fas fa-angle-down grey-text text-lighten-1"></i>
+              </span>
             </div>
-            <div className='collapsible-body'>
+            <div className="collapsible-body">
               <p>{plan.description}</p>
               {/* <Link to= {'/' + plan._id }><button className="btn btn-small indigo darken-4">Know more</button></Link> */}
-              {
-                isAdded[index] 
-                  ? <button className="btn btn-small" onClick = { () => {toggleButtonMessage(index); removePlan(plan._id, slug) }}>Added succesfully!</button>
-                  : <button className="btn btn-small indigo darken-4" onClick = { () => {toggleButtonMessage(index); addPlan(plan, slug) }}>Add to your plan!</button>
-              }
+              {isAdded[index] ? (
+                <button
+                  className="btn btn-small"
+                  onClick={() => {
+                    toggleButtonMessage(index);
+                    removePlan(plan._id, slug);
+                  }}
+                >
+                  Added succesfully!
+                </button>
+              ) : (
+                <button
+                  className="btn btn-small indigo darken-4"
+                  onClick={() => {
+                    toggleButtonMessage(index);
+                    addPlan(plan, slug);
+                  }}
+                >
+                  Add to your plan!
+                </button>
+              )}
             </div>
           </li>
-        )
+        );
       })
     ) : (
       <div className="center">No data yet</div>
-    )
+    );
 
   useEffect(() => {
-    let collapsible = document.querySelectorAll(".collapsible");
-    M.Collapsible.init(collapsible, {})
-  }, [])
-  
+    let collapsible = document.querySelectorAll('.collapsible');
+    M.Collapsible.init(collapsible, {});
+  }, []);
+
   return (
     <div className="dropdown">
       <h4 className="center">Area {props.slug}</h4>
-      <ul className="collapsible">
-        { postList }
-      </ul>
+      <ul className="collapsible">{postList}</ul>
     </div>
-  )
-}
-
+  );
+};
 
 const mapStateToProps = ({ plan }) => {
-  console.log(plan)
+  console.log(plan);
   return {
     itin: plan.itin
-  }
-}
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    addPlan : (plan, slug) => { dispatch(addPlan(plan, slug)) },
-    removePlan: (id, slug) => { dispatch(removePlan(id, slug)) }
-  }
-}
+    addPlan: (plan, slug) => {
+      dispatch(addPlan(plan, slug));
+    },
+    removePlan: (id, slug) => {
+      dispatch(removePlan(id, slug));
+    }
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(AreaDropdown)
-
-
-
+export default connect(mapStateToProps, mapDispatchToProps)(AreaDropdown);
 
 // class AreaDropdown extends Component {
 //   state = {
@@ -128,7 +142,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(AreaDropdown)
 //       .then(() => {
 //         let collapsible = document.querySelectorAll(".collapsible");
 //         M.Collapsible.init(collapsible, {})
-//       })       
+//       })
 //     }
 
 //   handleAdd = plan => {
@@ -138,14 +152,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(AreaDropdown)
 //   }
 
 //   scrollDown = e => {
-//     //e.target.scrollIntoView(); 
+//     //e.target.scrollIntoView();
 //     const elem = e.target
 //     console.log(elem.getBoundingClientRect().top, window.scrollY, elem.getBoundingClientRect().top + window.scrollY )
 //     const y = 0.6 * (elem.getBoundingClientRect().top + window.scrollY);
 //     window.scroll({
 //       top: y,
 //       behavior: 'smooth'
-//     }); 
+//     });
 //   }
 
 //   render() {
@@ -178,7 +192,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(AreaDropdown)
 //           { postList }
 //         </ul>
 //       </div>
-        
+
 //     )
 //   }
 // }
