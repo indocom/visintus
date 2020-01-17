@@ -19,6 +19,8 @@ router.use('/users', require('./routes/users'));
 
 router.use('/categories', require('./routes/categories'));
 
+router.use('/highlights', require('./routes/highlights'));
+
 router.get('/plan-info', categoriesController.getPlansInfo);
 
 module.exports = router;
