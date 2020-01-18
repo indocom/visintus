@@ -9,18 +9,25 @@ import NotFound from './404.js';
 class Home extends Component {
   state = {
     categories: [],
+    highlights: [],
     isError: false
   };
   async componentDidMount() {
     try {
-      let res = await axios.get('/categories');
-      let data = res.data;
+      let highlightsData = await axios.get('/highlights');
+      let categoriesData = await axios.get('/categories');
+      highlightsData = highlightsData.data;
+      categoriesData = categoriesData.data;
       this.setState({
-        categories: data.message.length > 0 ? data.message : [],
+        highlights:
+          highlightsData.message.length > 0 ? highlightsData.message : [],
+        categories:
+          categoriesData.message.length > 0 ? categoriesData.message : [],
         isError: false
       });
     } catch {
       this.setState({
+        highlights: [],
         categories: [],
         isError: true
       });
@@ -29,7 +36,7 @@ class Home extends Component {
   render() {
     return !this.state.isError ? (
       <div className="Home">
-        <Carousel banners={[]} />
+        <Carousel banners={this.state.highlights} />
         <div className="container area">
           <InterestingArea categories={this.state.categories} />
         </div>
