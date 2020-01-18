@@ -30,6 +30,11 @@ class App extends Component {
               <Route exact path="/admin" component={Admin.Dashboard} />
               <Route
                 exact
+                path="/admin/highlights"
+                component={Admin.Components.Highlight}
+              />
+              <Route
+                exact
                 path="/admin/categories"
                 component={Admin.Components.Category}
               />

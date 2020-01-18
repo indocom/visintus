@@ -29,7 +29,7 @@ export default props => {
   return (
     <div className="container">
       <h4>
-        Category Details Page{' '}
+        Category Details Page
         <div
           className="btn right"
           onClick={() => {
