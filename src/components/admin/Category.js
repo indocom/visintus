@@ -49,7 +49,13 @@ const Category = props => {
               <button
                 data-target="update"
                 className="btn"
-                onClick={() => props.handleUpsert(category.slug)}
+                onClick={() =>
+                  props.handleUpsert(category.slug, {
+                    name: category.name,
+                    logo_url: category.logo_url,
+                    description: category.description
+                  })
+                }
               >
                 Update
               </button>
@@ -79,6 +85,14 @@ class UpsertCategory extends Component {
 
   title = this.props.slug === '' ? 'Add Category' : 'Update Category';
   endpoint = this.props.slug === '' ? '' : `/${this.props.slug}`;
+
+  componentDidMount() {
+    window.scrollTo(0, 0);
+    this.setState({
+      name: this.props.data.name,
+      logo_url: this.props.data.logo_url
+    });
+  }
 
   handleChange = e => {
     this.setState({
@@ -115,23 +129,40 @@ class UpsertCategory extends Component {
         >
           <h5 className="grey-text text-darken-3">{this.title}</h5>
           <div className="input-field">
-            <label htmlFor="name">Category Name</label>
+            <label htmlFor="name" className="active">
+              Category Name
+            </label>
             <input
               type="text"
               id="name"
+              value={this.state.name}
               onChange={this.handleChange}
               required
             />
           </div>
 
           <div className="input-field">
-            <label htmlFor="logo_url">Logo URL</label>
-            <input type="text" id="logo_url" onChange={this.handleChange} />
+            <label htmlFor="logo_url" className="active">
+              Logo URL
+            </label>
+            <input
+              type="text"
+              id="logo_url"
+              value={this.state.logo_url}
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field">
-            <label htmlFor="description">Description</label>
-            <input type="text" id="description" onChange={this.handleChange} />
+            <label htmlFor="description" className="active">
+              Description
+            </label>
+            <input
+              type="text"
+              id="description"
+              value={this.state.description}
+              onChange={this.handleChange}
+            />
           </div>
           <button className="btn">{this.title}</button>
           <div
@@ -151,21 +182,47 @@ class UpsertCategory extends Component {
 export default props => {
   let [isActive, setIsActive] = useState(false);
   let [slug, setSlug] = useState(''); //'' -> add category
-  let handleUpsert = slug => {
+  let [data, setData] = useState({
+    name: '',
+    logo_url: '',
+    description: ''
+  });
+  let handleUpsert = (slug, data) => {
     setIsActive(!isActive);
     setSlug(slug);
+    setData(data);
   };
 
   return (
     <div className="container">
       <h4>Category Admin Page</h4>
+      <div
+        className="btn right"
+        onClick={() => {
+          props.history.push('/admin');
+        }}
+      >
+        Back to admin dashboard
+      </div>
 
       {/* Input form to add or update. slug property to determine API endpoint */}
       {isActive && (
-        <UpsertCategory slug={slug} closeForm={() => setIsActive(!isActive)} />
+        <UpsertCategory
+          slug={slug}
+          data={data}
+          closeForm={() => setIsActive(!isActive)}
+        />
       )}
       {!isActive && (
-        <button onClick={() => handleUpsert('')} className="btn">
+        <button
+          onClick={() =>
+            handleUpsert('', {
+              name: '',
+              logo_url: ''
+            })
+          }
+          className="btn"
+        >
           Add category
         </button>
       )}
