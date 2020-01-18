@@ -20,13 +20,13 @@ const Highlight = props => {
     FetchAllHighlights();
   }, [highlights.length]);
 
-  const handleRemove = async slug => {
+  const handleRemove = async id => {
     const data = JSON.stringify({
       authToken: 'visintus'
     });
     console.log(data);
     await axios
-      .delete(`/highlights/${slug}`, {
+      .delete(`/highlights/${id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
@@ -42,15 +42,13 @@ const Highlight = props => {
       highlights.map((highlight, index) => {
         return (
           <li key={index} style={{ minHeight: 50 }}>
-            <Link to={props.baseURL + `/${highlight.slug}`}>
-              <span>{highlight.hyperlink}</span>
-            </Link>
+            <span style={{ fontSize: '1.2em' }}>{highlight.hyperlink}</span>
             <div className="right">
               <button
                 data-target="update"
                 className="btn"
                 onClick={() =>
-                  props.handleUpsert(highlight.slug, {
+                  props.handleUpsert(highlight._id, {
                     hyperlink: highlight.hyperlink,
                     image_url: highlight.image_url,
                     description: highlight.description
@@ -61,11 +59,12 @@ const Highlight = props => {
               </button>
               <button
                 className="btn red"
-                onClick={() => handleRemove(highlight.slug)}
+                onClick={() => handleRemove(highlight._id)}
               >
                 Remove
               </button>
             </div>
+            <p>{highlight.description}</p>
           </li>
         );
       })
@@ -90,7 +89,8 @@ class UpsertHighlight extends Component {
     window.scrollTo(0, 0);
     this.setState({
       image_url: this.props.data.image_url,
-      hyperlink: this.props.data.hyperlink
+      hyperlink: this.props.data.hyperlink,
+      description: this.props.data.description
     });
   }
 
@@ -130,7 +130,7 @@ class UpsertHighlight extends Component {
           <h5 className="grey-text text-darken-3">{this.title}</h5>
           <div className="input-field">
             <label htmlFor="hyperlink" className="active">
-              Highlight Name
+              Highlight hyperlink
             </label>
             <input
               type="text"
@@ -218,7 +218,8 @@ export default props => {
           onClick={() =>
             handleUpsert('', {
               hyperlink: '',
-              image_url: ''
+              image_url: '',
+              description: ''
             })
           }
           className="btn"
