@@ -1,12 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, NavLink, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { logOutUser } from '../../store/actions/authActions.js'
+import M from 'materialize-css';
 
 const Navbar = (props) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn');
   const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    console.log('hello');
+    let elems = document.querySelectorAll('.dropdown-trigger');
+    M.Dropdown.init(elems);
+  }, [])
+  
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -20,22 +28,35 @@ const Navbar = (props) => {
     })
     awaitLogOut.then( (value) => {
       console.log(value);
-      window.location.replace('/login');
+      window.location.replace('/');
     })
   }
+
   return (
     <nav className="nav-wrapper indigo darken-4">
+      <ul id="dropdownLogout" className="dropdown-content">
+        <li>
+          <Link to='/'>
+            Account
+          </Link>
+        </li>
+        <li>
+          <Link to='/' onClick={handleLogout}>
+            Logout
+          </Link>
+        </li>
+      </ul>
       <div className="container">
         <Link to='/' className="brand-logo">Visintus</Link>
         <ul className = 'right'>
           {
             (isLoggedIn === "true") 
               ?
-              (
+              ( 
                 <li>
-                  <button onClick={handleLogout}>
-                    Logout!
-                  </button>
+                  <a className="dropdown-trigger" href="#!" data-target="dropdownLogout">
+                    SW <i class="fas fa-chevron-down" style={{fontSize: "1rem"}}></i>
+                  </a>
                 </li>
               )
               :
