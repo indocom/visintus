@@ -8,15 +8,15 @@ class Login extends Component {
         email: '',
         password: ''
     }
+    
+    componentDidMount() {
+        const token = localStorage.getItem('token');
+        console.log('CDM', token);
+    }
 
-    // componentDidMount() {
-    //     const isLoggedIn = localStorage.getItem('isLoggedIn');
-    //     console.log(isLoggedIn);
-    //     this.setState({
-    //         isLoggedIn: isLoggedIn
-    //     });
-    //     console.log(this.state);
-    // }
+    handleReload = e => {
+        window.location.replace('/');
+    }
 
     handleChange = e => {
         this.setState({
@@ -33,7 +33,17 @@ class Login extends Component {
             localStorage.setItem('token', null);
             localStorage.setItem('isLoggedIn', false);
         } else {
-            this.props.signInUser(this.state);
+            const awaitSignIn = new Promise( (resolve, reject) => {
+                this.props.signInUser(this.state);
+                setTimeout(() => resolve(this.props.authError), 500);
+            })
+            awaitSignIn.then( (value) => {
+                console.log('Promise', value);
+                if(!value) {
+                    this.handleReload();
+                }
+            })
+            //setTimeout(() => this.handleReload(), 1000);
         }
     }
     render() {
@@ -53,9 +63,18 @@ class Login extends Component {
                         <input type="password" id="password" onChange={this.handleChange}/>
                     </div>
                     <div className="input-field">
-                        <button className="btn z-depth-0">
-                            {(isLoggedIn) ? "Logout" : "Login"}
-                        </button>
+                        {
+                            (isLoggedIn) ? 
+                                (
+                                    <p>You are logged in</p>
+                                )
+                                :
+                                (
+                                    <button className='btn z-depth-0'>
+                                        Login
+                                    </button>
+                                )
+                        }
                         <div className="red-text center">
                             { authError ? <p> { authError } </p> : null }
                         </div>
