@@ -52,7 +52,7 @@ const Itin = props => {
             <div className="dropdownItin__title">
               <h6 className="red-text">{slug}</h6>
               <button onClick={() => display({ slug })}>
-                <i class="fas fa-chevron-down"></i>
+                <i className="fas fa-chevron-down"></i>
               </button>
             </div>
             <div className="dropdownItin__content" id={slug}>

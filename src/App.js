@@ -26,7 +26,6 @@ class App extends Component {
               <Route path="/signup" component={Signup} />
               <Route path="/itinerary" component={Itinerary} />
               <Route path="/checkout" component={Checkout} />
-              // Routing for admin
               <Route exact path="/admin" component={Admin.Dashboard} />
               <Route
                 exact
