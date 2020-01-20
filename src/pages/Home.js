@@ -1,41 +1,50 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
 import InterestingArea from '../components/home/InterestingArea.js';
 import Carousel from '../components/Carousel.js';
 import PlanAVisit from '../components/home/PlanAVisit.js';
-import axios from 'axios';
-import Fourofour from './404.js';
-
+import NotFound from './404.js';
 
 class Home extends Component {
   state = {
     categories: [],
-    isError: false,
-  }
-  async componentDidMount(){
+    highlights: [],
+    isError: false
+  };
+  async componentDidMount() {
     try {
-      let res = await axios.get('/categories')
-      let data = res.data
+      let highlightsData = await axios.get('/highlights');
+      let categoriesData = await axios.get('/categories');
+      highlightsData = highlightsData.data;
+      categoriesData = categoriesData.data;
       this.setState({
-        categories: data.message.length > 0 ? data.message : [],
+        highlights:
+          highlightsData.message.length > 0 ? highlightsData.message : [],
+        categories:
+          categoriesData.message.length > 0 ? categoriesData.message : [],
         isError: false
-      })
+      });
     } catch {
       this.setState({
+        highlights: [],
         categories: [],
-        isError: true,
-      })
+        isError: true
+      });
     }
   }
   render() {
     return !this.state.isError ? (
       <div className="Home">
-        <Carousel banners={[]} />
+        <Carousel banners={this.state.highlights} />
         <div className="container area">
           <InterestingArea categories={this.state.categories} />
         </div>
         <PlanAVisit />
       </div>
-    ) : (<Fourofour />)
+    ) : (
+      <NotFound />
+    );
   }
 }
 

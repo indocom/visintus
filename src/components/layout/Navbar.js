@@ -80,4 +80,4 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
   withRouter,
   connect(null, mapDispatchToProps)
-)(Navbar)
+)(Navbar);

@@ -47,7 +47,6 @@ const Itin = (props) => {
 		Object.entries(props.itin).map(([slug, plans]) => {
 			return(
 				<Fragment key={slug}>
-
 					<div className='dropdownItin__title'>
 						<h6 className="red-text">{ slug }</h6>
 						<button onClick={() => display({slug})}><i class="fas fa-chevron-down"></i></button>
@@ -98,8 +97,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return{
-				removePlan : (id, slug) => { dispatch(removePlan(id, slug)) },
-				removeCategory: (slug) => { dispatch(removeCategory(slug)) }
+		removePlan : (id, slug) => { dispatch(removePlan(id, slug)) },
+		removeCategory: (slug) => { dispatch(removeCategory(slug)) }
     }
 }
 

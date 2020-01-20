@@ -1,60 +1,67 @@
-import React, { Component } from 'react'
-import '../index.css'
-import '../css/area.css'
-import axios from 'axios'
-import CategoryDropdown from '../components/category/CategoryDropdown'
-import CategoryPeople from '../components/category/CategoryPeople'
-import Carousel from '../components/Carousel'
-import Fourofour from './404'
+import React, { Component } from 'react';
+import axios from 'axios';
+
+import CategoryDropdown from '../components/category/CategoryDropdown';
+import CategoryPeople from '../components/category/CategoryPeople';
+import Carousel from '../components/Carousel';
+import NotFound from './404';
+
+import '../index.css';
+import '../css/area.css';
 
 class Category extends Component {
   state = {
     banners: [],
-    reps: [],
     plans: [],
-    isError: false,
-  }
+    reps: [],
+    isError: false
+  };
 
-  async fetchCategoryData(){
-    const slug = this.props.match.params.area
+  async fetchCategoryData() {
+    const slug = this.props.match.params.slug;
     try {
-      let res = await axios.get(`/categories/${slug}`)
+      let res = await axios.get(`/categories/${slug}`);
       console.log(res);
-      let data = res.data
+      let data = res.data;
       this.setState({
         banners: data.message.banners,
-        reps: data.message.representatives,
         plans: data.message.plans,
-        isError: false,
-      })
+        reps: data.message.representatives,
+        isError: false
+      });
     } catch {
       this.setState({
         banners: [],
-        reps: [],
         plans: [],
-        isError: true,
-      })
+        reps: [],
+        isError: true
+      });
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.fetchCategoryData();
-  }  
+  }
 
-  componentDidUpdate(prevProps){
-    if(prevProps.match.params.area !== this.props.match.params.area){
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.slug !== this.props.match.params.slug) {
       this.fetchCategoryData();
     }
   }
-  
+
   render() {
     return !this.state.isError ? (
-      <div className="container area">        
-        <Carousel banners={this.state.banners}/>
-        <CategoryDropdown plans={this.state.plans} slug={this.props.match.params.area}/>
-        <CategoryPeople reps={this.state.reps}/>
-      </div> 
-    ) : ( <Fourofour />)
+      <div className="container area">
+        <Carousel banners={this.state.banners} />
+        <CategoryDropdown
+          plans={this.state.plans}
+          slug={this.props.match.params.slug}
+        />
+        <CategoryPeople reps={this.state.reps} />
+      </div>
+    ) : (
+      <NotFound />
+    );
   }
 }
 
