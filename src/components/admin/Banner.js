@@ -7,11 +7,13 @@ const BannerDetails = ({ banners, slug, setDetails }) => {
     // const data = JSON.stringify({
     // 	authToken: 'visintus',
     // })
+    const token = localStorage.getItem('token');
     await axios
       .delete(`/categories/${slug}/banners/${id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`
         },
         crossdomain: true
       })

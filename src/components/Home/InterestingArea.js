@@ -1,24 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-<<<<<<< HEAD
-const InterestingArea = (props) => {
-  const { categories } = props
-  // console.log(categories)
-  const categoriesList = categories.length > 0 ? (
-    categories.map((category, index) => {
-      return (
-        <div className="col s6 l4 card z-depth-0 grey lighten-4" key={index} >
-          <div className="card-image waves-effect waves-block waves-light" style={{borderRadius: 5, boxShadow: "1px 3px 10px #aaa"}}>
-            {
-              <Link to={`/category/${category.slug}`}>
-                <span className="card-title">
-                    {category.name}
-                </span>
-                <img src={category.logo_url} alt="logo"/>
-              </Link>
-            }
-=======
 const InterestingArea = props => {
   const { categories } = props;
   // console.log(categories)
@@ -38,7 +20,6 @@ const InterestingArea = props => {
                 </Link>
               }
             </div>
->>>>>>> develop
           </div>
         );
       })
