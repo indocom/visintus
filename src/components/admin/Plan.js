@@ -3,9 +3,9 @@ import axios from 'axios';
 
 const PlanDetails = ({ plans, handleUpsert, slug, setDetails }) => {
   const handleRemove = async _id => {
-    const data = JSON.stringify({
-      authToken: 'visintus'
-    });
+    // const data = JSON.stringify({
+    //   authToken: 'visintus'
+    // });
     await axios
       .delete(`/categories/${slug}/plans/${_id}`, {
         headers: {
@@ -14,7 +14,7 @@ const PlanDetails = ({ plans, handleUpsert, slug, setDetails }) => {
         },
         crossdomain: true
       })
-      .then(res => res.status == 200 && setDetails([]))
+      .then(res => res.status === 200 && setDetails([]))
       .catch(err => console.log(err));
   };
 

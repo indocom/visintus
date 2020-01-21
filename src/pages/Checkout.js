@@ -75,7 +75,8 @@ const Checkout = props => {
   const planList = Object.entries(itin).map(([slug, data]) => {
     return (
       <Fragment key={slug}>
-        <h6
+        <Link
+          to={`/categories/${slug}`}
           style={{
             textTransform: 'uppercase',
             fontWeight: 500,
@@ -83,7 +84,7 @@ const Checkout = props => {
           }}
         >
           {data.name}
-        </h6>
+        </Link>
         <div>
           <ul>
             {data.plans.length > 0 &&

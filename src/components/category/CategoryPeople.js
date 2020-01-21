@@ -1,5 +1,4 @@
 import React from 'react';
-import Stars from '../../assets/stars.jpg';
 
 const AreaPeople = props => {
   const { reps } = props;
@@ -12,7 +11,7 @@ const AreaPeople = props => {
         >
           <div className="card ayellow team">
             <div className="card-image">
-              <img src={person.photo_url} alt="Representative photo" />
+              <img src={person.photo_url} alt="Representative" />
             </div>
             <div className="details">
               <h3>{person.name}</h3>

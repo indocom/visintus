@@ -33,7 +33,7 @@ const AreaDropdown = props => {
       let status = plans.map(plan => idsInItin.includes(plan._id));
       setIsAdded(status);
     } catch {}
-  }, [plans.length]);
+  }, [plans.length, itin, plans, slug]);
 
   const postList =
     plans && plans.length && plans.length > 0 ? (

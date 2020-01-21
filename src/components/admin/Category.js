@@ -33,7 +33,7 @@ const Category = props => {
         },
         crossdomain: true
       })
-      .then(res => res.status == 200 && setCategories([]))
+      .then(res => res.status === 200 && setCategories([]))
       .catch(err => console.log(err));
   };
 
