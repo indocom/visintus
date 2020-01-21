@@ -1,16 +1,37 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import M from 'materialize-css';
 
 const Checkout = props => {
-  const [itin, setItin] = useState(props.itin);
+  const [itin, setItin] = useState({});
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [organization, setOrganization] = useState('');
   const [visitDate, setVisitDate] = useState('');
   const [remarks, setRemarks] = useState('');
   console.log(itin);
+
+  useEffect(() => {
+    const fetchPlanInfo = async () => {
+      try {
+        let categories = JSON.stringify({ categories: props.itin });
+        const res = await axios.post('/plan-info', categories, {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+          },
+          crossdomain: true
+        });
+        console.log(res);
+        setItin(res.data.message);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchPlanInfo();
+  }, [props.itin]);
 
   useEffect(() => {
     const elems = document.querySelectorAll('.datepicker');
@@ -30,7 +51,7 @@ const Checkout = props => {
     props.history.push('/');
   };
 
-  if (!itin || Object.keys(itin).length <= 1) {
+  if (!itin || Object.keys(itin).length < 1) {
     return (
       <div
         className="container center"
@@ -51,7 +72,7 @@ const Checkout = props => {
     );
   }
 
-  const planList = Object.entries(props.itin).map(([slug, plans]) => {
+  const planList = Object.entries(itin).map(([slug, data]) => {
     return (
       <Fragment key={slug}>
         <h6
@@ -61,14 +82,14 @@ const Checkout = props => {
             letterSpacing: '0.001em'
           }}
         >
-          {slug}
+          {data.name}
         </h6>
         <div>
           <ul>
-            {plans.length > 0 &&
-              plans.map(plan => (
+            {data.plans.length > 0 &&
+              data.plans.map(plan => (
                 <li key={plan._id}>
-                  <p>&nbsp; {plan.name}</p>
+                  <p>&nbsp;-&nbsp; {plan.name}</p>
                 </li>
               ))}
           </ul>

@@ -14,6 +14,7 @@ const Itin = props => {
     const fetchPlanInfo = async () => {
       try {
         let categories = JSON.stringify({ categories: props.itin });
+        console.log(categories);
         const res = await axios.post('/plan-info', categories, {
           headers: {
             'Access-Control-Allow-Origin': '*',
@@ -29,9 +30,17 @@ const Itin = props => {
     };
     fetchPlanInfo();
   }, [props.itin]);
-  console.log(plan);
+
+  const handleRemoveCategory = slug => {
+    props.removeCategory(slug);
+  };
+
   const handleRemovePlan = (id, slug) => {
     props.removePlan(id, slug);
+  };
+
+  const handleSave = e => {
+    M.toast({ html: 'Data saved!', classes: 'teal rounded center top' });
   };
 
   const handleCheckout = e => {
@@ -57,14 +66,6 @@ const Itin = props => {
     }
   };
 
-  const handleSave = e => {
-    M.toast({ html: 'Data saved!', classes: 'teal rounded center top' });
-  };
-
-  const handleRemoveCategory = slug => {
-    props.removeCategory(slug);
-  };
-
   let planList =
     Object.keys(plan).length > 0 ? (
       Object.entries(plan).map(([slug, data]) => {
@@ -79,47 +80,41 @@ const Itin = props => {
             </div>
             <div className="dropdownItin__content" id={slug}>
               <ul>
-                {data.plans.length > 0 ? (
-                  data.plans.map(plan => (
-                    <li key={plan._id} style={{ minHeight: 50 }}>
-                      <div>
-                        {plan.name}
-                        {slug !== 'intro' && (
-                          <div
-                            className="btn btn-small right red"
-                            onClick={() => handleRemovePlan(plan._id, slug)}
-                          >
-                            {' '}
-                            Remove{' '}
-                          </div>
-                        )}
-                      </div>
-                      <p>{plan.description}</p>
-                    </li>
-                  ))
-                ) : (
-                  <>
-                    <p>You have deleted all plans for this area.</p>
-                    <div>
-                      You can either find out more{' '}
-                      <Link to={`/category/${slug}`}>
-                        interesting items here
-                      </Link>{' '}
-                      or delete{' '}
-                      <div
-                        style={{
-                          color: '#039be5',
-                          cursor: 'pointer',
-                          display: 'inline'
-                        }}
-                        onClick={() => handleRemoveCategory(slug)}
-                      >
-                        the area
-                      </div>{' '}
-                      from your itinerary
-                    </div>
-                  </>
-                )}
+                {data.plans.length > 1
+                  ? data.plans.map(plan => (
+                      <li key={plan._id} style={{ minHeight: 50 }}>
+                        <div>
+                          {plan.name}
+                          {slug !== 'intro' && (
+                            <div
+                              className="btn btn-small right red"
+                              onClick={() => handleRemovePlan(plan._id, slug)}
+                            >
+                              {' '}
+                              Remove{' '}
+                            </div>
+                          )}
+                        </div>
+                        <p>{plan.description}</p>
+                      </li>
+                    ))
+                  : data.plans.map(plan => (
+                      <li key={plan._id} style={{ minHeight: 50 }}>
+                        <div>
+                          {plan.name}
+                          {slug !== 'intro' && (
+                            <div
+                              className="btn btn-small right red"
+                              onClick={() => handleRemoveCategory(slug)}
+                            >
+                              {' '}
+                              Remove{' '}
+                            </div>
+                          )}
+                        </div>
+                        <p>{plan.description}</p>
+                      </li>
+                    ))}
               </ul>
             </div>
           </Fragment>
