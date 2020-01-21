@@ -33,7 +33,13 @@ Body:
 ```
 {
   "message" : {
-    "token" : ...
+    "token" : ...,
+    "userData": {
+      "name": ...,
+      "initials": ...,
+      "email": ...,
+      "role": ...
+    }
   }
 }
 ```
