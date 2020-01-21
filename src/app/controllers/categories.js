@@ -19,9 +19,15 @@ const {
  ********************/
 
 exports.createCategory = async (req, res) => {
+  const slug = slugify(req.body.category.name, {
+    replacement: '-',
+    remove: /[&,+()$~%.'":*?<>{}]/g,
+    lower: true
+  });
+
   var newCategory = new Category({
     name: req.body.category.name,
-    slug: slugify(req.body.category.name),
+    slug,
     logo_url: req.body.category.logo_url,
     description: req.body.category.description,
     banners: [],
@@ -91,6 +97,11 @@ exports.getPlansInfo = async (req, res) => {
         $in: categories[slug].map(id => mongoose.Types.ObjectId(id))
       }
     });
+  }
+
+  if (queries.length == 0) {
+    handleSuccess(res, buildSuccObject({}));
+    return;
   }
 
   Category.aggregate([

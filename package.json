@@ -25,6 +25,7 @@
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "express-validator": "^6.3.0",
+    "faker": "git+https://github.com/Marak/faker.js.git",
     "http-errors": "~1.6.3",
     "husky": "^4.0.10",
     "i18n": "^0.8.4",
@@ -48,7 +49,6 @@
     "validator": "^12.1.0"
   },
   "devDependencies": {
-    "faker": "^4.1.0",
     "nodemon": "^2.0.1"
   },
   "husky": {
