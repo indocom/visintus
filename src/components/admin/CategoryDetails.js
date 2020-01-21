@@ -24,7 +24,7 @@ export default props => {
       console.log(details);
     }
     FetchAllDetails();
-  }, [details.length, details, slug]);
+  }, [details.length]);
 
   return (
     <div className="container">
