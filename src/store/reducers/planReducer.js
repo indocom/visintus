@@ -38,13 +38,13 @@ const initState = {
   itin: localStorage.getItem('plan-info')
     ? JSON.parse(localStorage.getItem('plan-info')).itin
     : {
-        intro: [
-          {
-            _id: 0,
-            name: 'Introduction to NUS',
-            description: 'Lorem ipsum si dolor amet'
-          }
-        ]
+        // intro: [
+        //   {
+        //     _id: 0,
+        //     name: 'Introduction to NUS',
+        //     description: 'Lorem ipsum si dolor amet'
+        //   }
+        // ]
       }
 };
 
@@ -55,7 +55,7 @@ const planReducer = (state = initState, action) => {
       if (sameSlug.filter(plan => plan._id === action.plan._id).length > 0) {
         return state;
       } else {
-        let newPlan = [...sameSlug, action.plan];
+        let newPlan = [...sameSlug, action.plan._id];
         let newPlanInfo = {
           ...state,
           itin: {
@@ -71,7 +71,7 @@ const planReducer = (state = initState, action) => {
         ...state,
         itin: {
           ...state.itin,
-          [action.slug]: [action.plan]
+          [action.slug]: [action.plan._id]
         }
       };
       localStorage.setItem('plan-info', JSON.stringify(newPlanInfo));
@@ -80,7 +80,7 @@ const planReducer = (state = initState, action) => {
   } else if (action.type === 'REMOVE_PLAN') {
     const sameSlug = state.itin[action.slug];
     console.log(sameSlug);
-    let newPlan = sameSlug.filter(plan => plan._id !== action.id);
+    let newPlan = sameSlug.filter(id => id !== action.id);
     console.log(newPlan);
     let newPlanInfo = {
       ...state,
