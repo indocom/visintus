@@ -14,6 +14,36 @@ const {
  * Private functions *
  *********************/
 
+function convertRequestToMongoQuery(categories) {
+  const queries = [];
+  for (slug in categories) {
+    queries.push({
+      slug: slug,
+      'plans._id': {
+        $in: categories[slug].map(id => mongoose.Types.ObjectId(id))
+      }
+    });
+  }
+  return queries;
+}
+
+function queryPlanInfos(queries, projection) {
+  return Category.aggregate([
+    { $project: projection },
+    { $unwind: '$plans' },
+    { $match: { $or: queries } },
+    {
+      $group: {
+        _id: '$slug',
+        name: { $first: '$name' },
+        slug: { $first: '$slug' },
+        plans: { $push: '$plans' }
+      }
+    },
+    { $project: { _id: 0 } }
+  ]);
+}
+
 /********************
  * Public functions *
  ********************/
@@ -87,37 +117,14 @@ exports.getCategoryInfo = async (req, res) => {
 };
 
 exports.getPlansInfo = async (req, res) => {
-  const categories = req.body.categories;
-  const queries = [];
-
-  for (slug in categories) {
-    queries.push({
-      slug: slug,
-      'plans._id': {
-        $in: categories[slug].map(id => mongoose.Types.ObjectId(id))
-      }
-    });
-  }
+  const queries = convertRequestToMongoQuery(req.body.categories);
 
   if (queries.length == 0) {
     handleSuccess(res, buildSuccObject({}));
     return;
   }
 
-  Category.aggregate([
-    { $project: { name: 1, slug: 1, plans: 1 } },
-    { $unwind: '$plans' },
-    { $match: { $or: queries } },
-    {
-      $group: {
-        _id: '$slug',
-        name: { $first: '$name' },
-        slug: { $first: '$slug' },
-        plans: { $push: '$plans' }
-      }
-    },
-    { $project: { _id: 0 } }
-  ])
+  queryPlanInfos(queries, { name: 1, slug: 1, plans: 1 })
     .then(result => {
       var resultObj = {};
       result.forEach(element => {
@@ -128,6 +135,22 @@ exports.getPlansInfo = async (req, res) => {
       });
 
       handleSuccess(res, buildSuccObject(resultObj));
+    })
+    .catch(error => handleError(res, buildErrObject(422, error.message)));
+};
+
+exports.checkoutPlans = async (req, res) => {
+  const queries = convertRequestToMongoQuery(req.body.categories);
+
+  if (queries.length == 0) {
+    handleSuccess(res, buildSuccObject({}));
+    return;
+  }
+
+  queryPlanInfos(queries, { name: 1, slug: 1, 'plans.name': 1, 'plans._id': 1 })
+    .then(result => {
+      console.log(JSON.stringify(result), req.body.orderInfo);
+      handleSuccess(res, buildSuccObject('Your order has been recorded'));
     })
     .catch(error => handleError(res, buildErrObject(422, error.message)));
 };

@@ -25,5 +25,6 @@ router.use('/categories', require('./routes/categories'));
 router.use('/highlights', require('./routes/highlights'));
 
 router.post('/plan-info', categoriesController.getPlansInfo);
+router.post('/checkout', categoriesController.checkoutPlans);
 
 module.exports = router;

@@ -101,6 +101,41 @@ Body:
 }
 ```
 
+### POST `/checkout`
+
+Real plan info of multiple categories:
+
+#### Request
+
+Body:
+
+```
+{
+  "categories": {
+    $slug: [ plan ids ]
+  },
+  "orderInfo": {
+    "name": ...,
+    "email": ...,
+    "visitDate": ...,
+    "organization": ...,
+    "remarks": ...
+  }
+}
+```
+
+`$slug` represents category slug that is used as the key for a particular array of plan ids. You may pass arbitrary number of slugs and plan ids for the API query.
+
+#### Response
+
+Body:
+
+```
+{
+  "message": ...
+}
+```
+
 ### POST `/categories`
 
 > :warning: **Requires authorization**
