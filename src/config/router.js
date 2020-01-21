@@ -24,6 +24,6 @@ router.use('/categories', require('./routes/categories'));
 
 router.use('/highlights', require('./routes/highlights'));
 
-router.get('/plan-info', categoriesController.getPlansInfo);
+router.post('/plan-info', categoriesController.getPlansInfo);
 
 module.exports = router;

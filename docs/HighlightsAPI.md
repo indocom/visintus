@@ -8,17 +8,12 @@ All requests must have JSON format. Hence, you have to set "Content-Type" field 
 
 Some API calls require authorization. Set "Authorization" field in header to contain JWT token that you obtained from the last successful login attempt. You will be able to access those APIs based on the permission level that you have.
 
-
 ### GET `/highlights`
 
 Read all highlights
 
-#### Request
-```
-{}
-```
-
 #### Response
+
 ```
 {
   "message" : {
@@ -36,6 +31,7 @@ Read all highlights
 Add a highlight
 
 #### Request
+
 ```
 {
   "highlight" : {
@@ -47,6 +43,7 @@ Add a highlight
 ```
 
 #### Response
+
 ```
 {
   "message" : ...
@@ -60,6 +57,7 @@ Add a highlight
 Update a highlight
 
 #### Request
+
 ```
 {
   "highlight" : {
@@ -71,6 +69,7 @@ Update a highlight
 ```
 
 #### Response
+
 ```
 {
   "message" : ...
@@ -83,12 +82,8 @@ Update a highlight
 
 Remove a representative for a category
 
-#### Request
-```
-{}
-```
-
 #### Response
+
 ```
 {
   "message" : ...

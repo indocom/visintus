@@ -14,20 +14,14 @@ Some API calls require authorization. Set "Authorization" field in header to con
 
 Read multiple categories basic info (for Home).
 
-#### Request:
-
-Body: 
-```
-{}
-```
-
-#### Response 
+#### Response
 
 Body:
+
 ```
 {
   "message" : [ {
-      "name"      : ..., 
+      "name"      : ...,
       "slug"      : ...,
       "logo_url"  : ...,
   } ]
@@ -38,16 +32,10 @@ Body:
 
 Read full info of a cateogry (for category page)
 
-#### Request 
+#### Response
 
 Body:
-```
-{}
-```
 
-#### Response 
-
-Body:
 ```
 {
   "message" : {
@@ -63,7 +51,7 @@ Body:
       "_id"         : ...,
       "name"        : ...,
       "description" : ...
-    } ], 
+    } ],
     "representatives" : [ {
       "_id"         : ...,
       "name"        : ...,
@@ -74,13 +62,14 @@ Body:
 }
 ```
 
-### GET `/plan-info`
+### POST `/plan-info`
 
 Real plan info of multiple categories:
 
-#### Request 
+#### Request
 
 Body:
+
 ```
 {
   "categories": {
@@ -91,9 +80,10 @@ Body:
 
 `$slug` represents category slug that is used as the key for a particular array of plan ids. You may pass arbitrary number of slugs and plan ids for the API query.
 
-#### Response 
+#### Response
 
 Body:
+
 ```
 {
   "message": {
@@ -117,9 +107,10 @@ Body:
 
 Create category
 
-#### Request 
+#### Request
 
 Body:
+
 ```
 {
   "category": {
@@ -133,6 +124,7 @@ Body:
 #### Response
 
 Body:
+
 ```
 {
   "message": ...
@@ -145,16 +137,10 @@ Body:
 
 Delete category
 
-#### Request
-
-Body: 
-```
-{}
-```
-
 #### Response
 
 Body:
+
 ```
 {
   "message": ...
@@ -168,6 +154,7 @@ Body:
 Update category
 
 #### Request
+
 ```
 {
   "category": {
@@ -179,6 +166,7 @@ Update category
 ```
 
 #### Response
+
 ```
 {
   "message": ...
@@ -194,6 +182,7 @@ Update category
 Add a banner for a category
 
 #### Request
+
 ```
 {
   "banner": {
@@ -203,6 +192,7 @@ Add a banner for a category
 ```
 
 #### Response
+
 ```
 {
   "message" : ...
@@ -215,18 +205,6 @@ Add a banner for a category
 
 Remove a banner for a category
 
-#### Request
-```
-{}
-```
-
-#### Response
-```
-{
-  "message" : ...
-}
-```
-
 ## Plans for Categories
 
 ### POST `/categories/:slug/plans`
@@ -236,6 +214,7 @@ Remove a banner for a category
 Add a plan for a category
 
 #### Request
+
 ```
 {
   "plan" : {
@@ -246,6 +225,7 @@ Add a plan for a category
 ```
 
 #### Response
+
 ```
 {
   "message" : ...
@@ -259,6 +239,7 @@ Add a plan for a category
 Update a plan for a category
 
 #### Request
+
 ```
 {
   "plan" : {
@@ -269,6 +250,7 @@ Update a plan for a category
 ```
 
 #### Response
+
 ```
 {
   "message" : ...
@@ -281,12 +263,8 @@ Update a plan for a category
 
 Remove a plan for a category
 
-#### Request
-```
-{}
-```
-
 #### Response
+
 ```
 {
   "message" : ...
@@ -302,6 +280,7 @@ Remove a plan for a category
 Add a representative for a category
 
 #### Request
+
 ```
 {
   "representative" : {
@@ -313,6 +292,7 @@ Add a representative for a category
 ```
 
 #### Response
+
 ```
 {
   "message" : ...
@@ -326,6 +306,7 @@ Add a representative for a category
 Update a representative for a category
 
 #### Request
+
 ```
 {
   "representative" : {
@@ -337,6 +318,7 @@ Update a representative for a category
 ```
 
 #### Response
+
 ```
 {
   "message" : ...
@@ -349,12 +331,8 @@ Update a representative for a category
 
 Remove a representative for a category
 
-#### Request
-```
-{}
-```
-
 #### Response
+
 ```
 {
   "message" : ...

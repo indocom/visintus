@@ -8,14 +8,14 @@ All requests must have JSON format. Hence, you have to set "Content-Type" field 
 
 Some API calls require authorization. Set "Authorization" field in header to contain JWT token that you obtained from the last successful login attempt. You will be able to access those APIs based on the permission level that you have.
 
-
 ### POST `/users/register`
 
 Register a new user.
 
 #### Request:
 
-Body: 
+Body:
+
 ```
 {
   "user": {
@@ -26,9 +26,10 @@ Body:
 }
 ```
 
-#### Response 
+#### Response
 
 Body:
+
 ```
 {
   "message" : {
@@ -43,7 +44,8 @@ Login.
 
 #### Request:
 
-Body: 
+Body:
+
 ```
 {
   "user": {
@@ -53,9 +55,10 @@ Body:
 }
 ```
 
-#### Response 
+#### Response
 
 Body:
+
 ```
 {
   "message" : {
@@ -67,20 +70,23 @@ Body:
 ### POST `/users/logout`
 
 Logout.
+
 > :warning: **Requires authorization**
 
 #### Request:
 
-Body: 
+Body:
+
 ```
 {
   "token": ...
 }
 ```
 
-#### Response 
+#### Response
 
 Body:
+
 ```
 {
   "message" : ...
