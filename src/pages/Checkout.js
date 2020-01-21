@@ -15,14 +15,18 @@ const Checkout = props => {
   useEffect(() => {
     const elems = document.querySelectorAll('.datepicker');
     M.Datepicker.init(elems, {
-      disableWeekends: true
+      disableWeekends: true,
+      minDate: new Date()
     });
   }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
     console.log(props, name, email, visitDate, organization, remarks);
-    M.toast({ html: 'Booking saved!', classes: 'teal rounded center top' });
+    M.toast({
+      html: '<h1>Booking successful!</h1>',
+      classes: 'teal rounded center top'
+    });
     props.history.push('/');
   };
 
@@ -50,13 +54,21 @@ const Checkout = props => {
   const planList = Object.entries(props.itin).map(([slug, plans]) => {
     return (
       <Fragment key={slug}>
-        <h6 className="red-text">{slug}</h6>
+        <h6
+          style={{
+            textTransform: 'uppercase',
+            fontWeight: 500,
+            letterSpacing: '0.001em'
+          }}
+        >
+          {slug}
+        </h6>
         <div>
           <ul>
             {plans.length > 0 &&
               plans.map(plan => (
                 <li key={plan._id}>
-                  <p>{plan.name}</p>
+                  <p>&nbsp; {plan.name}</p>
                 </li>
               ))}
           </ul>
@@ -67,57 +79,78 @@ const Checkout = props => {
 
   return (
     <div className="container">
-      <h4>Checkout</h4>
-      {planList}
-      <h5>Please let us know more about you!</h5>
-      <form className="grey lighten-4" onSubmit={handleSubmit}>
-        <div className="input-field">
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            required
-            onChange={e => setName(e.target.value)}
-          />
-        </div>
-        <div className="input-field">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            required
-            onChange={e => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="input-field">
-          <label htmlFor="visitDate">Visit Date</label>
-          <input
-            type="text"
-            id="visitDate"
-            required
-            className="datepicker"
-            onChange={e => setVisitDate(e.target.value)}
-          />
-        </div>
-        <div className="input-field">
-          <label htmlFor="organization">Organization</label>
-          <input
-            type="text"
-            id="organization"
-            required
-            onChange={e => setOrganization(e.target.value)}
-          />
-        </div>
-        <div className="input-field">
-          <label htmlFor="remarks">Additional Remarks</label>
-          <textarea
-            className="materialize-textarea"
-            id="remarks"
-            onChange={e => setRemarks(e.target.value)}
-          />
-        </div>
-        <button className="btn z-depth-0">Book your visit!</button>
-      </form>
+      <div className="row">
+        <h5>CHECKOUT</h5>
+        <form className="grey lighten-4" onSubmit={handleSubmit}>
+          <div className="col s12 l8" style={{ padding: '1.5em 1.5em 1em' }}>
+            <h5>Contacts</h5>
+            <div className="input-field">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                id="name"
+                required
+                onChange={e => setName(e.target.value)}
+              />
+            </div>
+            <div className="input-field">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                required
+                onChange={e => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="input-field">
+              <label htmlFor="visitDate">Visit Date</label>
+              <input
+                type="text"
+                id="visitDate"
+                required
+                className="datepicker"
+                onChange={e => setVisitDate(e.target.value)}
+              />
+            </div>
+            <div className="input-field">
+              <label htmlFor="organization">Organization</label>
+              <input
+                type="text"
+                id="organization"
+                required
+                onChange={e => setOrganization(e.target.value)}
+              />
+            </div>
+            <div className="input-field">
+              <label htmlFor="remarks">Additional Remarks</label>
+              <textarea
+                className="materialize-textarea"
+                id="remarks"
+                onChange={e => setRemarks(e.target.value)}
+              />
+            </div>
+          </div>
+          <div
+            className="col s12 l4 white"
+            style={{ padding: '0 1.5em 1.5em' }}
+          >
+            <h5
+              style={{
+                borderBottom: '1px solid rgba(0,0,0,0.4)',
+                paddingBottom: '0.5em'
+              }}
+            >
+              Plan Summary
+            </h5>
+            {planList}
+          </div>
+          <div className="col s12" style={{ padding: '1em 1.5em' }}>
+            <button className="btn btn-large z-depth-0">
+              Book your visit!
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
