@@ -6,8 +6,6 @@
   background-color: lightskyblue;
   position: relative;
   padding: 1rem;
-  left: 5%;
-  width: 90%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -33,25 +31,12 @@
   transition: all 0.3s linear;
 }
 
-.dropdownItin__content ul {
-  position: relative;
-  left: 5%;
-  width: 90%;
-}
-
 .dropdownItin__content li {
-  background-color: skyblue;
+  background-color: white;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   padding: 1rem;
-}
-
-.dropdownItin__content li > p {
-  max-width: 80%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .dropdownButtonContainer {
