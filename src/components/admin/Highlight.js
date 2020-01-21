@@ -1,5 +1,4 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Highlight = props => {
@@ -33,7 +32,7 @@ const Highlight = props => {
         },
         crossdomain: true
       })
-      .then(res => res.status == 200 && setHighlights([]))
+      .then(res => res.status === 200 && setHighlights([]))
       .catch(err => console.log(err));
   };
 

@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useState } from 'react';
 import axios from 'axios';
 
 const BannerDetails = ({ banners, slug, setDetails }) => {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Loading from './Loading';
+// import Loading from './Loading';
 import '../css/Carousel.css';
 import carouselUtils from './carouselUtils';
 
@@ -56,21 +56,3 @@ class Carousel extends Component {
 }
 
 export default Carousel;
-
-// render(){
-//     const { pics } = this.props
-//     const picCarousel = pics.length ? (
-//         pics.map(pic => {
-//             return(
-//             <img  key={pic.id} src={pic.url} className='carousel-item' alt={pic.title} />
-//             )
-//         })
-//     ) : (
-//         <div className="center">No data yet</div>
-//     )
-//     return (
-//         <div className="carousel carousel-slider">
-//             { picCarousel }
-//         </div>
-//     )
-// }
