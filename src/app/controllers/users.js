@@ -410,10 +410,17 @@ exports.login = async (req, res) => {
       const userAccess = await saveUserAccessAndReturnToken(req, user);
       await updateToken(userAccess.token, user);
       await saveLoginAttemptsToDB(user);
+
       utils.handleSuccess(
         res,
         utils.buildSuccObject({
-          token: userAccess.token
+          token: userAccess.token,
+          userData: {
+            name: user.name,
+            initials: user.name[0],
+            email: user.email,
+            role: user.role
+          }
         })
       );
     }
@@ -438,7 +445,13 @@ exports.register = async (req, res) => {
     utils.handleSuccess(
       res,
       utils.buildSuccObject({
-        token: response.token
+        token: response.token,
+        userData: {
+          name: user.name,
+          initials: user.name[0],
+          email: user.email,
+          role: user.role
+        }
       })
     );
     //}
