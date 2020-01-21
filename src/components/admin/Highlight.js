@@ -41,7 +41,7 @@ const Highlight = props => {
       highlights.map((highlight, index) => {
         return (
           <li key={index} style={{ minHeight: 50 }}>
-            <span style={{ fontSize: '1.2em' }}>{highlight.hyperlink}</span>
+            <span style={{ fontSize: '1.2em' }}>{highlight.image_url}</span>
             <div className="right">
               <button
                 data-target="update"
@@ -63,6 +63,7 @@ const Highlight = props => {
                 Remove
               </button>
             </div>
+            <p>{highlight.hyperlink}</p>
             <p>{highlight.description}</p>
           </li>
         );
@@ -128,19 +129,6 @@ class UpsertHighlight extends Component {
         >
           <h5 className="grey-text text-darken-3">{this.title}</h5>
           <div className="input-field">
-            <label htmlFor="hyperlink" className="active">
-              Highlight hyperlink
-            </label>
-            <input
-              type="text"
-              id="hyperlink"
-              value={this.state.hyperlink}
-              onChange={this.handleChange}
-              required
-            />
-          </div>
-
-          <div className="input-field">
             <label htmlFor="image_url" className="active">
               Image URL
             </label>
@@ -148,6 +136,19 @@ class UpsertHighlight extends Component {
               type="text"
               id="image_url"
               value={this.state.image_url}
+              onChange={this.handleChange}
+              required
+            />
+          </div>
+
+          <div className="input-field">
+            <label htmlFor="hyperlink" className="active">
+              Highlight hyperlink
+            </label>
+            <input
+              type="text"
+              id="hyperlink"
+              value={this.state.hyperlink}
               onChange={this.handleChange}
             />
           </div>
