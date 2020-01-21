@@ -44,6 +44,28 @@ const Checkout = props => {
   const handleSubmit = e => {
     e.preventDefault();
     console.log(props, name, email, visitDate, organization, remarks);
+
+    let order = JSON.stringify({
+      categories: props.itin,
+      orderInfo: {
+        name,
+        email,
+        visitDate,
+        organization,
+        remarks
+      }
+    });
+
+    const res = axios.post('/checkout', order, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+      },
+      crossdomain: true
+    });
+
+    console.log(res);
+
     M.toast({
       html: '<h1>Booking successful!</h1>',
       classes: 'teal rounded center top'
