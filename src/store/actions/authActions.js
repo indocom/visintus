@@ -56,9 +56,13 @@ export const signInUser = ({ email, password }) => {
         .then( response => {
             console.log("signInUser",response);
             const {token} = response.data.message;
+            const {role} = response.data.message.userData;
+            const {initials} = response.data.message.userData;
             console.log(token);
             localStorage.setItem('token', token);
             localStorage.setItem('isLoggedIn', true);
+            localStorage.setItem('role', role);
+            localStorage.setItem('initials', initials);
             dispatch(loginSuccess(response.data.message.token));
         })
         .catch( error => {
@@ -105,9 +109,13 @@ export const signUpUser = ( {email, password, firstName, lastName}) => {
         })
         .then( response => {
             console.log("signUpUser", response);
+            const {role} = response.data.message.userData;
+            const {initials} = response.data.message.userData;
             const {token} = response.data.message;
             localStorage.setItem('token', token);
             localStorage.setItem('isLoggedIn', true);
+            localStorage.setItem('role', role);
+            localStorage.setItem('initials', initials);
             dispatch(signUpSuccess());
         })
         .catch( error => {

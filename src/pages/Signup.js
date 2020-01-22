@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { signUpUser } from '../store/actions/authActions'
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { signUpUser } from '../store/actions/authActions';
 
 class Signup extends Component {
   state = {
@@ -31,7 +31,7 @@ class Signup extends Component {
       this.handleReload();
     })
   };
-  
+
   render() {
     const { auth, authError } = this.props;
     //if (auth.uid) return <Redirect to='/' />

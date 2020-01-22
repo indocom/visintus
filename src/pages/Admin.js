@@ -3,8 +3,8 @@ import AdminComponents from '../components/admin';
 import { Link } from 'react-router-dom';
 
 export const Dashboard = () => {
-	const token = localStorage.getItem('token');
-	if(token !== "null" && token !== null) {
+	const role = localStorage.getItem('role');
+	if(role === 'admin') {
 		return (
 			<div className="container">
 			  <h3>Admin Dashboard</h3>

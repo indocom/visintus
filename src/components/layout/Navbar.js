@@ -8,6 +8,7 @@ import M from 'materialize-css';
 const Navbar = (props) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn');
   const token = localStorage.getItem('token');
+  const initials = localStorage.getItem('initials');
 
   useEffect(() => {
     console.log('hello');
@@ -24,6 +25,8 @@ const Navbar = (props) => {
       props.logOutUser(token);
       localStorage.setItem('token', null);
       localStorage.setItem('isLoggedIn', false);
+      localStorage.setItem('initials', null);
+      localStorage.setItem('role', null);
       setTimeout(() => resolve('logout success'));
     })
     awaitLogOut.then( (value) => {
@@ -55,7 +58,7 @@ const Navbar = (props) => {
               ( 
                 <li>
                   <a className="dropdown-trigger" href="#!" data-target="dropdownLogout">
-                    SW <i class="fas fa-chevron-down" style={{fontSize: "1rem"}}></i>
+                    {initials} <i class="fas fa-chevron-down" style={{fontSize: "1rem"}}></i>
                   </a>
                 </li>
               )

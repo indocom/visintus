@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { signInUser, logOutUser } from '../store/actions/authActions'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { signInUser, logOutUser } from '../store/actions/authActions';
 
 class Login extends Component {
   state = {
@@ -32,6 +32,8 @@ class Login extends Component {
       this.props.logOutUser(token);
       localStorage.setItem('token', null);
       localStorage.setItem('isLoggedIn', false);
+      localStorage.setItem('role', null);
+      localStorage.setItem('initials', null);
     } else {
       const awaitSignIn = new Promise( (resolve, reject) => {
         this.props.signInUser(this.state);
