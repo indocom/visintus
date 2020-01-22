@@ -11,6 +11,10 @@ class Signup extends Component {
     lastName: ''
   };
 
+  handleReload = e => {
+    window.location.replace('/');
+  }
+
   handleChange = e => {
     this.setState({
       [e.target.id]: e.target.value
@@ -19,8 +23,15 @@ class Signup extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.signUpUser(this.state);
+    const awaitSignUp = new Promise( (resolve, reject) => {
+      this.props.signUpUser(this.state);
+      setTimeout(() => resolve('Sign Up Success'), 500);
+    })
+    awaitSignUp.then( (value) => {
+      this.handleReload();
+    })
   };
+  
   render() {
     const { auth, authError } = this.props;
     //if (auth.uid) return <Redirect to='/' />

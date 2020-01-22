@@ -105,6 +105,9 @@ export const signUpUser = ( {email, password, firstName, lastName}) => {
         })
         .then( response => {
             console.log("signUpUser", response);
+            const {token} = response.data.message;
+            localStorage.setItem('token', token);
+            localStorage.setItem('isLoggedIn', true);
             dispatch(signUpSuccess());
         })
         .catch( error => {
