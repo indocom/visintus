@@ -3,14 +3,13 @@ import axios from 'axios';
 
 const RepDetails = ({ reps, handleUpsert, slug, setDetails }) => {
   const handleRemove = async _id => {
-    // const data = JSON.stringify({
-    //   authToken: 'visintus'
-    // });
+    const token = localStorage.getItem('token');
     await axios
       .delete(`/categories/${slug}/representatives/${_id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
         },
         crossdomain: true
       })
@@ -79,7 +78,7 @@ class UpsertRep extends Component {
       representative: this.state
     });
     console.log(data);
-
+    const token = localStorage.getItem('token');
     await axios
       .post(
         `/categories/${this.props.slug}/representatives` + this.endpoint,
@@ -87,7 +86,8 @@ class UpsertRep extends Component {
         {
           headers: {
             'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `${token}`
           },
           crossdomain: true
         }

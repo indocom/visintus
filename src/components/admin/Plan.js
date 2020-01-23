@@ -3,14 +3,13 @@ import axios from 'axios';
 
 const PlanDetails = ({ plans, handleUpsert, slug, setDetails }) => {
   const handleRemove = async _id => {
-    // const data = JSON.stringify({
-    //   authToken: 'visintus'
-    // });
+    const token = localStorage.getItem('token');
     await axios
       .delete(`/categories/${slug}/plans/${_id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
         },
         crossdomain: true
       })
@@ -78,12 +77,13 @@ class UpsertPlan extends Component {
       plan: this.state
     });
     console.log(data);
-
+    const token = localStorage.getItem('token');
     await axios
       .post(`/categories/${this.props.slug}/plans` + this.endpoint, data, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
         },
         crossdomain: true
       })

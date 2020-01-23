@@ -101,6 +101,16 @@ const planReducer = (state = initState, action) => {
     delete newPlanInfo.itin[action.slug];
     localStorage.setItem('plan-info', JSON.stringify(newPlanInfo));
     return newPlanInfo;
+  } else if (action.type === 'REMOVE_CATEGORY') {
+    let newPlanInfo = {
+      ...state,
+      itin: {
+        ...state.itin
+      }
+    };
+    delete newPlanInfo.itin[action.slug];
+    localStorage.setItem('plan-info', JSON.stringify(newPlanInfo));
+    return newPlanInfo;
   } else {
     return state;
   }
