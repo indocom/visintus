@@ -20,15 +20,13 @@ const Highlight = props => {
   }, [highlights.length]);
 
   const handleRemove = async id => {
-    const data = JSON.stringify({
-      authToken: 'visintus'
-    });
-    console.log(data);
+    const token = localStorage.getItem('token');
     await axios
       .delete(`/highlights/${id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
         },
         crossdomain: true
       })

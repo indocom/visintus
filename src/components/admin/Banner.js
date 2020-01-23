@@ -4,14 +4,13 @@ import axios from 'axios';
 const BannerDetails = ({ banners, slug, setDetails }) => {
   const [isActive, setIsActive] = useState(false);
   const handleRemove = async (id, slug) => {
-    // const data = JSON.stringify({
-    // 	authToken: 'visintus',
-    // })
+    const token = localStorage.getItem('token');
     await axios
       .delete(`/categories/${slug}/banners/${id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
         },
         crossdomain: true
       })
@@ -67,13 +66,17 @@ class UpsertBanner extends Component {
       authToken: 'visintus',
       banner: this.state
     });
+
+    const token = localStorage.getItem('token');
+
     console.log(data);
 
     await axios
       .post(`/categories/${this.props.slug}/banners`, data, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
         },
         crossdomain: true
       })

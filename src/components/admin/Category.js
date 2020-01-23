@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 const Category = props => {
@@ -24,12 +24,16 @@ const Category = props => {
     const data = JSON.stringify({
       authToken: 'visintus'
     });
+
+    const token = localStorage.getItem('token');
+
     console.log(data);
     await axios
       .delete(`/categories/${slug}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
         },
         crossdomain: true
       })
@@ -107,11 +111,14 @@ class UpsertCategory extends Component {
     });
     console.log(data);
 
+    const token = localStorage.getItem('token');
+
     await axios
       .post('/categories' + this.endpoint, data, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
         },
         crossdomain: true
       })
@@ -192,41 +199,46 @@ export default props => {
     setSlug(slug);
     setData(data);
   };
+  const token = localStorage.getItem('token');
 
-  return (
-    <div className="container">
-      <h4>Category Admin Page</h4>
-      <div
-        className="btn right"
-        onClick={() => {
-          props.history.push('/admin');
-        }}
-      >
-        Back to admin dashboard
-      </div>
-
-      {/* Input form to add or update. slug property to determine API endpoint */}
-      {isActive && (
-        <UpsertCategory
-          slug={slug}
-          data={data}
-          closeForm={() => setIsActive(!isActive)}
-        />
-      )}
-      {!isActive && (
-        <button
-          onClick={() =>
-            handleUpsert('', {
-              name: '',
-              logo_url: ''
-            })
-          }
-          className="btn"
+  if (token !== 'null' && token !== null) {
+    return (
+      <div className="container">
+        <h4>Category Admin Page</h4>
+        <div
+          className="btn right"
+          onClick={() => {
+            props.history.push('/admin');
+          }}
         >
-          Add category
-        </button>
-      )}
-      <Category handleUpsert={handleUpsert} baseURL={props.match.path} />
-    </div>
-  );
+          Back to admin dashboard
+        </div>
+
+        {/* Input form to add or update. slug property to determine API endpoint */}
+        {isActive && (
+          <UpsertCategory
+            slug={slug}
+            data={data}
+            closeForm={() => setIsActive(!isActive)}
+          />
+        )}
+        {!isActive && (
+          <button
+            onClick={() =>
+              handleUpsert('', {
+                name: '',
+                logo_url: ''
+              })
+            }
+            className="btn"
+          >
+            Add category
+          </button>
+        )}
+        <Category handleUpsert={handleUpsert} baseURL={props.match.path} />
+      </div>
+    );
+  } else {
+    return <Redirect to="/login" />;
+  }
 };

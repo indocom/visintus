@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { signUpUser } from '../store/actions/authActions';
 
 class Signup extends Component {
   state = {
@@ -8,6 +8,10 @@ class Signup extends Component {
     password: '',
     firstName: '',
     lastName: ''
+  };
+
+  handleReload = e => {
+    window.location.replace('/');
   };
 
   handleChange = e => {
@@ -18,8 +22,15 @@ class Signup extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.signUpUser(this.state);
+    const awaitSignUp = new Promise((resolve, reject) => {
+      this.props.signUpUser(this.state);
+      setTimeout(() => resolve('Sign Up Success'), 500);
+    });
+    awaitSignUp.then(value => {
+      this.handleReload();
+    });
   };
+
   render() {
     const { auth, authError } = this.props;
     //if (auth.uid) return <Redirect to='/' />
@@ -59,8 +70,18 @@ class Signup extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => {
+  return {
+    authError: state.auth.authError
+  };
+};
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = dispatch => {
+  return {
+    signUpUser: credentials => {
+      dispatch(signUpUser(credentials));
+    }
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
