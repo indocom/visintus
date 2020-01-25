@@ -7,8 +7,8 @@ import Category from './pages/Category';
 import Footer from './components/layout/Footer';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Itinerary from './pages/Itinerary';
-import * as Admin from './pages/Admin';
+import Itinerary from './pages/Itin';
+import { Dashboard } from './pages/Admin';
 import Checkout from './pages/Checkout';
 import NotFound from './pages/404';
 
@@ -26,22 +26,7 @@ class App extends Component {
               <Route path="/signup" component={Signup} />
               <Route path="/itinerary" component={Itinerary} />
               <Route path="/checkout" component={Checkout} />
-              <Route exact path="/admin" component={Admin.Dashboard} />
-              <Route
-                exact
-                path="/admin/highlights"
-                component={Admin.Components.Highlight}
-              />
-              <Route
-                exact
-                path="/admin/categories"
-                component={Admin.Components.Category}
-              />
-              <Route
-                exact
-                path="/admin/categories/:slug"
-                component={Admin.Components.CategoryDetails}
-              />
+              <Route path="/admin" component={Dashboard} />
               <Route component={NotFound} />
             </Switch>
           </div>
