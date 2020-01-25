@@ -7,21 +7,21 @@ const plansController = require('../../app/controllers/plans.js');
 router.post(
   '/',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   plansController.createPlan
 );
 
 router.post(
   '/:planId',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   plansController.updatePlan
 );
 
 router.delete(
   '/:planId',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   plansController.deletePlan
 );
 

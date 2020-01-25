@@ -20,9 +20,7 @@ const LOGIN_ATTEMPTS = 5;
  * Private functions *
  *********************/
 
-/*
-Generates a token
-*/
+/* Generates a token */
 const generateToken = user => {
   // Gets expiration time
   const expiration =
@@ -516,8 +514,6 @@ exports.requireAuth = async (req, res, next) => {
   })(req, res, next);
 };
 
-// exports.requireAuth = passport.authenticate('jwt', { session: false });
-
 /* Verify a role */
 
 exports.roleAuthorization = roles => async (req, res, next) => {
@@ -542,4 +538,30 @@ exports.logout = async (req, res) => {
   } catch (error) {
     utils.handleError(res, utils.buildErrObject(422, error.message));
   }
+};
+
+exports.list = async (req, res) => {
+  User.find()
+    .select('-_id name email role')
+    .lean()
+    .then(users => utils.handleSuccess(res, utils.buildSuccObject(users)))
+    .catch(error =>
+      utils.handleError(res, utils.buildErrObject(error.message))
+    );
+};
+
+exports.updateRole = async (req, res) => {
+  User.updateOne({ email: req.body.user.email }, { role: req.body.user.role })
+    .then(result => {
+      if (result.n) {
+        if (result.nModified)
+          utils.handleSuccess(res, utils.buildSuccObject('Role updated'));
+        else
+          utils.handleError(res, utils.buildErrObject(422, 'No changes made'));
+      } else
+        utils.handleError(res, utils.buildErrObject(422, 'User not found'));
+    })
+    .catch(error =>
+      utils.handleError(res, utils.buildErrObject(422, error.message))
+    );
 };

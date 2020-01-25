@@ -9,21 +9,21 @@ router.get('/', highlightsController.getAllHighlights);
 router.post(
   '/',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   highlightsController.createHighlight
 );
 
 router.post(
   '/:highlightId',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   highlightsController.updateHighlight
 );
 
 router.delete(
   '/:highlightId',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   highlightsController.deleteHighlight
 );
 

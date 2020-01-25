@@ -7,14 +7,14 @@ const bannersController = require('../../app/controllers/banners');
 router.post(
   '/',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   bannersController.createBanner
 );
 
 router.delete(
   '/:bannerId',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   bannersController.deleteBanner
 );
 

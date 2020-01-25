@@ -33,4 +33,24 @@ router.post('/login', usersController.login);
  */
 router.post('/logout', usersController.requireAuth, usersController.logout);
 
+/*
+ * List all users
+ */
+router.get(
+  '/list',
+  usersController.requireAuth,
+  usersController.roleAuthorization(['superadmin']),
+  usersController.list
+);
+
+/*
+ * Update user role
+ */
+router.post(
+  '/update-role',
+  usersController.requireAuth,
+  usersController.roleAuthorization(['superadmin']),
+  usersController.updateRole
+);
+
 module.exports = router;

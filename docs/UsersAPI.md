@@ -104,3 +104,52 @@ Body:
   "message" : ...
 }
 ```
+
+### GET `/users/list`
+
+List all users info.
+
+> :warning: **Requires authorization (superadmin)**
+
+#### Response
+
+Body:
+
+```
+{
+  "message" : {
+    "users": [{
+      "name": ...,
+      "email": ...,
+      "role": ...
+    }]
+  }
+}
+```
+
+### POST `/users/update-role`
+
+Update role for user.
+
+> :warning: **Requires authorization (superadmin)**
+
+#### Request
+
+```
+{
+  "user": {
+    "email": ...
+    "role": ...
+  }
+}
+```
+
+#### Response
+
+Body:
+
+```
+{
+  "message" : ...
+}
+```

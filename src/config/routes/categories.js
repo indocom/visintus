@@ -11,21 +11,21 @@ router.get('/:slug', categoriesController.getCategoryInfo);
 router.post(
   '/',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   categoriesController.createCategory
 );
 
 router.post(
   '/:slug',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   categoriesController.updateCategory
 );
 
 router.delete(
   '/:slug',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   categoriesController.deleteCategory
 );
 

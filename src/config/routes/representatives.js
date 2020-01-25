@@ -7,21 +7,21 @@ const representativesController = require('../../app/controllers/representatives
 router.post(
   '/',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   representativesController.createRepresentative
 );
 
 router.post(
   '/:representativeId',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   representativesController.updateRepresentative
 );
 
 router.delete(
   '/:representativeId',
   usersController.requireAuth,
-  usersController.roleAuthorization(['admin']),
+  usersController.roleAuthorization(['admin', 'superadmin']),
   representativesController.deleteRepresentative
 );
 
