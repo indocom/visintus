@@ -7,7 +7,7 @@ import Category from './pages/Category';
 import Footer from './components/layout/Footer';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Itinerary from './pages/Itin';
+import Itinerary from './pages/Itinerary';
 import { Dashboard } from './pages/Admin';
 import Checkout from './pages/Checkout';
 import NotFound from './pages/404';

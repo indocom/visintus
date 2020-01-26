@@ -1,19 +1,24 @@
 import React from 'react';
 import { Link, Redirect, BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Highlight, Category, CategoryDetails } from '../components/admin';
+import {
+  Highlight,
+  Category,
+  CategoryDetails,
+  User
+} from '../components/admin';
 
 export const Dashboard = props => {
   const { match } = props;
   const role = localStorage.getItem('role');
-  if (role === 'admin') {
+  if (role === 'admin' || role === 'superadmin') {
     return (
       <BrowserRouter>
         <div className="row">
           <div className="col s2" style={{ color: 'black' }}>
             <Link to={`${match.url}`}>
-              <h5 style={{ width: '70%', margin: 'auto', padding: '0.5em' }}>
+              <h4 style={{ width: '70%', margin: 'auto', padding: '0.5em' }}>
                 Admin
-              </h5>
+              </h4>
             </Link>
             <hr />
             <ul
@@ -30,6 +35,11 @@ export const Dashboard = props => {
               <li>
                 <Link to={`${match.url}/categories`}>Category</Link>
               </li>
+              {role === 'superadmin' && (
+                <li>
+                  <Link to={`${match.url}/users`}>Manage Users</Link>
+                </li>
+              )}
             </ul>
           </div>
           <div className="col s10 container" style={{ paddingLeft: '2em' }}>
@@ -49,6 +59,7 @@ const Container = ({ route }) => {
     <Switch>
       <Route exact path={`${match.path}`} render={() => <h4>Hello Admin</h4>} />
       <Route exact path={`${match.path}/highlights`} component={Highlight} />
+      <Route exact path={`${match.path}/users`} component={User} />
       <Route exact path={`${match.path}/categories`} component={Category} />
       <Route
         exact
