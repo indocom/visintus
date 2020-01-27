@@ -27,7 +27,7 @@ export default props => {
   }, [details.length]);
 
   return (
-    <div className="container">
+    <>
       <h4>
         Category Details Page
         <div
@@ -108,6 +108,6 @@ export default props => {
           })()}
         </div>
       </div>
-    </div>
+    </>
   );
 };

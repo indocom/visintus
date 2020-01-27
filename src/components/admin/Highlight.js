@@ -100,10 +100,8 @@ class UpsertHighlight extends Component {
 
   handleSubmit = async e => {
     const data = JSON.stringify({
-      authToken: 'visintus',
       highlight: this.state
     });
-    console.log(data);
 
     await axios
       .post('/highlights' + this.endpoint, data, {
@@ -192,7 +190,7 @@ export default props => {
   };
 
   return (
-    <div className="container">
+    <>
       <h4>Highlight Admin Page</h4>
       <div
         className="btn right"
@@ -226,6 +224,6 @@ export default props => {
         </button>
       )}
       <Highlight handleUpsert={handleUpsert} baseURL={props.match.path} />
-    </div>
+    </>
   );
 };

@@ -1,9 +1,6 @@
 import Category from './Category';
 import CategoryDetails from './CategoryDetails';
 import Highlight from './Highlight';
+import User from './User';
 
-export default {
-  Category,
-  CategoryDetails,
-  Highlight
-};
+export { Category, CategoryDetails, Highlight, User };
