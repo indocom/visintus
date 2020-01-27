@@ -99,6 +99,7 @@ class UpsertHighlight extends Component {
   };
 
   handleSubmit = async e => {
+    const token = localStorage.getItem('token');
     const data = JSON.stringify({
       highlight: this.state
     });
@@ -107,7 +108,8 @@ class UpsertHighlight extends Component {
       .post('/highlights' + this.endpoint, data, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
         },
         crossdomain: true
       })
