@@ -9,6 +9,7 @@ const Navbar = props => {
   const isLoggedIn = localStorage.getItem('isLoggedIn');
   const token = localStorage.getItem('token');
   const initials = localStorage.getItem('initials');
+  const role = localStorage.getItem('role');
 
   useEffect(() => {
     console.log('hello');
@@ -40,6 +41,11 @@ const Navbar = props => {
         <li>
           <Link to="/">Account</Link>
         </li>
+        {['admin', 'superadmin'].includes(role) && (
+          <li>
+            <Link to="/admin">Admin</Link>
+          </li>
+        )}
         <li>
           <Link to="/" onClick={handleLogout}>
             Logout
@@ -51,6 +57,9 @@ const Navbar = props => {
           Visintus
         </Link>
         <ul className="right">
+          <li>
+            <NavLink to="/itinerary">Itin</NavLink>
+          </li>
           {isLoggedIn === 'true' ? (
             <li>
               <a
@@ -70,9 +79,6 @@ const Navbar = props => {
               <NavLink to="/login">Login</NavLink>
             </li>
           )}
-          <li>
-            <NavLink to="/itinerary">Itin</NavLink>
-          </li>
         </ul>
       </div>
     </nav>

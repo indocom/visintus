@@ -3,6 +3,8 @@ import axios from 'axios';
 
 function User() {
   const [users, setUsers] = useState([]);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -17,19 +19,37 @@ function User() {
           crossdomain: true
         });
         setUsers(res.data.message);
-        console.log(users);
+        setIsAuthorized(true);
       } catch (e) {
         console.log(e);
+        setIsAuthorized(false);
       }
     };
     fetchUsers();
   }, [users.length]);
 
-  const toggleUserRole = (e, email) => {
-    let newUsers = [...users];
-    let changedUser = newUsers.find(user => user.email === email);
-    changedUser.role = changedUser.role === 'admin' ? 'user' : 'admin';
-    setUsers(newUsers);
+  const toggleUserRole = async (email, role) => {
+    try {
+      const token = localStorage.getItem('token');
+      const data = JSON.stringify({
+        user: {
+          email,
+          role: role === 'admin' ? 'user' : 'admin'
+        }
+      });
+      await axios.post('/users/update-role', data, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
+        },
+        crossdomain: true
+      });
+      setUsers([]);
+    } catch (e) {
+      console.log(e);
+      setIsError(true);
+    }
   };
 
   const userList =
@@ -44,7 +64,7 @@ function User() {
               type="checkbox"
               checked={user.role.includes('admin')}
               disabled={user.role === 'superadmin'}
-              onChange={e => toggleUserRole(e, user.email)}
+              onChange={e => toggleUserRole(user.email, user.role)}
             />
             <span>{user.role}</span>
           </label>
@@ -52,20 +72,24 @@ function User() {
       </tr>
     ));
 
-  return (
-    <>
-      <h4>User Admin Page</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role (checked if admin!)</th>
-          </tr>
-        </thead>
-        <tbody>{userList}</tbody>
-      </table>
-    </>
+  return !isError ? (
+    isAuthorized && (
+      <>
+        <h4>User Admin Page</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role (checked if admin!)</th>
+            </tr>
+          </thead>
+          <tbody>{userList}</tbody>
+        </table>
+      </>
+    )
+  ) : (
+    <p>Error fetching data</p>
   );
 }
 
