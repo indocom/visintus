@@ -10,6 +10,13 @@ import '../css/itin.css';
 
 const Itin = props => {
   const [plan, setPlan] = useState({});
+
+  useEffect(() => {
+    let collapsible = document.querySelectorAll('.collapsible');
+    M.Collapsible.init(collapsible);
+    console.log('collapsible deployed');
+  }, []);
+
   useEffect(() => {
     const fetchPlanInfo = async () => {
       try {
@@ -52,33 +59,34 @@ const Itin = props => {
     props.history.push('/checkout');
   };
 
-  const display = value => {
-    const id = '#' + value.slug;
-    const getElem = document.querySelector(`${id}`);
-    if (getElem.style.position === 'relative') {
-      getElem.style.position = 'absolute';
-      getElem.style.opacity = '0';
-      getElem.style.transition = 'all 0s linear';
-    } else {
-      getElem.style.position = 'relative';
-      getElem.style.opacity = '1';
-      getElem.style.transition = 'all 0.3s linear';
-    }
-  };
+  // const display = value => {
+  //   const id = '#' + value.slug;
+  //   const getElem = document.querySelector(`${id}`);
+  //   if (getElem.style.position === 'relative') {
+  //     getElem.style.position = 'absolute';
+  //     getElem.style.opacity = '0';
+  //     getElem.style.transition = 'all 0s linear';
+  //   } else {
+  //     getElem.style.position = 'relative';
+  //     getElem.style.opacity = '1';
+  //     getElem.style.transition = 'all 0.3s linear';
+  //   }
+  // };
 
   let planList =
     Object.keys(plan).length > 0 ? (
       Object.entries(plan).map(([slug, data]) => {
         console.log(data);
         return (
-          <Fragment key={slug}>
-            <div className="dropdownItin__title">
-              <h6 className="red-text">{data.name}</h6>
-              <button onClick={() => display({ slug })}>
-                <i className="fas fa-chevron-down"></i>
-              </button>
+          <li key={slug}>
+            <div className="collapsible-header">
+              <h6>{data.name}
+                <span>
+                  <i className="fas fa-angle-down grey-text text-lighten-1"></i>
+                </span>
+              </h6>
             </div>
-            <div className="dropdownItin__content" id={slug}>
+            <div className="collapsible-body">
               <ul>
                 {data.plans.length > 1
                   ? data.plans.map(plan => (
@@ -117,28 +125,39 @@ const Itin = props => {
                     ))}
               </ul>
             </div>
-          </Fragment>
+          </li>
         );
       })
     ) : (
-      <p> You haven't make any plans yet </p>
+      // <p> You haven't make any plans yet </p>
+      null
     );
-
+  
+  let buttons = (
+    <div className="dropdownButtonContainer">
+      <div className="btn" style={{ marginRight: 10 }} onClick={handleSave}>
+        Save
+      </div>
+      <div className="btn" onClick={handleCheckout}>
+        Save &amp; Checkout
+      </div>
+    </div>
+  );
+  
   return (
     <div className="container" style={{ padding: '1.5em 0' }}>
       <Link to="/">&lt;&lt;&lt; Continue planning</Link>
       <h5>Your itinerary</h5>
       <div className="dropdownItin">
-        {planList}
+        {planList === null 
+          ? <p> You haven't make any plans yet </p>
+          : null
+        }
+        <ul className="collapsible">
+          {planList}
+        </ul>
         <br />
-        <div className="dropdownButtonContainer">
-          <div className="btn" style={{ marginRight: 10 }} onClick={handleSave}>
-            Save
-          </div>
-          <div className="btn" onClick={handleCheckout}>
-            Save &amp; Checkout
-          </div>
-        </div>
+        {planList === null ? null : buttons}
       </div>
     </div>
   );
