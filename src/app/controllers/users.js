@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const uuid = require('uuid');
-const passport = require('passport');
 const { addHours } = require('date-fns');
 const { matchedData } = require('express-validator');
 
@@ -10,8 +9,6 @@ const ForgotPassword = require('../models/forgotPassword');
 const utils = require('../middleware/utils');
 const auth = require('../middleware/auth');
 const emailer = require('../middleware/emailer');
-
-require('../../config/passport');
 
 const HOURS_TO_BLOCK = 2;
 const LOGIN_ATTEMPTS = 5;
@@ -39,7 +36,6 @@ const generateToken = user => {
 };
 
 /* Creates an object with user info */
-
 const setUserInfo = data => {
   let user = {
     _id: data._id,
@@ -61,7 +57,6 @@ const setUserInfo = data => {
 };
 
 /* Blocks a user */
-
 const blockUser = async user => {
   return new Promise((resolve, reject) => {
     user.blockExpires = addHours(new Date(), HOURS_TO_BLOCK);
@@ -77,7 +72,6 @@ const blockUser = async user => {
 };
 
 /* Saves a new user access and then returns token */
-
 const saveUserAccessAndReturnToken = async (req, user) => {
   return new Promise((resolve, reject) => {
     const userAccess = new UserAccess({
@@ -98,7 +92,6 @@ const saveUserAccessAndReturnToken = async (req, user) => {
 };
 
 /* Saves login attempts to database */
-
 const saveLoginAttemptsToDB = async user => {
   return new Promise((resolve, reject) => {
     user.save((err, result) => {
@@ -108,20 +101,6 @@ const saveLoginAttemptsToDB = async user => {
       if (result) {
         resolve(true);
       }
-    });
-  });
-};
-
-/* Checks permissions of a user */
-
-const checkPermissions = async (data, next) => {
-  return new Promise((resolve, reject) => {
-    User.findById(data.id, (err, result) => {
-      utils.itemNotFound(err, result, reject, 'NOT_FOUND');
-      if (data.roles.indexOf(result.role) > -1) {
-        return resolve(next());
-      }
-      return reject(utils.buildErrObject(422, 'UNAUTHORIZED'));
     });
   });
 };
@@ -154,7 +133,6 @@ const checkLoginAttemptsAndBlockExpires = async user => {
 };
 
 /* Checks if blockExpires from user is greater than now */
-
 const userIsBlocked = async user => {
   return new Promise((resolve, reject) => {
     if (user.blockExpires > new Date()) {
@@ -165,7 +143,6 @@ const userIsBlocked = async user => {
 };
 
 /* Finds user by email  */
-
 const findUser = async email => {
   return new Promise((resolve, reject) => {
     User.findOne(
@@ -180,7 +157,6 @@ const findUser = async email => {
 };
 
 /* Finds user by Token */
-
 const findUserByToken = async token => {
   return new Promise((resolve, reject) => {
     User.findOne(
@@ -197,7 +173,6 @@ const findUserByToken = async token => {
 /* Adds one attempts to loginAttempts, if password does not match and 
     compares loginAttempts with the constant LOGIN_ATTEMPTS, if it is less 
     returns wrong password, else returns blockUser function */
-
 const passwordsDoNotMatch = async user => {
   user.loginAttempts += 1;
   await saveLoginAttemptsToDB(user);
@@ -212,7 +187,6 @@ const passwordsDoNotMatch = async user => {
 };
 
 /* Registers a new user in the database */
-
 const registerUser = async user => {
   return new Promise((resolve, reject) => {
     const newUser = new User({
@@ -230,7 +204,6 @@ const registerUser = async user => {
 };
 
 /* Builds the registration token */
-
 const returnRegisterToken = (item, userInfo) => {
   if (process.env.NODE_ENV !== 'production') {
     userInfo.verification = item.verification;
@@ -243,7 +216,6 @@ const returnRegisterToken = (item, userInfo) => {
 };
 
 /* Checks if verification id exists for user */
-
 const verificationExists = async id => {
   return new Promise((resolve, reject) => {
     User.findOne(
@@ -260,7 +232,6 @@ const verificationExists = async id => {
 };
 
 /* Verifies an user */
-
 const verifyUser = async user => {
   return new Promise((resolve, reject) => {
     user.verified = true;
@@ -277,7 +248,6 @@ const verifyUser = async user => {
 };
 
 /* Updates a user password in database */
-
 const updatePassword = async (password, user) => {
   return new Promise((resolve, reject) => {
     user.password = password;
@@ -287,8 +257,8 @@ const updatePassword = async (password, user) => {
     });
   });
 };
-/* Builds an object with created forgot password object */
 
+/* Builds an object with created forgot password object */
 const forgotPasswordResponse = item => {
   let data = {
     msg: 'RESET_EMAIL_SENT',
@@ -304,7 +274,6 @@ const forgotPasswordResponse = item => {
 };
 
 /* Finds user by email */
-
 const findUserToResetPassword = async email => {
   return new Promise((resolve, reject) => {
     User.findOne({ email }, (err, user) => {
@@ -315,7 +284,6 @@ const findUserToResetPassword = async email => {
 };
 
 /* Checks if a forgot password verification exists */
-
 const findForgotPassword = async id => {
   return new Promise((resolve, reject) => {
     ForgotPassword.findOne(
@@ -343,7 +311,6 @@ const markResetPasswordAsUsed = async (req, forgot) => {
 };
 
 /* Save the new password through forgot password method */
-
 const saveForgotPassword = async req => {
   return new Promise((resolve, reject) => {
     const forgot = new ForgotPassword({
@@ -360,7 +327,6 @@ const saveForgotPassword = async req => {
 };
 
 /* Updates a token for a particular user */
-
 const updateToken = async (token, user) => {
   return new Promise((resolve, reject) => {
     user.token = token;
@@ -373,7 +339,6 @@ const updateToken = async (token, user) => {
 };
 
 /* Invalidates a token */
-
 const invalidateToken = async user => {
   return new Promise((resolve, reject) => {
     user.isTokenValid = false;
@@ -389,7 +354,6 @@ const invalidateToken = async user => {
  ********************/
 
 /* Login function called by route */
-
 exports.login = async (req, res) => {
   try {
     const user = await findUser(req.body.user.email);
@@ -428,7 +392,6 @@ exports.login = async (req, res) => {
 };
 
 /* Register / Sign-up called by route */
-
 exports.register = async (req, res) => {
   try {
     //if(!doesEmailExists){
@@ -459,7 +422,6 @@ exports.register = async (req, res) => {
 };
 
 /* Verify function called by route */
-
 exports.verify = async (req, res) => {
   try {
     // req = matchedData(req)
@@ -471,7 +433,6 @@ exports.verify = async (req, res) => {
 };
 
 /* Forgot password function called by route */
-
 exports.forgotPassword = async (req, res) => {
   try {
     const locale = req.getLocale();
@@ -486,7 +447,6 @@ exports.forgotPassword = async (req, res) => {
 };
 
 /* Reset password function called by route */
-
 exports.resetPassword = async (req, res) => {
   try {
     const data = matchedData(req);
@@ -500,36 +460,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-/* Authentication */
-
-exports.requireAuth = async (req, res, next) => {
-  passport.authenticate('jwt', (_, user, err) => {
-    if (err)
-      return utils.handleError(res, utils.buildErrObject(422, err.message));
-    if (!user)
-      return utils.handleError(res, utils.buildErrObject(422, 'Unknown user'));
-
-    req.user = user;
-    next();
-  })(req, res, next);
-};
-
-/* Verify a role */
-
-exports.roleAuthorization = roles => async (req, res, next) => {
-  try {
-    const data = {
-      id: req.user._id,
-      roles
-    };
-    await checkPermissions(data, next);
-  } catch (error) {
-    utils.handleError(res, utils.buildErrObject(422, error.message));
-  }
-};
-
 /* Signout called by route */
-
 exports.logout = async (req, res) => {
   try {
     const user = await findUserByToken(req.body.token);

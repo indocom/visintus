@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Setup config routing
-app.use('/', require('./config/router.js'));
+app.use('/', require('./config/routes'));
 
 // Load config data
 const config = require('./config/config.js');
