@@ -6,8 +6,16 @@ const Category = props => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     async function FetchAllCategories() {
+      const token = localStorage.getItem('token');
       let { data } = await axios
-        .get('/categories')
+        .get('/admin/categories', {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+            Authorization: `${token}`
+          },
+          crossdomain: true
+        })
         .catch(err => console.log(err));
 
       if (data) {
@@ -24,7 +32,7 @@ const Category = props => {
     const token = localStorage.getItem('token');
 
     await axios
-      .delete(`/categories/${slug}`, {
+      .delete(`/admin/categories/${slug}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
@@ -109,7 +117,7 @@ class UpsertCategory extends Component {
     const token = localStorage.getItem('token');
 
     await axios
-      .post('/categories' + this.endpoint, data, {
+      .post('/admin/categories' + this.endpoint, data, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',

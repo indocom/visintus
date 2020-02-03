@@ -10,7 +10,7 @@ function User() {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('/users/list', {
+        const res = await axios.get('/admin/users/list', {
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ function User() {
           role: role === 'admin' ? 'user' : 'admin'
         }
       });
-      await axios.post('/users/update-role', data, {
+      await axios.post('/admin/users/update-role', data, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',

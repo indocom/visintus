@@ -5,7 +5,7 @@ const PlanDetails = ({ plans, handleUpsert, slug, setDetails }) => {
   const handleRemove = async _id => {
     const token = localStorage.getItem('token');
     await axios
-      .delete(`/categories/${slug}/plans/${_id}`, {
+      .delete(`/admin/categories/${slug}/plans/${_id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
@@ -79,14 +79,18 @@ class UpsertPlan extends Component {
     console.log(data);
     const token = localStorage.getItem('token');
     await axios
-      .post(`/categories/${this.props.slug}/plans` + this.endpoint, data, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${token}`
-        },
-        crossdomain: true
-      })
+      .post(
+        `/admin/categories/${this.props.slug}/plans` + this.endpoint,
+        data,
+        {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+            Authorization: `${token}`
+          },
+          crossdomain: true
+        }
+      )
       .catch(err => console.log(err));
   };
   render() {

@@ -6,7 +6,7 @@ const BannerDetails = ({ banners, slug, setDetails }) => {
   const handleRemove = async (id, slug) => {
     const token = localStorage.getItem('token');
     await axios
-      .delete(`/categories/${slug}/banners/${id}`, {
+      .delete(`/admin/categories/${slug}/banners/${id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ class UpsertBanner extends Component {
     console.log(data);
 
     await axios
-      .post(`/categories/${this.props.slug}/banners`, data, {
+      .post(`/admin/categories/${this.props.slug}/banners`, data, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',

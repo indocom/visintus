@@ -5,8 +5,16 @@ const Highlight = props => {
   const [highlights, setHighlights] = useState([]);
   useEffect(() => {
     async function FetchAllHighlights() {
+      const token = localStorage.getItem('token');
       let { data } = await axios
-        .get('/highlights')
+        .get('/admin/highlights', {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+            Authorization: `${token}`
+          },
+          crossdomain: true
+        })
         .catch(err => console.log(err));
       console.log(data);
       if (data) {
@@ -22,7 +30,7 @@ const Highlight = props => {
   const handleRemove = async id => {
     const token = localStorage.getItem('token');
     await axios
-      .delete(`/highlights/${id}`, {
+      .delete(`/admin/highlights/${id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
@@ -105,7 +113,7 @@ class UpsertHighlight extends Component {
     });
 
     await axios
-      .post('/highlights' + this.endpoint, data, {
+      .post('/admin/highlights' + this.endpoint, data, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',

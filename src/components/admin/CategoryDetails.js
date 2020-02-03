@@ -12,8 +12,16 @@ export default props => {
 
   useEffect(() => {
     async function FetchAllDetails() {
+      const token = localStorage.getItem('token');
       let { data } = await axios
-        .get(`/categories/${slug}`)
+        .get(`/admin/categories/${slug}`, {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+            Authorization: `${token}`
+          },
+          crossdomain: true
+        })
         .catch(err => console.log(err));
       if (data) {
         if (!data.message) return;
