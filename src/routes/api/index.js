@@ -11,5 +11,6 @@ router.use(
 router.use('/categories', require('./categories'));
 router.use('/highlights', require('./highlights'));
 router.use('/users', require('./users'));
+router.use('/images', require('./images'));
 
 module.exports = router;
