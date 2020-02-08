@@ -1,27 +1,26 @@
 import React, { Component, useEffect, useState } from 'react';
 import axios from 'axios';
+import M from 'materialize-css';
 
 const Highlight = props => {
   const [highlights, setHighlights] = useState([]);
   useEffect(() => {
     async function FetchAllHighlights() {
-      const token = localStorage.getItem('token');
-      let { data } = await axios
-        .get('/admin/highlights', {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get('/admin/highlights', {
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
             Authorization: `${token}`
           },
           crossdomain: true
-        })
-        .catch(err => console.log(err));
-      console.log(data);
-      if (data) {
-        if (!data.message) return;
-        setHighlights(data.message);
-      } else {
-        console.log(`Error in loading /pages/highlights`);
+        });
+        setHighlights(res.data.message);
+        // setIsAuthorized(true);
+      } catch (e) {
+        console.log(e);
+        // setIsAuthorized(false);
       }
     }
     FetchAllHighlights();
@@ -85,7 +84,9 @@ class UpsertHighlight extends Component {
   state = {
     image_url: '',
     description: '',
-    hyperlink: ''
+    hyperlink: '',
+    selectedFile: null,
+    token: localStorage.getItem('token') || ''
   };
 
   title = this.props.slug === '' ? 'Add Highlight' : 'Update Highlight';
@@ -106,8 +107,43 @@ class UpsertHighlight extends Component {
     });
   };
 
+  handleSelectFile = e => {
+    console.log(e.target.files[0]);
+    this.setState({
+      selectedFile: e.target.files[0]
+    });
+  };
+
+  handleFileUpload = async e => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('file', this.state.selectedFile);
+    try {
+      const res = await axios.post('/images/upload', data, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+          Authorization: `${this.state.token}`
+        },
+        crossdomain: true
+      });
+      console.log(res);
+      this.setState({ image_url: res.data.message });
+      M.toast({
+        html: '<div>Image uploaded!</div>',
+        classes: 'teal rounded center top'
+      });
+    } catch (e) {
+      console.log('bangke');
+      console.log(e);
+      M.toast({
+        html: `<div>Image failed to upload!</div><div> ${e}! </div>`,
+        classes: 'red rounded center top'
+      });
+    }
+  };
+
   handleSubmit = async e => {
-    const token = localStorage.getItem('token');
     const data = JSON.stringify({
       highlight: this.state
     });
@@ -117,7 +153,7 @@ class UpsertHighlight extends Component {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
-          Authorization: `${token}`
+          Authorization: `${this.state.token}`
         },
         crossdomain: true
       })
@@ -129,23 +165,50 @@ class UpsertHighlight extends Component {
 
     return (
       <>
+        <h5 className="grey-text text-darken-3">{this.title}</h5>
+        <form
+          style={{ padding: 15, backgroundColor: '#eee' }}
+          onSubmit={this.handleFileUpload}
+        >
+          <div className="file-field input-field">
+            <div className="btn">
+              <span>File</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={this.handleSelectFile}
+              />
+            </div>
+            <div className="file-path-wrapper">
+              <input
+                className="file-path validate"
+                type="text"
+                placeholder="Insert file here"
+              />
+            </div>
+            <input type="submit" className="btn" value="save" />
+          </div>
+        </form>
+
         <form
           onSubmit={this.handleSubmit}
           style={{ padding: 15, backgroundColor: '#eee' }}
         >
-          <h5 className="grey-text text-darken-3">{this.title}</h5>
-          <div className="input-field">
-            <label htmlFor="image_url" className="active">
-              Image URL
-            </label>
-            <input
-              type="text"
-              id="image_url"
-              value={this.state.image_url}
-              onChange={this.handleChange}
-              required
-            />
-          </div>
+          {this.props.slug !== '' && (
+            <div className="input-field">
+              <label htmlFor="image_url" className="active">
+                Image URL
+              </label>
+              <input
+                type="text"
+                id="image_url"
+                value={this.state.image_url}
+                onChange={this.handleChange}
+                required
+                disabled
+              />
+            </div>
+          )}
 
           <div className="input-field">
             <label htmlFor="hyperlink" className="active">
@@ -170,6 +233,7 @@ class UpsertHighlight extends Component {
               onChange={this.handleChange}
             />
           </div>
+
           <button className="btn">{this.title}</button>
           <div
             className="btn"
