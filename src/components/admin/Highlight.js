@@ -1,48 +1,32 @@
 import React, { Component, useEffect, useState } from 'react';
 import axios from 'axios';
+import useFetch from '../../hooks/useFetch';
+import useMutation from '../../hooks/useMutation';
 import M from 'materialize-css';
 
 const Highlight = props => {
-  const [highlights, setHighlights] = useState([]);
-  useEffect(() => {
-    async function FetchAllHighlights() {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('/admin/highlights', {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json',
-            Authorization: `${token}`
-          },
-          crossdomain: true
-        });
-        setHighlights(res.data.message);
-        // setIsAuthorized(true);
-      } catch (e) {
-        console.log(e);
-        // setIsAuthorized(false);
-      }
-    }
-    FetchAllHighlights();
-  }, [highlights.length]);
+  const [
+    { response: highlights, loading: fetchLoading, error: fetchError },
+    doFetch
+  ] = useFetch({ endpoint: '/admin/highlights' });
+  const [{ error: mutationError }, upsertData] = useMutation();
 
   const handleRemove = async id => {
-    const token = localStorage.getItem('token');
-    await axios
-      .delete(`/admin/highlights/${id}`, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${token}`
-        },
-        crossdomain: true
-      })
-      .then(res => res.status === 200 && setHighlights([]))
-      .catch(err => console.log(err));
+    upsertData({
+      method: 'delete',
+      endpoint: `/admin/highlights/${id}`
+    });
+    doFetch(true);
+    if (mutationError) {
+      M.toast({
+        html: `<div>Failed to remove!</div><div> ${mutationError}! </div>`,
+        classes: 'red rounded center top'
+      });
+    }
   };
 
   const highlightsList =
-    highlights.length > 0 ? (
+    highlights && highlights.length > 0 ? (
       highlights.map((highlight, index) => {
         return (
           <li key={index} style={{ minHeight: 50 }}>
@@ -77,180 +61,169 @@ const Highlight = props => {
       <div className="center">No data yet :(</div>
     );
 
-  return <ul>{highlightsList}</ul>;
+  if (fetchLoading) return null;
+  return !fetchError ? (
+    <ul>{highlightsList}</ul>
+  ) : (
+    <p>
+      Error fetching data! Check your credentials or contact your administrator
+    </p>
+  );
 };
 
-class UpsertHighlight extends Component {
-  state = {
-    image_url: '',
-    description: '',
-    hyperlink: '',
-    selectedFile: null,
-    token: localStorage.getItem('token') || ''
-  };
+const UpsertHighlight = props => {
+  const [description, setDescription] = useState(props.data.description);
+  const [hyperlink, setHyperlink] = useState(props.data.hyperlink);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [
+    { response: highlights, loading: fetchLoading, error: fetchError },
+    doFetch
+  ] = useFetch({ endpoint: '/admin/highlights' });
+  const [
+    { response: imageURL, error: mutationError },
+    upsertData
+  ] = useMutation();
 
-  title = this.props.slug === '' ? 'Add Highlight' : 'Update Highlight';
-  endpoint = this.props.slug === '' ? '' : `/${this.props.slug}`;
+  const title = props.slug === '' ? 'Add Highlight' : 'Update Highlight';
+  const endpoint = props.slug === '' ? '' : `/${props.slug}`;
 
-  componentDidMount() {
+  useEffect(() => {
     window.scrollTo(0, 0);
-    this.setState({
-      image_url: this.props.data.image_url,
-      hyperlink: this.props.data.hyperlink,
-      description: this.props.data.description
-    });
-  }
+  }, []);
 
-  handleChange = e => {
-    this.setState({
-      [e.target.id]: e.target.value
-    });
-  };
-
-  handleSelectFile = e => {
+  const handleSelectFile = e => {
     console.log(e.target.files[0]);
-    this.setState({
-      selectedFile: e.target.files[0]
+    setSelectedFile(e.target.files[0]);
+    M.toast({
+      html: '<div>Remember to save!</div>',
+      classes: 'teal rounded center top'
     });
   };
 
-  handleFileUpload = async e => {
+  const handleFileUpload = async e => {
     e.preventDefault();
+
     const data = new FormData();
-    data.append('file', this.state.selectedFile);
-    try {
-      const res = await axios.post('/images/upload', data, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${this.state.token}`
-        },
-        crossdomain: true
-      });
-      console.log(res);
-      this.setState({ image_url: res.data.message });
-      M.toast({
-        html: '<div>Image uploaded!</div>',
-        classes: 'teal rounded center top'
-      });
-    } catch (e) {
-      console.log('bangke');
-      console.log(e);
+    data.append('file', selectedFile);
+
+    await upsertData({
+      method: 'post',
+      endpoint: `/images/upload`,
+      data
+    });
+
+    if (mutationError) {
       M.toast({
         html: `<div>Image failed to upload!</div><div> ${e}! </div>`,
         classes: 'red rounded center top'
       });
+    } else {
+      M.toast({
+        html: '<div>Image uploaded!</div>',
+        classes: 'teal rounded center top'
+      });
     }
   };
 
-  handleSubmit = async e => {
+  const handleSubmit = async e => {
     const data = JSON.stringify({
-      highlight: this.state
+      highlight: {
+        image_url: imageURL,
+        description,
+        hyperlink
+      }
     });
+    console.log(data);
 
-    await axios
-      .post('/admin/highlights' + this.endpoint, data, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${this.state.token}`
-        },
-        crossdomain: true
-      })
-      .catch(err => console.log(err));
+    await upsertData({
+      method: 'post',
+      endpoint: '/admin/highlights' + endpoint,
+      data
+    });
   };
-  render() {
-    // const { auth, authError } = this.props
-    // if (auth.uid) return <Redirect to='/admin' />
 
-    return (
-      <>
-        <h5 className="grey-text text-darken-3">{this.title}</h5>
-        <form
-          style={{ padding: 15, backgroundColor: '#eee' }}
-          onSubmit={this.handleFileUpload}
-        >
-          <div className="file-field input-field">
-            <div className="btn">
-              <span>File</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={this.handleSelectFile}
-              />
-            </div>
-            <div className="file-path-wrapper">
-              <input
-                className="file-path validate"
-                type="text"
-                placeholder="Insert file here"
-              />
-            </div>
-            <input type="submit" className="btn" value="save" />
+  return (
+    <>
+      <h5 className="grey-text text-darken-3">{title}</h5>
+      <form
+        style={{ padding: 15, backgroundColor: '#eee' }}
+        onSubmit={handleFileUpload}
+      >
+        <div className="file-field input-field">
+          <div className="btn">
+            <span>File</span>
+            <input type="file" accept="image/*" onChange={handleSelectFile} />
           </div>
-        </form>
+          <div className="file-path-wrapper">
+            <input
+              className="file-path validate"
+              type="text"
+              placeholder="Insert file here"
+            />
+          </div>
+          <input type="submit" className="btn" value="save" />
+        </div>
+      </form>
 
-        <form
-          onSubmit={this.handleSubmit}
-          style={{ padding: 15, backgroundColor: '#eee' }}
-        >
-          {this.props.slug !== '' && (
-            <div className="input-field">
-              <label htmlFor="image_url" className="active">
-                Image URL
-              </label>
-              <input
-                type="text"
-                id="image_url"
-                value={this.state.image_url}
-                onChange={this.handleChange}
-                required
-                disabled
-              />
-            </div>
-          )}
-
+      <form
+        onSubmit={handleSubmit}
+        style={{ padding: 15, backgroundColor: '#eee' }}
+      >
+        {props.slug !== '' && (
           <div className="input-field">
-            <label htmlFor="hyperlink" className="active">
-              Highlight hyperlink
+            <label htmlFor="image_url" className="active">
+              Image URL
             </label>
             <input
               type="text"
-              id="hyperlink"
-              value={this.state.hyperlink}
-              onChange={this.handleChange}
+              id="image_url"
+              value={props.data.image_url}
+              required
+              disabled
             />
           </div>
+        )}
 
-          <div className="input-field">
-            <label htmlFor="description" className="active">
-              Description
-            </label>
-            <input
-              type="text"
-              id="description"
-              value={this.state.description}
-              onChange={this.handleChange}
-            />
-          </div>
+        <div className="input-field">
+          <label htmlFor="hyperlink" className="active">
+            Highlight hyperlink
+          </label>
+          <input
+            type="text"
+            id="hyperlink"
+            value={hyperlink}
+            onChange={e => setHyperlink(e.target.value)}
+          />
+        </div>
 
-          <button className="btn">{this.title}</button>
-          <div
-            className="btn"
-            onClick={() => {
-              this.props.closeForm();
-            }}
-          >
-            Cancel
-          </div>
-        </form>
-      </>
-    );
-  }
-}
+        <div className="input-field">
+          <label htmlFor="description" className="active">
+            Description
+          </label>
+          <input
+            type="text"
+            id="description"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+          />
+        </div>
+
+        <button className="btn">{title}</button>
+        <div
+          className="btn"
+          onClick={() => {
+            props.closeForm();
+          }}
+        >
+          Cancel
+        </div>
+      </form>
+    </>
+  );
+};
 
 export default props => {
-  let [isActive, setIsActive] = useState(false);
+  let [isActive, setIsActive] = useState(false); // -> is form shown?
   let [slug, setSlug] = useState(''); //'' -> add highlight
   let [data, setData] = useState({
     hyperlink: '',
