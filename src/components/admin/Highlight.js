@@ -91,7 +91,7 @@ const UpsertHighlight = props => {
     setSelectedFile(e.target.files[0]);
     M.toast({
       html: '<div>Remember to save!</div>',
-      classes: 'teal rounded center top'
+      classes: 'amber rounded center top'
     });
   };
 
@@ -115,7 +115,7 @@ const UpsertHighlight = props => {
     } else {
       M.toast({
         html: '<div>Image uploaded!</div>',
-        classes: 'teal rounded center top'
+        classes: 'green rounded center top'
       });
     }
   };
@@ -123,8 +123,7 @@ const UpsertHighlight = props => {
   const handleSubmit = async () => {
     const data = JSON.stringify({
       highlight: {
-        image_url:
-          props.data.image_url === '' ? imageURL : props.data.image_url,
+        image_url: !props.data.image_url ? imageURL : props.data.image_url,
         description,
         hyperlink
       }
@@ -147,7 +146,7 @@ const UpsertHighlight = props => {
       >
         <div className="file-field input-field">
           <div className="btn">
-            <span>File</span>
+            <span>Insert picture here</span>
             <input type="file" accept="image/*" onChange={handleSelectFile} />
           </div>
           <div className="file-path-wrapper">
@@ -165,7 +164,7 @@ const UpsertHighlight = props => {
         onSubmit={handleSubmit}
         style={{ padding: 15, backgroundColor: '#eee' }}
       >
-        {props.slug !== '' && (
+        {props.slug && (
           <div className="input-field">
             <label htmlFor="image_url" className="active">
               Image URL

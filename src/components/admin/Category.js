@@ -1,51 +1,33 @@
 import React, { Component, useEffect, useState } from 'react';
+import useFetch from '../../hooks/useFetch';
+import useMutation from '../../hooks/useMutation';
+import M from 'materialize-css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Category = props => {
-  const [categories, setCategories] = useState([]);
-  useEffect(() => {
-    async function FetchAllCategories() {
-      const token = localStorage.getItem('token');
-      let { data } = await axios
-        .get('/admin/categories', {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json',
-            Authorization: `${token}`
-          },
-          crossdomain: true
-        })
-        .catch(err => console.log(err));
-
-      if (data) {
-        if (!data.message) return;
-        setCategories(data.message);
-      } else {
-        console.log(`Error in loading /pages/category`);
-      }
-    }
-    FetchAllCategories();
-  }, [categories.length]);
+  const [
+    { response: categories, loading: fetchLoading, error: fetchError },
+    doFetch
+  ] = useFetch({ endpoint: '/admin/categories' });
+  const [{ error: mutationError }, upsertData] = useMutation();
 
   const handleRemove = async slug => {
-    const token = localStorage.getItem('token');
-
-    await axios
-      .delete(`/admin/categories/${slug}`, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${token}`
-        },
-        crossdomain: true
-      })
-      .then(res => res.status === 200 && setCategories([]))
-      .catch(err => console.log(err));
+    upsertData({
+      method: 'delete',
+      endpoint: `/admin/categories/${slug}`
+    });
+    doFetch(true);
+    if (mutationError) {
+      M.toast({
+        html: `<div>Failed to remove!</div><div> ${mutationError}! </div>`,
+        classes: 'red rounded center top'
+      });
+    }
   };
 
   const categoriesList =
-    categories.length > 0 ? (
+    categories && categories.length > 0 ? (
       categories.map((category, index) => {
         return (
           <li key={index} style={{ minHeight: 50 }}>
@@ -80,77 +62,123 @@ const Category = props => {
       <div className="center">No data yet :(</div>
     );
 
-  return <ul>{categoriesList}</ul>;
+  if (fetchLoading) return null;
+  return !fetchError ? (
+    <ul>{categoriesList}</ul>
+  ) : (
+    <p>
+      Error fetching data! Check your credentials or contact your administrator
+    </p>
+  );
 };
 
-class UpsertCategory extends Component {
-  state = {
-    name: '',
-    logo_url: '',
-    description: ''
-  };
+const UpsertCategory = props => {
+  const [name, setName] = useState(props.data.name);
+  const [description, setDescription] = useState(props.data.description);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [
+    { response: logoURL, error: mutationError },
+    upsertData
+  ] = useMutation();
 
-  title = this.props.slug === '' ? 'Add Category' : 'Update Category';
-  endpoint = this.props.slug === '' ? '' : `/${this.props.slug}`;
+  const title = props.slug === '' ? 'Add Category' : 'Update Category';
+  const endpoint = props.slug === '' ? '' : `/${props.slug}`;
 
-  componentDidMount() {
+  useEffect(() => {
     window.scrollTo(0, 0);
-    this.setState({
-      name: this.props.data.name,
-      logo_url: this.props.data.logo_url
-    });
-  }
+  }, []);
 
-  handleChange = e => {
-    this.setState({
-      [e.target.id]: e.target.value
+  const handleSelectFile = e => {
+    console.log(e.target.files[0]);
+    setSelectedFile(e.target.files[0]);
+    M.toast({
+      html: '<div>Remember to save!</div>',
+      classes: 'amber rounded center top'
     });
   };
 
-  handleSubmit = async e => {
+  const handleFileUpload = async e => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append('file', selectedFile);
+
+    await upsertData({
+      method: 'post',
+      endpoint: `/images/upload`,
+      data
+    });
+
+    if (mutationError) {
+      M.toast({
+        html: `<div>Image failed to upload!</div><div> ${e}! </div>`,
+        classes: 'red rounded center top'
+      });
+    } else {
+      M.toast({
+        html: '<div>Image uploaded!</div>',
+        classes: 'green rounded center top'
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
     const data = JSON.stringify({
-      authToken: 'visintus',
-      category: this.state
+      category: {
+        name,
+        logo_url: !props.data.logo_url ? logoURL : props.data.logo_url
+      }
     });
     console.log(data);
 
-    const token = localStorage.getItem('token');
-
-    await axios
-      .post('/admin/categories' + this.endpoint, data, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${token}`
-        },
-        crossdomain: true
-      })
-      .catch(err => console.log(err));
+    await upsertData({
+      method: 'post',
+      endpoint: '/admin/categories' + endpoint,
+      data
+    });
   };
-  render() {
-    // const { auth, authError } = this.props
-    // if (auth.uid) return <Redirect to='/admin' />
 
-    return (
-      <>
-        <form
-          onSubmit={this.handleSubmit}
-          style={{ padding: 15, backgroundColor: '#eee' }}
-        >
-          <h5 className="grey-text text-darken-3">{this.title}</h5>
-          <div className="input-field">
-            <label htmlFor="name" className="active">
-              Category Name
-            </label>
+  return (
+    <>
+      <h5 className="grey-text text-darken-3">{title}</h5>
+      <form
+        style={{ padding: 15, backgroundColor: '#eee' }}
+        onSubmit={handleFileUpload}
+      >
+        <div className="file-field input-field">
+          <div className="btn">
+            <span>Insert picture here</span>
+            <input type="file" accept="image/*" onChange={handleSelectFile} />
+          </div>
+          <div className="file-path-wrapper">
             <input
+              className="file-path validate"
               type="text"
-              id="name"
-              value={this.state.name}
-              onChange={this.handleChange}
-              required
+              placeholder="Insert file here"
             />
           </div>
+          <input type="submit" className="btn" value="save" />
+        </div>
+      </form>
 
+      <form
+        onSubmit={handleSubmit}
+        style={{ padding: 15, backgroundColor: '#eee' }}
+      >
+        <div className="input-field">
+          <label htmlFor="name" className="active">
+            Category Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            required
+          />
+        </div>
+
+        {props.slug && (
           <div className="input-field">
             <label htmlFor="logo_url" className="active">
               Logo URL
@@ -158,36 +186,37 @@ class UpsertCategory extends Component {
             <input
               type="text"
               id="logo_url"
-              value={this.state.logo_url}
-              onChange={this.handleChange}
+              value={props.data.logo_url}
+              required
+              disabled
             />
           </div>
+        )}
 
-          <div className="input-field">
-            <label htmlFor="description" className="active">
-              Description
-            </label>
-            <input
-              type="text"
-              id="description"
-              value={this.state.description}
-              onChange={this.handleChange}
-            />
-          </div>
-          <button className="btn">{this.title}</button>
-          <div
-            className="btn"
-            onClick={() => {
-              this.props.closeForm();
-            }}
-          >
-            Cancel
-          </div>
-        </form>
-      </>
-    );
-  }
-}
+        <div className="input-field">
+          <label htmlFor="description" className="active">
+            Description
+          </label>
+          <input
+            type="text"
+            id="description"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+          />
+        </div>
+        <button className="btn">{title}</button>
+        <div
+          className="btn"
+          onClick={() => {
+            props.closeForm();
+          }}
+        >
+          Cancel
+        </div>
+      </form>
+    </>
+  );
+};
 
 export default props => {
   let [isActive, setIsActive] = useState(false);

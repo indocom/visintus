@@ -1,4 +1,6 @@
 import React, { Component, useState } from 'react';
+import useMutation from '../../hooks/useMutation';
+import M from 'materialize-css';
 import axios from 'axios';
 
 const BannerDetails = ({ banners, slug, setDetails }) => {
@@ -50,62 +52,93 @@ const BannerDetails = ({ banners, slug, setDetails }) => {
   );
 };
 
-class UpsertBanner extends Component {
-  state = {
-    image_url: ''
-  };
+const UpsertBanner = props => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [
+    { response: imageURL, error: mutationError },
+    upsertData
+  ] = useMutation();
 
-  handleChange = e => {
-    this.setState({
-      [e.target.id]: e.target.value
+  const handleSelectFile = e => {
+    console.log(e.target.files[0]);
+    setSelectedFile(e.target.files[0]);
+    M.toast({
+      html: '<div>Remember to save!</div>',
+      classes: 'amber rounded center top'
     });
   };
 
-  handleSubmit = async e => {
+  const handleFileUpload = async e => {
+    const data = new FormData();
+    data.append('file', selectedFile);
+
+    await upsertData({
+      method: 'post',
+      endpoint: `/images/upload`,
+      data
+    });
+
+    if (mutationError) {
+      M.toast({
+        html: `<div>Image failed to upload!</div><div> ${e}! </div>`,
+        classes: 'red rounded center top'
+      });
+    } else {
+      M.toast({
+        html: '<div>Image uploaded!</div>',
+        classes: 'green rounded center top'
+      });
+    }
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
     const data = JSON.stringify({
-      authToken: 'visintus',
-      banner: this.state
+      banner: {
+        image_url: imageURL
+      }
     });
-
-    const token = localStorage.getItem('token');
-
     console.log(data);
 
-    await axios
-      .post(`/admin/categories/${this.props.slug}/banners`, data, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${token}`
-        },
-        crossdomain: true
-      })
-      .catch(err => console.log(err));
+    await upsertData({
+      method: 'post',
+      endpoint: `/admin/categories/${props.slug}/banners`,
+      data
+    });
   };
 
-  render() {
-    // const { auth, authError } = this.props
-    // if (auth.uid) return <Redirect to='/' />
-    return (
+  return (
+    <>
+      <h6 className="grey-text text-darken-3">Add Banner</h6>
       <form
         className="white"
-        onSubmit={this.handleSubmit}
-        style={{ paddingBottom: 20 }}
+        style={{ paddingBottom: 40 }}
+        onSubmit={handleFileUpload}
       >
-        <h6 className="grey-text text-darken-3">Add Banner</h6>
-        <div className="input-field">
-          <label htmlFor="image_url">Image URL</label>
-          <input
-            type="text"
-            id="image_url"
-            onChange={this.handleChange}
-            required
-          />
+        <div className="file-field input-field">
+          <div className="btn">
+            <span>Insert picture here</span>
+            <input type="file" accept="image/*" onChange={handleSelectFile} />
+          </div>
+          <div className="file-path-wrapper">
+            <input
+              className="file-path validate"
+              type="text"
+              placeholder="Insert file here"
+            />
+          </div>
+          <input type="submit" className="btn" value="save" />
         </div>
-        <button className="btn">Add Banner</button>
       </form>
-    );
-  }
-}
+      <form
+        className="white"
+        style={{ marginTop: -50, marginLeft: 75 }}
+        onSubmit={handleSubmit}
+      >
+        <button className="btn ">Add Banner</button>
+      </form>
+    </>
+  );
+};
 
 export default BannerDetails;
