@@ -1,5 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import useMutation from '../../hooks/useMutation';
 import M from 'materialize-css';
@@ -76,10 +75,6 @@ const UpsertHighlight = props => {
   const [hyperlink, setHyperlink] = useState(props.data.hyperlink);
   const [selectedFile, setSelectedFile] = useState(null);
   const [
-    { response: highlights, loading: fetchLoading, error: fetchError },
-    doFetch
-  ] = useFetch({ endpoint: '/admin/highlights' });
-  const [
     { response: imageURL, error: mutationError },
     upsertData
   ] = useMutation();
@@ -125,10 +120,11 @@ const UpsertHighlight = props => {
     }
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async () => {
     const data = JSON.stringify({
       highlight: {
-        image_url: imageURL,
+        image_url:
+          props.data.image_url === '' ? imageURL : props.data.image_url,
         description,
         hyperlink
       }
