@@ -1,4 +1,4 @@
-# Categories:
+# Users:
 
 :information_source: JSON Format
 
@@ -151,5 +151,20 @@ Body:
 ```
 {
   "message" : ...
+}
+```
+
+### POST `/users/verify`
+
+Verify a user.
+
+#### Request:
+
+Body: 
+```
+{
+  "user": {
+    "email"     : ...
+  }
 }
 ```

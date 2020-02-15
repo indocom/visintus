@@ -8,7 +8,7 @@ const UserAccess = require('../models/userAccess');
 const ForgotPassword = require('../models/forgotPassword');
 const utils = require('../middleware/utils');
 const auth = require('../middleware/auth');
-const emailer = require('../middleware/emailer');
+const emailer = require('./mailer');
 
 const HOURS_TO_BLOCK = 2;
 const LOGIN_ATTEMPTS = 5;
@@ -314,7 +314,7 @@ const markResetPasswordAsUsed = async (req, forgot) => {
 const saveForgotPassword = async req => {
   return new Promise((resolve, reject) => {
     const forgot = new ForgotPassword({
-      email: req.body.email,
+      email: req.email,
       verification: uuid.v4()
     });
     forgot.save((err, item) => {
@@ -345,6 +345,16 @@ const invalidateToken = async user => {
     user.save((err, item) => {
       utils.itemNotFound(err, item, reject, 'ERROR');
       resolve(item);
+    });
+  });
+};
+
+/* Checks User model if user with a specific email exists */
+const emailExists = async email => {
+  return new Promise((resolve, reject) => {
+    User.findOne({ email }, (err, item) => {
+      itemAlreadyExists(err, item, reject, 'EMAIL_ALREADY_EXISTS');
+      resolve(false);
     });
   });
 };
@@ -394,15 +404,13 @@ exports.login = async (req, res) => {
 /* Register / Sign-up called by route */
 exports.register = async (req, res) => {
   try {
-    //if(!doesEmailExists){
     const item = await registerUser(req.body.user);
-    console.log(item);
 
     const userInfo = setUserInfo(item);
     const response = returnRegisterToken(item, userInfo);
     const user = await findUser(req.body.user.email);
     await updateToken(response.token, user);
-
+    emailer.sendRegistrationEmailMessage('en', user);
     utils.handleSuccess(
       res,
       utils.buildSuccObject({
@@ -415,7 +423,6 @@ exports.register = async (req, res) => {
         }
       })
     );
-    //}
   } catch (error) {
     utils.handleError(res, utils.buildErrObject(422, error.message));
   }
@@ -424,9 +431,8 @@ exports.register = async (req, res) => {
 /* Verify function called by route */
 exports.verify = async (req, res) => {
   try {
-    // req = matchedData(req)
-    const user = await verificationExists(req.id);
-    utils.handleSuccess(await verifyUser(user));
+    // const user = await verificationExists(req.id);
+    utils.handleSuccess(await verifyUser(req.body.user));
   } catch (error) {
     utils.handleError(res, utils.buildErrObject(422, error.message));
   }
@@ -435,12 +441,13 @@ exports.verify = async (req, res) => {
 /* Forgot password function called by route */
 exports.forgotPassword = async (req, res) => {
   try {
-    const locale = req.getLocale();
-    const data = matchedData(req);
-    await findUser(data.email);
-    const item = await saveForgotPassword(req);
-    // emailer.sendResetPasswordEmailMessage(locale, item)
-    // res.status(200).json(forgotPasswordResponse(item))
+    const userInfo = await findUser(req.body.user.email);
+    const item = await saveForgotPassword(req.body.user);
+    emailer.sendResetPasswordEmailMessage('en', userInfo);
+    utils.handleSuccess(
+      res,
+      utils.buildSuccObject(forgotPasswordResponse(item))
+    );
   } catch (error) {
     utils.handleError(res, utils.buildErrObject(422, error.message));
   }
