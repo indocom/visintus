@@ -27,29 +27,15 @@ const UserSchema = new mongoose.Schema(
       enum: ['user', 'admin', 'superadmin'],
       default: 'user'
     },
+    isVerified: {
+      type: Boolean,
+      default: false
+    },
+    accessToken: {
+      type: String
+    },
     verification: {
       type: String
-    },
-    verified: {
-      type: Boolean,
-      default: false
-    },
-    loginAttempts: {
-      type: Number,
-      default: 0,
-      select: false
-    },
-    blockExpires: {
-      type: Date,
-      default: Date.now,
-      select: false
-    },
-    token: {
-      type: String
-    },
-    isTokenValid: {
-      type: Boolean,
-      default: false
     }
   },
   {

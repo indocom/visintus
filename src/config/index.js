@@ -1,5 +1,6 @@
 const convict = require('convict');
 const yaml = require('js-yaml');
+const check = require('validator').check;
 
 convict.addParser({ extension: ['yml', 'yaml'], parse: yaml.safeLoad });
 
@@ -40,8 +41,27 @@ const config = convict({
     }
   },
 
+  jwt: {
+    expiration: {
+      doc: 'Expiration time for JWT in minutes',
+      format: 'int',
+      default: 60
+    },
+    secret: {
+      doc: 'Secret to generate JWT',
+      format: function(val) {
+        check(val, 'should be a 64 character hex key').regex(
+          /^[a-fA-F0-9]{64}$/
+        );
+      },
+      default:
+        '508cf2a154dfd4e182237f6dcd436b4ea4255d5eea379ee80bd07f6a3ee1039f',
+      env: 'JWT_SECRET'
+    }
+  },
+
   mailgun: {
-    api_key: {
+    apiKey: {
       doc: 'API key for mailgun',
       format: '*',
       default: '',

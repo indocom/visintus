@@ -2,14 +2,14 @@
 require('dotenv').config();
 
 // Load dependencies
-var cookieParser = require('cookie-parser');
-var createError = require('http-errors');
-var express = require('express');
-var logger = require('morgan');
-var path = require('path');
+const cookieParser = require('cookie-parser');
+const createError = require('http-errors');
+const express = require('express');
+const logger = require('morgan');
+const path = require('path');
 
 // Setup application
-var app = express();
+const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'ejs');
 
 // Use logger for development environment
@@ -26,10 +26,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Setup config routing
-app.use('/', require('./config/routes'));
+app.use('/', require('./routes'));
 
 // Load config data
-const config = require('./config/config.js');
+const config = require('./config');
 
 const { setupDbConnection } = require('./app/middleware/db');
 setupDbConnection(config.get('db'));
