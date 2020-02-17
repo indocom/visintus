@@ -33,16 +33,4 @@ exports.sendMail = (data, callback) => {
     }
     return callback(err, info, response);
   });
-
-  const data = {
-    user,
-    subject,
-    htmlMessage
-  };
-
-  sendEmail(data, messageSent => {
-    messsageSent
-      ? console.log(`Email SENT to: ${user.email}`)
-      : console.log(`Email FAILED to: ${user.email}`);
-  });
 };
