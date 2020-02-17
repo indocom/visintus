@@ -85,6 +85,17 @@ const registerUser = async user => {
   });
 };
 
+/* Checks User model if user with a specific email exists */
+const isEmailRegistered = async email => {
+  return new Promise((resolve, reject) => {
+    User.findOne({ email }, (err, item) => {
+      if (err) reject(buildErrObject(422, err.message));
+      if (item) resolve(true);
+      else resolve(false);
+    });
+  });
+};
+
 /********************
  * Public functions *
  ********************/
@@ -127,27 +138,19 @@ exports.login = async (req, res) => {
 /* Register / Sign-up called by route */
 exports.register = async (req, res) => {
   try {
-    const item = await registerUser(req.body.user);
+    if (await isEmailRegistered(req.body.user.email)) {
+      handleError(res, buildErrObject(409, 'Email is already registered'));
+      return;
+    }
 
-    const userInfo = setUserInfo(item);
-    const response = returnRegisterToken(item, userInfo);
-    const user = await findUser(req.body.user.email);
-    await updateToken(response.token, user);
-    emailer.sendRegistrationEmailMessage('en', user);
-    utils.handleSuccess(
+    const user = await registerUser(req.body.user);
+    emailer.sendRegistrationEmailMessage(user);
+    handleSuccess(
       res,
-      utils.buildSuccObject({
-        token: response.token,
-        userData: {
-          name: user.name,
-          initials: user.name[0],
-          email: user.email,
-          role: user.role
-        }
-      })
+      buildSuccObject('User has been created! Please verify your email.')
     );
-  } catch (error) {
-    utils.handleError(res, utils.buildErrObject(422, error.message));
+  } catch (err) {
+    handleError(res, buildErrObject(422, err.message));
   }
 };
 
