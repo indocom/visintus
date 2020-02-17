@@ -96,6 +96,17 @@ const isEmailRegistered = async email => {
   });
 };
 
+/* Invalidates a token */
+const invalidateToken = async user => {
+  return new Promise((resolve, reject) => {
+    user.token = null;
+    user.save((err, item) => {
+      if (err) reject(buildErrObject(422, err.message));
+      resolve(item);
+    });
+  });
+};
+
 /********************
  * Public functions *
  ********************/
@@ -196,11 +207,10 @@ exports.resetPassword = async (req, res) => {
 /* Signout called by route */
 exports.logout = async (req, res) => {
   try {
-    const user = await findUserByToken(req.body.token);
     await invalidateToken(user);
-    utils.handleSuccess(res, utils.buildSuccObject('User logged out'));
+    handleSuccess(res, buildSuccObject('User logged out'));
   } catch (error) {
-    utils.handleError(res, utils.buildErrObject(422, error.message));
+    handleError(res, buildErrObject(422, error.message));
   }
 };
 
@@ -208,10 +218,8 @@ exports.list = async (req, res) => {
   User.find()
     .select('-_id name email role')
     .lean()
-    .then(users => utils.handleSuccess(res, utils.buildSuccObject(users)))
-    .catch(error =>
-      utils.handleError(res, utils.buildErrObject(error.message))
-    );
+    .then(users => handleSuccess(res, buildSuccObject(users)))
+    .catch(error => handleError(res, buildErrObject(error.message)));
 };
 
 exports.updateRole = async (req, res) => {
@@ -219,13 +227,9 @@ exports.updateRole = async (req, res) => {
     .then(result => {
       if (result.n) {
         if (result.nModified)
-          utils.handleSuccess(res, utils.buildSuccObject('Role updated'));
-        else
-          utils.handleError(res, utils.buildErrObject(422, 'No changes made'));
-      } else
-        utils.handleError(res, utils.buildErrObject(422, 'User not found'));
+          handleSuccess(res, buildSuccObject('Role updated'));
+        else handleError(res, buildErrObject(422, 'No changes made'));
+      } else handleError(res, buildErrObject(422, 'User not found'));
     })
-    .catch(error =>
-      utils.handleError(res, utils.buildErrObject(422, error.message))
-    );
+    .catch(error => handleError(res, buildErrObject(422, error.message)));
 };

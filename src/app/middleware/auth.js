@@ -85,7 +85,9 @@ exports.checkPassword = async (user, password) => {
   });
 };
 
-/* Authentication */
+/* 
+  Authenticates user.
+*/
 exports.requireAuth = async (req, res, next) => {
   passport.authenticate('jwt', (_, user, err) => {
     if (err) return handleError(res, buildErrObject(422, err.message));
@@ -96,7 +98,10 @@ exports.requireAuth = async (req, res, next) => {
   })(req, res, next);
 };
 
-/* Verify a role */
+/* 
+  Verify user role(s). 
+  `requireAuth` must precede this function.
+*/
 exports.roleAuthorization = roles => async (req, res, next) => {
   User.findById(req.user._id)
     .select('role')
