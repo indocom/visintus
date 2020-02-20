@@ -27,15 +27,11 @@ const UserSchema = new mongoose.Schema(
       enum: ['user', 'admin', 'superadmin'],
       default: 'user'
     },
+
+    // Initial verification
     isVerified: {
       type: Boolean,
       default: false
-    },
-    accessToken: {
-      type: String
-    },
-    verification: {
-      type: String
     }
   },
   {

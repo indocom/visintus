@@ -5,9 +5,8 @@ const config = require('../../config');
 const User = require('../models/user');
 
 const algorithm = 'aes-256-ecb';
-const secret = process.env.JWT_SECRET;
-const { handleError, buildErrObject, itemNotFound } = require('./utils');
 
+const { handleError, buildErrObject } = require('./utils');
 const JwtStrategy = require('passport-jwt').Strategy;
 
 /* Encrypts text */
@@ -38,7 +37,7 @@ exports.decrypt = text => {
 const jwtExtractor = req => {
   let token = null;
   if (req.headers.authorization) {
-    token = req.headers.authorization.trim();
+    token = req.headers.authorization.replace('Bearer ', '').trim();
   } else if (req.body.token) {
     token = req.body.token.trim();
   } else if (req.query.token) {
@@ -55,7 +54,7 @@ const jwtExtractor = req => {
  */
 const jwtOptions = {
   jwtFromRequest: jwtExtractor,
-  secretOrKey: process.env.JWT_SECRET
+  secretOrKey: config.get('jwt.secret')
 };
 
 /**
@@ -91,7 +90,7 @@ exports.checkPassword = async (user, password) => {
 exports.requireAuth = async (req, res, next) => {
   passport.authenticate('jwt', (_, user, err) => {
     if (err) return handleError(res, buildErrObject(422, err.message));
-    if (!user) return handleError(res, buildErrObject(422, 'Unknown user'));
+    if (!user) return handleError(res, buildErrObject(422, 'User not found'));
 
     req.user = user;
     next();

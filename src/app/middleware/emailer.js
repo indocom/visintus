@@ -29,8 +29,6 @@ exports.sendMail = (data, callback) => {
   const transporter = createTransporter();
 
   transporter.sendMail(data, (err, info, response) => {
-    if (err) {
-    }
     return callback(err, info, response);
   });
 };

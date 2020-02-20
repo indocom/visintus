@@ -41,12 +41,25 @@ const config = convict({
     }
   },
 
-  jwt: {
-    expiration: {
-      doc: 'Expiration time for JWT in minutes',
+  user: {
+    accessTokenExp: {
+      doc: 'Expiration time for access token in seconds',
       format: 'int',
-      default: 60
+      default: 60 * 60 // 1 hour
     },
+    refreshTokenExp: {
+      doc: 'Expiration time for refresh token in seconds',
+      format: 'int',
+      default: 60 * 60 * 24 * 5 // 5 days
+    },
+    resetPasswordTokenExp: {
+      doc: 'Expiration time for reset password token in seconds',
+      format: 'int',
+      default: 60 * 60 * 24 * 2 // 2 days
+    }
+  },
+
+  jwt: {
     secret: {
       doc: 'Secret to generate JWT',
       format: function(val) {
