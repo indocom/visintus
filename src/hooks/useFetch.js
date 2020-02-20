@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
+import M from 'materialize-css';
 
 const useFetch = ({ endpoint, needAuthorization = true }) => {
   const [response, setResponse] = useState(null);
@@ -33,7 +34,25 @@ const useFetch = ({ endpoint, needAuthorization = true }) => {
         setResponse(res.data.message);
         setIsStale(false);
       } catch (e) {
-        setError(e);
+        if (e.response) {
+          setError(e.response.data.errors.message);
+          M.toast({
+            html: `<div>Error fetching data! ${e.response.data.errors.message}!</div>`,
+            classes: 'red rounded center top'
+          });
+        } else if (e.request) {
+          setError(e.request);
+          M.toast({
+            html: `<div>No response was received! ${e.request}!</div>`,
+            classes: 'red rounded center top'
+          });
+        } else {
+          setError(e);
+          M.toast({
+            html: `<div>Something went wrong! ${e}!</div>`,
+            classes: 'red rounded center top'
+          });
+        }
       }
       setLoading(false);
     };
