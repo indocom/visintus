@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const auth = require('../../../../app/middleware/auth');
-const UsersController = require('../../../../app/controllers/users');
-const UsersValidator = require('../../../../app/validators/users');
+const auth = require('../../../app/middleware/auth');
+const UsersController = require('../../../app/controllers/users');
+const UsersValidator = require('../../../app/validators/users');
 
 /*
  * List all users

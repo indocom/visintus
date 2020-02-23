@@ -6,11 +6,13 @@ const config = require('../../config');
 const User = require('../models/user');
 const { handleError, buildErrObject } = require('./utils');
 
+const secret = Buffer.from(config.get('crypto.aes128cbc.secret'), 'hex');
+
 /* Encrypts text */
 exports.encrypt = text => {
   const cipher = crypto.createCipher(
-    'aes-128-cbc', // algorithm
-    config.get('crypto.aes128cbc.secret'), // secret
+    'aes-128-cbc',
+    secret,
     crypto.randomBytes(16) // iv
   );
 
@@ -26,11 +28,7 @@ exports.decrypt = text => {
   let iv = Buffer.from(textParts.shift(), 'hex');
   let encryptedText = Buffer.from(textParts.join(':'), 'hex');
 
-  let decipher = crypto.createDecipheriv(
-    'aes-256-cbc',
-    config.get('crypto.aes128cbc.secret'),
-    iv
-  );
+  let decipher = crypto.createDecipheriv('aes-256-cbc', secret, iv);
 
   let decrypted = decipher.update(encryptedText);
   decrypted = Buffer.concat([decrypted, decipher.final()]);

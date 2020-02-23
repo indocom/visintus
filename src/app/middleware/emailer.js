@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const mg = require('nodemailer-mailgun-transport');
 
-const config = require('../../config/config');
+const config = require('../../config');
 const User = require('../models/user');
 
 /* create transporter */

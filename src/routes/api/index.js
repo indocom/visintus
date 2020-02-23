@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const auth = require('../../../app/middleware/auth');
+const auth = require('../../app/middleware/auth');
 
 router.use(
   '/admin',

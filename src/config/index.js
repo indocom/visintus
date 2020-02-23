@@ -63,8 +63,10 @@ const config = convict({
     aes128cbc: {
       secret: {
         doc: 'Secret for aes128cbc',
-        format: function(val) {
-          check(val, 'should be 128 bits (16 chars)').regex(/^.{16}$/);
+        format: function check(val) {
+          if (!/^[a-fA-F0-9]{32}$/.test(val)) {
+            throw new Error('Should be a 32 character hex key');
+          }
         },
         default: '770A8A65DA156D24EE2A093277530142',
         env: 'CRYPTO_AES128CBC_SECRET'
@@ -75,10 +77,10 @@ const config = convict({
   jwt: {
     secret: {
       doc: 'Secret to generate JWT',
-      format: function(val) {
-        check(val, 'should be a 64 character hex key').regex(
-          /^[a-fA-F0-9]{64}$/
-        );
+      format: function check(val) {
+        if (!/^[a-fA-F0-9]{64}$/.test(val)) {
+          throw new Error('Should be a 64 character hex key');
+        }
       },
       default:
         '508cf2a154dfd4e182237f6dcd436b4ea4255d5eea379ee80bd07f6a3ee1039f',

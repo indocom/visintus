@@ -169,7 +169,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.verifyUser = async (req, res) => {
+exports.verify = async (req, res) => {
   User.find({ _id: req.body.user.id, email: req.body.user.email })
     .select('isVerified')
     .then(user => {

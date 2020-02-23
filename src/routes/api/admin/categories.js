@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const CategoriesController = require('../../../../app/controllers/categories');
-const CategoriesValidator = require('../../../../app/validators/categories');
+const CategoriesController = require('../../../app/controllers/categories');
+const CategoriesValidator = require('../../../app/validators/categories');
 
 router.get(
   '/',

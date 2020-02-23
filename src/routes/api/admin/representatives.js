@@ -1,6 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
-const RepresentativesController = require('../../../../app/controllers/representatives');
-const RepresentativesValidator = require('../../../../app/validators/representatives');
+const RepresentativesController = require('../../../app/controllers/representatives');
+const RepresentativesValidator = require('../../../app/validators/representatives');
 
 router.post(
   '/',

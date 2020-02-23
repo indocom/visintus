@@ -1,6 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
-const BannersController = require('../../../../app/controllers/banners');
-const BannersValidator = require('../../../../app/validators/banners');
+const BannersController = require('../../../app/controllers/banners');
+const BannersValidator = require('../../../app/validators/banners');
 
 router.post('/', BannersValidator.createBanner, BannersController.createBanner);
 
