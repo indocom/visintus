@@ -1,73 +1,80 @@
 const crypto = require('crypto');
 const passport = require('passport');
+const JwtStrategy = require('passport-jwt').Strategy;
 
 const config = require('../../config');
 const User = require('../models/user');
-
-const algorithm = 'aes-256-ecb';
-
 const { handleError, buildErrObject } = require('./utils');
-const JwtStrategy = require('passport-jwt').Strategy;
 
 /* Encrypts text */
 exports.encrypt = text => {
-  const cipher = crypto.createCipher(algorithm, secret);
-  let crypted = cipher.update(text, 'utf8', 'hex');
-  crypted += cipher.final('hex');
-  return crypted;
+  const cipher = crypto.createCipher(
+    'aes-128-cbc', // algorithm
+    config.get('crypto.aes128cbc.secret'), // secret
+    crypto.randomBytes(16) // iv
+  );
+
+  let encrypted = cipher.update(text);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+  return iv.toString('hex') + ':' + encrypted.toString('hex');
 };
 
 /* Decrypts text */
 exports.decrypt = text => {
-  const decipher = crypto.createDecipher(algorithm, secret);
-  try {
-    let dec = decipher.update(text, 'hex', 'utf8');
-    dec += decipher.final('utf8');
-    return dec;
-  } catch (err) {
-    return err;
-  }
+  let textParts = text.split(':');
+  let iv = Buffer.from(textParts.shift(), 'hex');
+  let encryptedText = Buffer.from(textParts.join(':'), 'hex');
+
+  let decipher = crypto.createDecipheriv(
+    'aes-256-cbc',
+    config.get('crypto.aes128cbc.secret'),
+    iv
+  );
+
+  let decrypted = decipher.update(encryptedText);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+  return decrypted.toString();
 };
 
-/**
- * Extracts token from: header, body or query
- * @param {Object} req - request object
- * @returns {string} token - decrypted token
- */
-const jwtExtractor = req => {
-  let token = null;
-  if (req.headers.authorization) {
-    token = req.headers.authorization.replace('Bearer ', '').trim();
-  } else if (req.body.token) {
-    token = req.body.token.trim();
-  } else if (req.query.token) {
-    token = req.query.token.trim();
-  }
-  if (token) {
-    token = auth.decrypt(token);
-  }
-  return token;
+const setupAuthJwt = () => {
+  // extract token
+  const extractor = req => {
+    let token = null;
+    if (req.headers.authorization) {
+      token = req.headers.authorization.replace('Bearer ', '').trim();
+    } else if (req.body.token) {
+      token = req.body.token.trim();
+    } else if (req.query.token) {
+      token = req.query.token.trim();
+    }
+    if (token) {
+      token = auth.decrypt(token);
+    }
+    return token;
+  };
+
+  // register to passport
+  passport.use(
+    new JwtStrategy(
+      {
+        jwtFromRequest: extractor,
+        secretOrKey: config.get('jwt.secret')
+      },
+      (payload, done) => {
+        User.findById(payload.data._id, (err, user) => {
+          if (err) return done(err);
+          return user ? done(null, user) : done();
+        });
+      }
+    )
+  );
 };
 
-/**
- * Options object for jwt middlware
- */
-const jwtOptions = {
-  jwtFromRequest: jwtExtractor,
-  secretOrKey: config.get('jwt.secret')
+exports.setup = () => {
+  setupAuthJwt();
 };
-
-/**
- * Login with JWT middleware
- */
-const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
-  User.findById(payload.data._id, (err, user) => {
-    if (err) return done(err, false);
-    return !user ? done(null, false) : done(null, user);
-  });
-});
-
-passport.use(jwtLogin);
 
 /* Checks if password matches */
 exports.checkPassword = async (user, password) => {
@@ -88,9 +95,9 @@ exports.checkPassword = async (user, password) => {
   Authenticates user.
 */
 exports.requireAuth = async (req, res, next) => {
-  passport.authenticate('jwt', (_, user, err) => {
-    if (err) return handleError(res, buildErrObject(422, err.message));
-    if (!user) return handleError(res, buildErrObject(422, 'User not found'));
+  passport.authenticate('jwt', (err, user, info) => {
+    if (err) return handleError(res, buildErrObject(401, 'Unauthenticated'));
+    if (!user) return handleError(res, buildErrObject(401, 'Unauthenticated'));
 
     req.user = user;
     next();
@@ -107,12 +114,12 @@ exports.roleAuthorization = roles => async (req, res, next) => {
     .lean()
     .then(user => {
       if (!user) {
-        handleError(res, buildErrObject(422, 'User not found'));
+        handleError(res, buildErrObject(401, 'Unauthenticated'));
       } else if (roles.indexOf(user.role) < 0) {
-        handleError(res, buildErrObject(422, 'Unauthorized'));
+        handleError(res, buildErrObject(403, 'Unauthorized'));
       } else {
         return next();
       }
     })
-    .catch(err => handleError(res, buildErrObject(422, err.message)));
+    .catch(err => handleError(res, buildErrObject(403, 'Unauthorized')));
 };

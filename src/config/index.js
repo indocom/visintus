@@ -59,6 +59,19 @@ const config = convict({
     }
   },
 
+  crypto: {
+    aes128cbc: {
+      secret: {
+        doc: 'Secret for aes128cbc',
+        format: function(val) {
+          check(val, 'should be 128 bits (16 chars)').regex(/^.{16}$/);
+        },
+        default: '770A8A65DA156D24EE2A093277530142',
+        env: 'CRYPTO_AES128CBC_SECRET'
+      }
+    }
+  },
+
   jwt: {
     secret: {
       doc: 'Secret to generate JWT',

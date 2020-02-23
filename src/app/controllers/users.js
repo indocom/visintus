@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const uuid = require('uuid');
-const { addHours } = require('date-fns');
 
 const auth = require('../middleware/auth');
+const date = require('../middleware/date');
+
 const config = require('../../config');
 
 const {
@@ -10,10 +11,10 @@ const {
   handleSuccess,
   buildErrObject,
   buildSuccObject
-} = require('../middleware/utils.js');
+} = require('../middleware/utils');
 
 const User = require('../models/user');
-const ForgotPassword = require('../models/forgotPassword');
+const UserMailer = require('../mailers/user_mailer');
 
 /*********************
  * Private functions *
@@ -23,9 +24,7 @@ const ForgotPassword = require('../models/forgotPassword');
 const findVerifiedUserByEmail = async email => {
   return new Promise((resolve, reject) => {
     User.findOne({ email })
-      .select(
-        'password loginAttempts blockExpires name email role verification'
-      )
+      .select('name email role password isVerified')
       .then(user => {
         if (!user) {
           reject(buildErrObject(422, 'User does not exist'));
@@ -39,33 +38,20 @@ const findVerifiedUserByEmail = async email => {
   });
 };
 
-/* Generates a token */
-const generateAccessToken = user => {
-  // Gets expiration time
-  const expiration =
-    Math.floor(Date.now() / 1000) + 60 * config.get('jwt.expiration');
-
-  // returns signed and encrypted token
-  return auth.encrypt(
-    jwt.sign(
-      {
-        data: { _id: user },
-        exp: expiration
-      },
-      config.get('jwt.secret')
-    )
+/* Creates a new access token for a particular user */
+const generateAccessToken = async user => {
+  // Computes expiration time
+  const exp = date.getEpochSecond() + config.get('user.accessTokenExp');
+  // Generates signed and encrypted token
+  const token = auth.encrypt(
+    jwt.sign({ data: { _id: user._id }, exp }, config.get('jwt.secret'))
   );
+
+  return token;
 };
 
-/* Updates a token for a particular user */
-const updateAccessToken = async (user, token) => {
-  return new Promise((resolve, reject) => {
-    user.accessToken = token;
-    user.save((err, item) => {
-      if (err) reject(buildErrObject(422, err.message));
-      resolve(item);
-    });
-  });
+const generateResetPasswordToken = async user => {
+  return generateAccessToken(user);
 };
 
 /* Registers a new user in the database */
@@ -74,8 +60,7 @@ const registerUser = async user => {
     const newUser = new User({
       name: user.name,
       email: user.email,
-      password: user.password,
-      verification: uuid.v4()
+      password: user.password
     });
 
     newUser.save((err, item) => {
@@ -97,11 +82,28 @@ const isEmailRegistered = async email => {
 };
 
 /* Invalidates a token */
-const invalidateToken = async user => {
+const invalidateTokens = async user => {
   return new Promise((resolve, reject) => {
-    user.token = null;
+    user.accessToken = null;
+    user.accessTokenExpiry = null;
+
+    user.refreshToken = null;
+    user.refreshTokenExpiry = null;
+
     user.save((err, item) => {
       if (err) reject(buildErrObject(422, err.message));
+      resolve(item);
+    });
+  });
+};
+
+/* Updates a user password in database */
+const updatePassword = async (user, newPassword) => {
+  return new Promise((resolve, reject) => {
+    user.password = newPassword;
+    user.save((err, item) => {
+      if (err) reject(buildErrObject(422, err.message));
+      if (!item) reject(buildErrObject(422, 'User not found'));
       resolve(item);
     });
   });
@@ -121,7 +123,7 @@ exports.login = async (req, res) => {
     );
 
     if (!isPasswordMatch) {
-      handleError(res, buildErrObject(409, 'Password does not match'));
+      handleError(res, buildErrObject(409, 'Authentication failed'));
     } else {
       // password is correct, all ok. register access and returns token
       const token = generateAccessToken(user._id);
@@ -142,6 +144,8 @@ exports.login = async (req, res) => {
       );
     }
   } catch (error) {
+    // to prevent attackers from identifying valid users
+    // change the error message to 'Authentication failed'
     handleError(res, error);
   }
 };
@@ -158,49 +162,53 @@ exports.register = async (req, res) => {
     emailer.sendRegistrationEmailMessage(user);
     handleSuccess(
       res,
-      buildSuccObject('User has been created! Please verify your email.')
+      buildSuccObject('User has been created. Please verify your email!')
     );
   } catch (err) {
     handleError(res, buildErrObject(422, err.message));
   }
 };
 
-/* Verify function called by route */
-exports.verify = async (req, res) => {
-  try {
-    // const user = await verificationExists(req.id);
-    utils.handleSuccess(await verifyUser(req.body.user));
-  } catch (error) {
-    utils.handleError(res, utils.buildErrObject(422, error.message));
-  }
+exports.verifyUser = async (req, res) => {
+  User.find({ _id: req.body.user.id, email: req.body.user.email })
+    .select('isVerified')
+    .then(user => {
+      if (!user) handleError(res, buildErrObject(422, 'Unknown user'));
+      else if (user.isVerified)
+        handleSuccess(res, buildSuccObject('User has been verified'));
+      else {
+        user.isVerified = true;
+        user.save((err, item) => {
+          if (err) handleError(res, buildErrObject(422, err.message));
+          handleSuccess(res, buildSuccObject('User verified'));
+        });
+      }
+    })
+    .catch(error => handleError(res, buildErrObject(422, err.message)));
 };
 
 /* Forgot password function called by route */
 exports.forgotPassword = async (req, res) => {
   try {
-    const userInfo = await findUser(req.body.user.email);
-    const item = await saveForgotPassword(req.body.user);
-    emailer.sendResetPasswordEmailMessage('en', userInfo);
-    utils.handleSuccess(
+    const user = await findVerifiedUserByEmail(req.body.user.email);
+    UserMailer.resetPassword(user);
+    handleSuccess(
       res,
-      utils.buildSuccObject(forgotPasswordResponse(item))
+      buildSuccObject('An email to reset password has been sent')
     );
   } catch (error) {
-    utils.handleError(res, utils.buildErrObject(422, error.message));
+    handleError(res, buildErrObject(422, error.message));
   }
 };
 
 /* Reset password function called by route */
 exports.resetPassword = async (req, res) => {
   try {
-    const data = matchedData(req);
-    const forgotPassword = await findForgotPassword(data.id);
-    const user = await findUserToResetPassword(forgotPassword.email);
-    await updatePassword(data.password, user);
-    const result = await markResetPasswordAsUsed(req, forgotPassword);
-    utils.handleSuccess(res, utils.buildSuccObject(result));
+    const user = await findVerifiedUserByEmail(req.user.email);
+    await updatePassword(user, req.body.user.newPassword);
+    handleSuccess(res, buildSuccObject('Password updated!'));
   } catch (error) {
-    utils.handleError(res, utils.buildErrObject(422, error.message));
+    handleError(res, buildErrObject(422, error.message));
   }
 };
 
