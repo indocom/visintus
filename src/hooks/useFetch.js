@@ -35,9 +35,9 @@ const useFetch = ({ endpoint, needAuthorization = true }) => {
         setIsStale(false);
       } catch (e) {
         if (e.response) {
-          setError(e.response.data.errors.message);
+          setError(e.response.data.error.message);
           M.toast({
-            html: `<div>Error fetching data! ${e.response.data.errors.message}!</div>`,
+            html: `<div>Error fetching data! ${e.response.data.error.message}!</div>`,
             classes: 'red rounded center top'
           });
         } else if (e.request) {
