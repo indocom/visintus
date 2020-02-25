@@ -10,11 +10,8 @@ const secret = Buffer.from(config.get('crypto.aes128cbc.secret'), 'hex');
 
 /* Encrypts text */
 exports.encrypt = text => {
-  const cipher = crypto.createCipher(
-    'aes-128-cbc',
-    secret,
-    crypto.randomBytes(16) // iv
-  );
+  let iv = crypto.randomBytes(16);
+  let cipher = crypto.createCipheriv('aes-128-cbc', secret, iv);
 
   let encrypted = cipher.update(text);
   encrypted = Buffer.concat([encrypted, cipher.final()]);
@@ -28,7 +25,7 @@ exports.decrypt = text => {
   let iv = Buffer.from(textParts.shift(), 'hex');
   let encryptedText = Buffer.from(textParts.join(':'), 'hex');
 
-  let decipher = crypto.createDecipheriv('aes-256-cbc', secret, iv);
+  let decipher = crypto.createDecipheriv('aes-128-cbc', secret, iv);
 
   let decrypted = decipher.update(encryptedText);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
@@ -48,7 +45,7 @@ const setupAuthJwt = () => {
       token = req.query.token.trim();
     }
     if (token) {
-      token = auth.decrypt(token);
+      token = exports.decrypt(token);
     }
     return token;
   };

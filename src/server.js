@@ -25,6 +25,9 @@ if (process.env.NODE_ENV === 'development') {
   app.use(logger('dev'));
 }
 
+// Setup auth middleware
+require('./app/middleware/auth').setup();
+
 // Setup config routing
 app.use('/', require('./routes'));
 

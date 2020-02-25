@@ -8,20 +8,27 @@ All requests must have JSON format. Hence, you have to set "Content-Type" field 
 
 Some API calls require authorization. Set "Authorization" field in header to contain JWT token that you obtained from the last successful login attempt. You will be able to access those APIs based on the permission level that you have.
 
-### POST `/users/register`
+## APIs
 
-Register a new user.
+- forgot-password
+- list
+- login
+- logout
+- register
+- reset-password
+- update-role
+- verify
+
+### POST `/users/forgot-password`
+
+Forgot password.
 
 #### Request:
-
-Body:
 
 ```
 {
   "user": {
-    "name"      : ...,
-    "email"     : ...,
-    "password"  : ...
+    "email": ...
   }
 }
 ```
@@ -32,14 +39,28 @@ Body:
 
 ```
 {
+  "message" : ...
+}
+```
+
+### GET `/users/list`
+
+> :warning: **Requires authorization (superadmin)**
+
+List all users info.
+
+#### Response
+
+Body:
+
+```
+{
   "message" : {
-    "token" : ...,
-    "userData": {
+    "users": [{
       "name": ...,
-      "initials": ...,
       "email": ...,
       "role": ...
-    }
+    }]
   }
 }
 ```
@@ -81,9 +102,30 @@ Body:
 
 ### POST `/users/logout`
 
+> :warning: **Requires authorization**
+
 Logout.
 
-> :warning: **Requires authorization**
+
+#### Request:
+
+```
+{}
+```
+
+#### Response
+
+Body:
+
+```
+{
+  "message" : ...
+}
+```
+
+### POST `/users/register`
+
+Register a new user.
 
 #### Request:
 
@@ -91,7 +133,30 @@ Body:
 
 ```
 {
-  "token": ...
+  "user": {
+    "name"      : ...,
+    "email"     : ...,
+    "password"  : ...
+  }
+}
+```
+
+### POST `/users/reset-password`
+
+> :warning: **Requires authorization**
+
+Reset password.
+
+#### Request:
+
+Body:
+
+```
+{
+  "user": {
+    "email"        : ...,
+    "newPassword"  : ...
+  }
 }
 ```
 
@@ -105,33 +170,11 @@ Body:
 }
 ```
 
-### GET `/users/list`
-
-List all users info.
-
-> :warning: **Requires authorization (superadmin)**
-
-#### Response
-
-Body:
-
-```
-{
-  "message" : {
-    "users": [{
-      "name": ...,
-      "email": ...,
-      "role": ...
-    }]
-  }
-}
-```
-
 ### POST `/users/update-role`
 
-Update role for user.
-
 > :warning: **Requires authorization (superadmin)**
+
+Update role for user.
 
 #### Request
 
@@ -164,7 +207,18 @@ Body:
 ```
 {
   "user": {
-    "email"     : ...
+    "email"           : ...
+    "verificationId"  : ...
   }
+}
+```
+
+#### Response
+
+Body:
+
+```
+{
+  "message" : ...
 }
 ```

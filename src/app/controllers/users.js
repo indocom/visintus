@@ -31,7 +31,7 @@ const findVerifiedUserByEmail = async email => {
         } else if (!user.isVerified) {
           reject(buildErrObject(422, 'User has not been verified'));
         } else {
-          resolve(item); // returns mongoose object
+          resolve(user); // returns mongoose object
         }
       })
       .catch(err => reject(buildErrObject(422, err.message)));
@@ -64,7 +64,7 @@ const registerUser = async user => {
     });
 
     newUser.save((err, item) => {
-      if (err) reject(utils.buildErrObject(422, err.message));
+      if (err) reject(buildErrObject(422, err.message));
       resolve(item);
     });
   });
@@ -117,6 +117,7 @@ const updatePassword = async (user, newPassword) => {
 exports.login = async (req, res) => {
   try {
     const user = await findVerifiedUserByEmail(req.body.user.email);
+    console.log(user);
     const isPasswordMatch = await auth.checkPassword(
       user,
       req.body.user.password
@@ -126,8 +127,7 @@ exports.login = async (req, res) => {
       handleError(res, buildErrObject(409, 'Authentication failed'));
     } else {
       // password is correct, all ok. register access and returns token
-      const token = generateAccessToken(user._id);
-      await updateAccessToken(user, token);
+      const token = await generateAccessToken(user);
 
       handleSuccess(
         res,
@@ -137,16 +137,16 @@ exports.login = async (req, res) => {
             initials: user.name[0],
             email: user.email,
             role: user.role,
-            verification: user.verification,
-            token
-          }
+            verification: user.verification
+          },
+          token
         })
       );
     }
-  } catch (error) {
+  } catch (err) {
     // to prevent attackers from identifying valid users
-    // change the error message to 'Authentication failed'
-    handleError(res, error);
+    // change the err message to 'Authentication failed'
+    handleError(res, err);
   }
 };
 
@@ -159,7 +159,8 @@ exports.register = async (req, res) => {
     }
 
     const user = await registerUser(req.body.user);
-    emailer.sendRegistrationEmailMessage(user);
+    UserMailer.verifyRegistration(user);
+
     handleSuccess(
       res,
       buildSuccObject('User has been created. Please verify your email!')
@@ -170,7 +171,10 @@ exports.register = async (req, res) => {
 };
 
 exports.verify = async (req, res) => {
-  User.find({ _id: req.body.user.id, email: req.body.user.email })
+  User.findOne({
+    _id: req.body.user.verificationId,
+    email: req.body.user.email
+  })
     .select('isVerified')
     .then(user => {
       if (!user) handleError(res, buildErrObject(422, 'Unknown user'));
@@ -184,31 +188,42 @@ exports.verify = async (req, res) => {
         });
       }
     })
-    .catch(error => handleError(res, buildErrObject(422, err.message)));
+    .catch(err => handleError(res, buildErrObject(422, err.message)));
 };
 
 /* Forgot password function called by route */
 exports.forgotPassword = async (req, res) => {
   try {
     const user = await findVerifiedUserByEmail(req.body.user.email);
-    UserMailer.resetPassword(user);
+    const token = await generateResetPasswordToken(user);
+
+    UserMailer.resetPassword(user, token);
+
     handleSuccess(
       res,
       buildSuccObject('An email to reset password has been sent')
     );
-  } catch (error) {
-    handleError(res, buildErrObject(422, error.message));
+  } catch (err) {
+    handleError(res, buildErrObject(422, err.message));
   }
 };
 
 /* Reset password function called by route */
 exports.resetPassword = async (req, res) => {
   try {
+    if (req.body.user.email != req.user.email) {
+      handleError(
+        res,
+        buildErrObject(422, 'Invalid request to reset password')
+      );
+      return;
+    }
+
     const user = await findVerifiedUserByEmail(req.user.email);
     await updatePassword(user, req.body.user.newPassword);
     handleSuccess(res, buildSuccObject('Password updated!'));
-  } catch (error) {
-    handleError(res, buildErrObject(422, error.message));
+  } catch (err) {
+    handleError(res, buildErrObject(422, err.message));
   }
 };
 
@@ -217,8 +232,8 @@ exports.logout = async (req, res) => {
   try {
     await invalidateToken(user);
     handleSuccess(res, buildSuccObject('User logged out'));
-  } catch (error) {
-    handleError(res, buildErrObject(422, error.message));
+  } catch (err) {
+    handleError(res, buildErrObject(422, err.message));
   }
 };
 
@@ -227,7 +242,7 @@ exports.list = async (req, res) => {
     .select('-_id name email role')
     .lean()
     .then(users => handleSuccess(res, buildSuccObject(users)))
-    .catch(error => handleError(res, buildErrObject(error.message)));
+    .catch(err => handleError(res, buildErrObject(err.message)));
 };
 
 exports.updateRole = async (req, res) => {
@@ -239,5 +254,5 @@ exports.updateRole = async (req, res) => {
         else handleError(res, buildErrObject(422, 'No changes made'));
       } else handleError(res, buildErrObject(422, 'User not found'));
     })
-    .catch(error => handleError(res, buildErrObject(422, error.message)));
+    .catch(err => handleError(res, buildErrObject(422, err.message)));
 };

@@ -26,7 +26,8 @@ router.post(
  * Reset password route
  */
 router.post(
-  '/reset',
+  '/reset-password',
+  auth.requireAuth,
   UsersValidator.resetPassword,
   UsersController.resetPassword
 );

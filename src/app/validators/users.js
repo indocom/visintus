@@ -18,7 +18,7 @@ exports.register = async (req, res, next) => {
   next();
 };
 
-exports.resetPassword = async (req, res) => {
+exports.resetPassword = async (req, res, next) => {
   next();
 };
 
