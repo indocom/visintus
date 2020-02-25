@@ -90,7 +90,7 @@ Body:
 {
   "message" : {
     "token" : ...,
-    "userData": {
+    "user": {
       "name": ...,
       "initials": ...,
       "email": ...,

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const uuid = require('uuid');
+const config = require('../../config');
 
 const {
   handleError,
@@ -9,5 +10,6 @@ const {
 } = require('../middleware/utils.js');
 
 exports.upload = async (req, res) => {
-  handleSuccess(req, buildSuccObject('https://source.unsplash.com/random'));
+  console.log(req);
+  handleSuccess(res, buildSuccObject('https://source.unsplash.com/random'));
 };

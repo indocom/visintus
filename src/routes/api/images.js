@@ -6,6 +6,7 @@ const ImagesValidator = require('../../app/validators/images');
 router.post(
   '/upload',
   auth.requireAuth,
+  auth.roleAuthorization(['admin', 'superadmin']),
   ImagesValidator.upload,
   ImagesController.upload
 );

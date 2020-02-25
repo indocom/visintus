@@ -14,4 +14,10 @@ router.get(
   CategoriesController.getCategoryInfo
 );
 
+router.post(
+  '/plan-info',
+  CategoriesValidator.getPlansInfo,
+  CategoriesController.getPlansInfo
+);
+
 module.exports = router;
