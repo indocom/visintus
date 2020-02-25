@@ -22,7 +22,7 @@ const Itin = props => {
       try {
         let categories = JSON.stringify({ categories: props.itin });
         console.log(categories);
-        const res = await axios.post('/plan-info', categories, {
+        const res = await axios.post('/categories/plan-info', categories, {
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json'
@@ -74,65 +74,64 @@ const Itin = props => {
   // };
 
   let planList =
-    Object.keys(plan).length > 0 ? (
-      Object.entries(plan).map(([slug, data]) => {
-        console.log(data);
-        return (
-          <li key={slug}>
-            <div className="collapsible-header">
-              <h6>{data.name}
-                <span>
-                  <i className="fas fa-angle-down grey-text text-lighten-1"></i>
-                </span>
-              </h6>
-            </div>
-            <div className="collapsible-body">
-              <ul>
-                {data.plans.length > 1
-                  ? data.plans.map(plan => (
-                      <li key={plan._id} style={{ minHeight: 50 }}>
-                        <div>
-                          {plan.name}
-                          {slug !== 'intro' && (
-                            <div
-                              className="btn btn-small right red"
-                              onClick={() => handleRemovePlan(plan._id, slug)}
-                            >
-                              {' '}
-                              Remove{' '}
-                            </div>
-                          )}
-                        </div>
-                        <p>{plan.description}</p>
-                      </li>
-                    ))
-                  : data.plans.map(plan => (
-                      <li key={plan._id} style={{ minHeight: 50 }}>
-                        <div>
-                          {plan.name}
-                          {slug !== 'intro' && (
-                            <div
-                              className="btn btn-small right red"
-                              onClick={() => handleRemoveCategory(slug)}
-                            >
-                              {' '}
-                              Remove{' '}
-                            </div>
-                          )}
-                        </div>
-                        <p>{plan.description}</p>
-                      </li>
-                    ))}
-              </ul>
-            </div>
-          </li>
-        );
-      })
-    ) : (
-      // <p> You haven't make any plans yet </p>
-      null
-    );
-  
+    Object.keys(plan).length > 0
+      ? Object.entries(plan).map(([slug, data]) => {
+          console.log(data);
+          return (
+            <li key={slug}>
+              <div className="collapsible-header">
+                <h6>
+                  {data.name}
+                  <span>
+                    <i className="fas fa-angle-down grey-text text-lighten-1"></i>
+                  </span>
+                </h6>
+              </div>
+              <div className="collapsible-body">
+                <ul>
+                  {data.plans.length > 1
+                    ? data.plans.map(plan => (
+                        <li key={plan._id} style={{ minHeight: 50 }}>
+                          <div>
+                            {plan.name}
+                            {slug !== 'intro' && (
+                              <div
+                                className="btn btn-small right red"
+                                onClick={() => handleRemovePlan(plan._id, slug)}
+                              >
+                                {' '}
+                                Remove{' '}
+                              </div>
+                            )}
+                          </div>
+                          <p>{plan.description}</p>
+                        </li>
+                      ))
+                    : data.plans.map(plan => (
+                        <li key={plan._id} style={{ minHeight: 50 }}>
+                          <div>
+                            {plan.name}
+                            {slug !== 'intro' && (
+                              <div
+                                className="btn btn-small right red"
+                                onClick={() => handleRemoveCategory(slug)}
+                              >
+                                {' '}
+                                Remove{' '}
+                              </div>
+                            )}
+                          </div>
+                          <p>{plan.description}</p>
+                        </li>
+                      ))}
+                </ul>
+              </div>
+            </li>
+          );
+        })
+      : // <p> You haven't make any plans yet </p>
+        null;
+
   let buttons = (
     <div className="dropdownButtonContainer">
       <div className="btn" style={{ marginRight: 10 }} onClick={handleSave}>
@@ -143,19 +142,14 @@ const Itin = props => {
       </div>
     </div>
   );
-  
+
   return (
     <div className="container" style={{ padding: '1.5em 0' }}>
       <Link to="/">&lt;&lt;&lt; Continue planning</Link>
       <h5>Your itinerary</h5>
       <div className="dropdownItin">
-        {planList === null 
-          ? <p> You haven't make any plans yet </p>
-          : null
-        }
-        <ul className="collapsible">
-          {planList}
-        </ul>
+        {planList === null ? <p> You haven't make any plans yet </p> : null}
+        <ul className="collapsible">{planList}</ul>
         <br />
         {planList === null ? null : buttons}
       </div>
