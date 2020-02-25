@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import useMutation from '../../hooks/useMutation';
 import M from 'materialize-css';
-import axios from 'axios';
+import FileUpload from './FileUpload';
 
 const Highlight = props => {
   const [
@@ -74,11 +74,10 @@ const Highlight = props => {
 const UpsertHighlight = props => {
   const [description, setDescription] = useState(props.data.description);
   const [hyperlink, setHyperlink] = useState(props.data.hyperlink);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [
-    { response: imageURL, error: mutationError },
-    upsertData
-  ] = useMutation();
+  const [imageURL, FileUploadForm] = FileUpload({
+    endpoint: '/images/upload'
+  });
+  const [{ error: mutationError }, upsertData] = useMutation();
 
   const title = props.slug === '' ? 'Add Highlight' : 'Update Highlight';
   const endpoint = props.slug === '' ? '' : `/${props.slug}`;
@@ -86,41 +85,6 @@ const UpsertHighlight = props => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  const handleSelectFile = e => {
-    console.log(e.target.files[0]);
-    setSelectedFile(e.target.files[0]);
-    M.toast({
-      html: '<div>Remember to save!</div>',
-      classes: 'amber rounded center top'
-    });
-  };
-
-  const handleFileUpload = async e => {
-    e.preventDefault();
-
-    const data = new FormData();
-    data.append('file', selectedFile);
-
-    await upsertData({
-      method: 'post',
-      endpoint: `/images/upload`,
-      data,
-      dataType: 'application/octet-stream'
-    });
-
-    if (mutationError) {
-      M.toast({
-        html: `<div>Image failed to upload!</div><div> ${e}! </div>`,
-        classes: 'red rounded center top'
-      });
-    } else {
-      M.toast({
-        html: '<div>Image uploaded!</div>',
-        classes: 'green rounded center top'
-      });
-    }
-  };
 
   const handleSubmit = async e => {
     if (!imageURL && !props.data.image_url) {
@@ -134,7 +98,7 @@ const UpsertHighlight = props => {
 
     const data = JSON.stringify({
       highlight: {
-        image_url: !props.data.image_url ? imageURL : props.data.image_url,
+        image_url: !imageURL ? props.data.image_url : imageURL,
         description,
         hyperlink
       }
@@ -146,30 +110,25 @@ const UpsertHighlight = props => {
       endpoint: '/admin/highlights' + endpoint,
       data
     });
+
+    if (mutationError) {
+      M.toast({
+        html: `<div>${title} failed</div><div> ${mutationError}! </div>`,
+        classes: 'red rounded center top'
+      });
+    } else {
+      M.toast({
+        html: `<div>${title} successful!</div>`,
+        classes: 'green rounded center top'
+      });
+    }
   };
 
   return (
     <>
       <h5 className="grey-text text-darken-3">{title}</h5>
-      <form
-        style={{ padding: 15, backgroundColor: '#eee' }}
-        onSubmit={handleFileUpload}
-      >
-        <div className="file-field input-field">
-          <div className="btn">
-            <span>Insert picture here</span>
-            <input type="file" accept="image/*" onChange={handleSelectFile} />
-          </div>
-          <div className="file-path-wrapper">
-            <input
-              className="file-path validate"
-              type="text"
-              placeholder="Insert file here"
-            />
-          </div>
-          <input type="submit" className="btn" value="save" />
-        </div>
-      </form>
+
+      <FileUploadForm />
 
       <form
         onSubmit={handleSubmit}
