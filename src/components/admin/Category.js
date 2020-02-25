@@ -122,7 +122,16 @@ const UpsertCategory = props => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async e => {
+    if (!logoURL && !props.data.image_url) {
+      e.preventDefault();
+      M.toast({
+        html: `<div>Please upload image first!</div>`,
+        classes: 'red rounded center top'
+      });
+      return;
+    }
+
     const data = JSON.stringify({
       category: {
         name,

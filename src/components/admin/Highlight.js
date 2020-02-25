@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import useMutation from '../../hooks/useMutation';
 import M from 'materialize-css';
+import axios from 'axios';
 
 const Highlight = props => {
   const [
@@ -104,7 +105,8 @@ const UpsertHighlight = props => {
     await upsertData({
       method: 'post',
       endpoint: `/images/upload`,
-      data
+      data,
+      dataType: 'application/octet-stream'
     });
 
     if (mutationError) {
@@ -120,7 +122,16 @@ const UpsertHighlight = props => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async e => {
+    if (!imageURL && !props.data.image_url) {
+      e.preventDefault();
+      M.toast({
+        html: `<div>Please upload image first!</div>`,
+        classes: 'red rounded center top'
+      });
+      return;
+    }
+
     const data = JSON.stringify({
       highlight: {
         image_url: !props.data.image_url ? imageURL : props.data.image_url,

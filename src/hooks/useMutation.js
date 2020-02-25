@@ -11,7 +11,8 @@ const useMutation = () => {
     method,
     endpoint,
     data,
-    needAuthorization = true
+    needAuthorization = true,
+    dataType = 'application/json'
   }) => {
     console.log(response);
     setError(null);
@@ -19,7 +20,7 @@ const useMutation = () => {
     try {
       let headers = {
         'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
+        'Content-Type': dataType
       };
 
       if (needAuthorization) {
