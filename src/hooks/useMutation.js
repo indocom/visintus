@@ -10,13 +10,15 @@ const useMutation = () => {
   const upsertData = async ({
     method,
     endpoint,
+    dataType = 'application/json',
     data,
     needAuthorization = true,
-    dataType = 'application/json'
+    auth,
+    showToast = true
   }) => {
-    console.log(response);
     setError(null);
     setLoading(true);
+
     try {
       let headers = {
         'Access-Control-Allow-Origin': '*',
@@ -24,7 +26,7 @@ const useMutation = () => {
       };
 
       if (needAuthorization) {
-        const token = localStorage.getItem('token');
+        const token = auth ? auth : localStorage.getItem('token');
         headers = {
           ...headers,
           Authorization: `${token}`
@@ -34,33 +36,46 @@ const useMutation = () => {
       const res = data
         ? await axios[method](endpoint, data, { headers })
         : await axios[method](endpoint, { headers });
-      console.log(res.data.message);
+
       setResponse(res.data.message);
-      console.log(response);
+
+      if (showToast) {
+        M.toast({
+          html: `<div>Update data successful! ${res.data.message}!</div>`,
+          classes: 'teal rounded center top'
+        });
+      }
     } catch (e) {
       if (e.response) {
-        setError(e.response.data.errors.message);
-        M.toast({
-          html: `<div>Update data failed! ${e.response.data.errors.message}!</div>`,
-          classes: 'red rounded center top'
-        });
+        setError(e.response.data.error.message);
       } else if (e.request) {
         setError(e.request);
-        M.toast({
-          html: `<div>No response was received! ${e.request}!</div>`,
-          classes: 'red rounded center top'
-        });
       } else {
         setError(e);
-        M.toast({
-          html: `<div>Something went wrong! ${e}!</div>`,
-          classes: 'red rounded center top'
-        });
+      }
+
+      if (showToast) {
+        if (e.response) {
+          M.toast({
+            html: `<div>Update data failed! ${e.response.data.error.message}!</div>`,
+            classes: 'red rounded center top'
+          });
+        } else if (e.request) {
+          M.toast({
+            html: `<div>No response was received! ${e.request}!</div>`,
+            classes: 'red rounded center top'
+          });
+        } else {
+          M.toast({
+            html: `<div>Something went wrong! ${e}!</div>`,
+            classes: 'red rounded center top'
+          });
+        }
       }
     }
     setLoading(false);
   };
-
+  // console.log({ response, loading, error });
   return [{ response, loading, error }, useCallback(upsertData, [])];
 };
 

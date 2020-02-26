@@ -11,6 +11,7 @@ import Itinerary from './pages/Itinerary';
 import { Dashboard } from './pages/Admin';
 import Checkout from './pages/Checkout';
 import NotFound from './pages/404';
+import { Verify, ForgotPassword, ResetPassword } from './pages/Password';
 
 class App extends Component {
   render() {
@@ -27,6 +28,9 @@ class App extends Component {
               <Route path="/itinerary" component={Itinerary} />
               <Route path="/checkout" component={Checkout} />
               <Route path="/admin" component={Dashboard} />
+              <Route path="/verify" component={Verify} />
+              <Route exact path="/reset" component={ResetPassword} />
+              <Route path="/forgot" component={ForgotPassword} />
               <Route component={NotFound} />
             </Switch>
           </div>
