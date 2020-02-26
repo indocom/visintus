@@ -32,9 +32,10 @@ const signUpSuccess = () => {
   };
 };
 
-const signUpFailed = () => {
+const signUpFailed = err => {
   return {
-    type: 'SIGNUP_ERROR'
+    type: 'SIGNUP_ERROR',
+    err
   };
 };
 
@@ -105,7 +106,7 @@ export const signUpUser = ({ email, password, firstName, lastName }) => {
     axios
       .post('/users/register', {
         user: {
-          name: firstName + lastName,
+          name: firstName + ' ' + lastName,
           email: email,
           password: password
         }
@@ -123,7 +124,7 @@ export const signUpUser = ({ email, password, firstName, lastName }) => {
       })
       .catch(error => {
         console.log('signUpUser', error);
-        dispatch(signUpFailed());
+        dispatch(signUpFailed(error));
       });
   };
 };
