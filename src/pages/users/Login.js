@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { signInUser, logOutUser } from '../store/actions/authActions';
+import { signInUser, logOutUser } from '../../store/actions/authActions';
 
 class Login extends Component {
   state = {
@@ -75,7 +75,8 @@ class Login extends Component {
             </div>
           </div>
         </form>
-        <Link to="/signup">Do not have an account?</Link>
+        <Link to="/signup">Do not have an account? &nbsp;</Link>
+        <Link to="/forgot">Forgot password?</Link>
       </div>
     );
   }

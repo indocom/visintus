@@ -59,7 +59,10 @@ const useFetch = ({ endpoint, needAuthorization = true }) => {
     fetchData();
   }, [isStale]);
 
-  return [{ response, loading, error, isStale }, useCallback(setIsStale, [])];
+  return [
+    { response, loading, error, isStale },
+    useCallback(() => setIsStale(true), [])
+  ];
 };
 
 export default useFetch;

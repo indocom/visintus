@@ -21,7 +21,7 @@ function User() {
       endpoint: '/admin/users/update-role',
       data
     });
-    await doFetch(true);
+    await doFetch();
   };
 
   const userList =
