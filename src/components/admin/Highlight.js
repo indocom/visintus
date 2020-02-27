@@ -16,7 +16,7 @@ const Highlight = props => {
       method: 'delete',
       endpoint: `/admin/highlights/${id}`
     });
-    doFetch(true);
+    doFetch();
     if (mutationError) {
       M.toast({
         html: `<div>Failed to remove!</div><div> ${mutationError}! </div>`,

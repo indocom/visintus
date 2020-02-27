@@ -17,7 +17,7 @@ const Category = props => {
       method: 'delete',
       endpoint: `/admin/categories/${slug}`
     });
-    doFetch(true);
+    doFetch();
     if (mutationError) {
       M.toast({
         html: `<div>Failed to remove!</div><div> ${mutationError}! </div>`,
