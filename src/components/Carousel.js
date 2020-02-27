@@ -28,11 +28,13 @@ class Carousel extends Component {
           <ul className="carousel__track">
             {banners.map((banner, index) => (
               <li className="carousel__slide current-slide" key={index}>
-                <img
-                  className="carousel__image"
-                  src={banner.image_url}
-                  alt={`banner${index + 1}`}
-                />
+                <a href={banner.hyperlink}>
+                  <img
+                    className="carousel__image"
+                    src={banner.image_url}
+                    alt={`banner${index + 1}`}
+                  />
+                </a>
               </li>
             ))}
           </ul>
@@ -47,6 +49,19 @@ class Carousel extends Component {
           {banners.slice(1).map((banner, index) => (
             <button className="carousel__indicator" key={index}></button>
           ))}
+        </div>
+
+        <div className="carousel__description">
+          <ul className="carousel__captions">
+            <li className="carousel__caption current-slide">
+              {banners[0].description}
+            </li>
+            {banners.slice(1).map((banner, index) => (
+              <li className="carousel__caption" key={index}>
+                {banner.description}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     ) : (
