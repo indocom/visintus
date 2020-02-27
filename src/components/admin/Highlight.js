@@ -1,49 +1,32 @@
-import React, { Component, useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import useFetch from '../../hooks/useFetch';
+import useMutation from '../../hooks/useMutation';
+import M from 'materialize-css';
+import FileUpload from './FileUpload';
 
 const Highlight = props => {
-  const [highlights, setHighlights] = useState([]);
-  useEffect(() => {
-    async function FetchAllHighlights() {
-      const token = localStorage.getItem('token');
-      let { data } = await axios
-        .get('/admin/highlights', {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json',
-            Authorization: `${token}`
-          },
-          crossdomain: true
-        })
-        .catch(err => console.log(err));
-      console.log(data);
-      if (data) {
-        if (!data.message) return;
-        setHighlights(data.message);
-      } else {
-        console.log(`Error in loading /pages/highlights`);
-      }
-    }
-    FetchAllHighlights();
-  }, [highlights.length]);
+  const [
+    { response: highlights, loading: fetchLoading, error: fetchError },
+    doFetch
+  ] = useFetch({ endpoint: '/admin/highlights' });
+  const [{ error: mutationError }, upsertData] = useMutation();
 
   const handleRemove = async id => {
-    const token = localStorage.getItem('token');
-    await axios
-      .delete(`/admin/highlights/${id}`, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${token}`
-        },
-        crossdomain: true
-      })
-      .then(res => res.status === 200 && setHighlights([]))
-      .catch(err => console.log(err));
+    upsertData({
+      method: 'delete',
+      endpoint: `/admin/highlights/${id}`
+    });
+    doFetch(true);
+    if (mutationError) {
+      M.toast({
+        html: `<div>Failed to remove!</div><div> ${mutationError}! </div>`,
+        classes: 'red rounded center top'
+      });
+    }
   };
 
   const highlightsList =
-    highlights.length > 0 ? (
+    highlights && highlights.length > 0 ? (
       highlights.map((highlight, index) => {
         return (
           <li key={index} style={{ minHeight: 50 }}>
@@ -78,62 +61,80 @@ const Highlight = props => {
       <div className="center">No data yet :(</div>
     );
 
-  return <ul>{highlightsList}</ul>;
+  if (fetchLoading) return null;
+  return !fetchError ? (
+    <ul>{highlightsList}</ul>
+  ) : (
+    <p>
+      Error fetching data! Check your credentials or contact your administrator
+    </p>
+  );
 };
 
-class UpsertHighlight extends Component {
-  state = {
-    image_url: '',
-    description: '',
-    hyperlink: ''
-  };
+const UpsertHighlight = props => {
+  const [description, setDescription] = useState(props.data.description);
+  const [hyperlink, setHyperlink] = useState(props.data.hyperlink);
+  const [imageURL, FileUploadForm] = FileUpload({
+    endpoint: '/images/upload'
+  });
+  const [{ error: mutationError }, upsertData] = useMutation();
 
-  title = this.props.slug === '' ? 'Add Highlight' : 'Update Highlight';
-  endpoint = this.props.slug === '' ? '' : `/${this.props.slug}`;
+  const title = props.slug === '' ? 'Add Highlight' : 'Update Highlight';
+  const endpoint = props.slug === '' ? '' : `/${props.slug}`;
 
-  componentDidMount() {
+  useEffect(() => {
     window.scrollTo(0, 0);
-    this.setState({
-      image_url: this.props.data.image_url,
-      hyperlink: this.props.data.hyperlink,
-      description: this.props.data.description
-    });
-  }
+  }, []);
 
-  handleChange = e => {
-    this.setState({
-      [e.target.id]: e.target.value
-    });
-  };
+  const handleSubmit = async e => {
+    if (!imageURL && !props.data.image_url) {
+      e.preventDefault();
+      M.toast({
+        html: `<div>Please upload image first!</div>`,
+        classes: 'red rounded center top'
+      });
+      return;
+    }
 
-  handleSubmit = async e => {
-    const token = localStorage.getItem('token');
     const data = JSON.stringify({
-      highlight: this.state
+      highlight: {
+        image_url: !imageURL ? props.data.image_url : imageURL,
+        description,
+        hyperlink
+      }
+    });
+    console.log(data);
+
+    await upsertData({
+      method: 'post',
+      endpoint: '/admin/highlights' + endpoint,
+      data
     });
 
-    await axios
-      .post('/admin/highlights' + this.endpoint, data, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${token}`
-        },
-        crossdomain: true
-      })
-      .catch(err => console.log(err));
+    if (mutationError) {
+      M.toast({
+        html: `<div>${title} failed</div><div> ${mutationError}! </div>`,
+        classes: 'red rounded center top'
+      });
+    } else {
+      M.toast({
+        html: `<div>${title} successful!</div>`,
+        classes: 'green rounded center top'
+      });
+    }
   };
-  render() {
-    // const { auth, authError } = this.props
-    // if (auth.uid) return <Redirect to='/admin' />
 
-    return (
-      <>
-        <form
-          onSubmit={this.handleSubmit}
-          style={{ padding: 15, backgroundColor: '#eee' }}
-        >
-          <h5 className="grey-text text-darken-3">{this.title}</h5>
+  return (
+    <>
+      <h5 className="grey-text text-darken-3">{title}</h5>
+
+      <FileUploadForm />
+
+      <form
+        onSubmit={handleSubmit}
+        style={{ padding: 15, backgroundColor: '#eee' }}
+      >
+        {props.slug && (
           <div className="input-field">
             <label htmlFor="image_url" className="active">
               Image URL
@@ -141,52 +142,53 @@ class UpsertHighlight extends Component {
             <input
               type="text"
               id="image_url"
-              value={this.state.image_url}
-              onChange={this.handleChange}
+              value={props.data.image_url}
               required
+              disabled
             />
           </div>
+        )}
 
-          <div className="input-field">
-            <label htmlFor="hyperlink" className="active">
-              Highlight hyperlink
-            </label>
-            <input
-              type="text"
-              id="hyperlink"
-              value={this.state.hyperlink}
-              onChange={this.handleChange}
-            />
-          </div>
+        <div className="input-field">
+          <label htmlFor="hyperlink" className="active">
+            Highlight hyperlink
+          </label>
+          <input
+            type="text"
+            id="hyperlink"
+            value={hyperlink}
+            onChange={e => setHyperlink(e.target.value)}
+          />
+        </div>
 
-          <div className="input-field">
-            <label htmlFor="description" className="active">
-              Description
-            </label>
-            <input
-              type="text"
-              id="description"
-              value={this.state.description}
-              onChange={this.handleChange}
-            />
-          </div>
-          <button className="btn">{this.title}</button>
-          <div
-            className="btn"
-            onClick={() => {
-              this.props.closeForm();
-            }}
-          >
-            Cancel
-          </div>
-        </form>
-      </>
-    );
-  }
-}
+        <div className="input-field">
+          <label htmlFor="description" className="active">
+            Description
+          </label>
+          <input
+            type="text"
+            id="description"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+          />
+        </div>
+
+        <button className="btn">{title}</button>
+        <div
+          className="btn"
+          onClick={() => {
+            props.closeForm();
+          }}
+        >
+          Cancel
+        </div>
+      </form>
+    </>
+  );
+};
 
 export default props => {
-  let [isActive, setIsActive] = useState(false);
+  let [isActive, setIsActive] = useState(false); // -> is form shown?
   let [slug, setSlug] = useState(''); //'' -> add highlight
   let [data, setData] = useState({
     hyperlink: '',

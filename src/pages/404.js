@@ -11,7 +11,7 @@ function NotFound() {
         its name changed, or temporarily unavailable
       </h6>
       <h6>
-        Are you looking for your <Link to="/itin">plan</Link>, instead?
+        Are you looking for your <Link to="/itinerary">plan</Link>, instead?
       </h6>
       <div style={{ minHeight: 30 }}></div>
       <Link to="/" className="btn">

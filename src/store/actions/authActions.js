@@ -57,8 +57,8 @@ export const signInUser = ({ email, password }) => {
       .then(response => {
         console.log('signInUser', response);
         const { token } = response.data.message;
-        const { role } = response.data.message.userData;
-        const { initials } = response.data.message.userData;
+        const { role } = response.data.message.user;
+        const { initials } = response.data.message.user;
         console.log(token);
         localStorage.setItem('token', token);
         localStorage.setItem('isLoggedIn', true);

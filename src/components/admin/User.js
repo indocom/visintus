@@ -1,58 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import useFetch from '../../hooks/useFetch';
+import useMutation from '../../hooks/useMutation';
 
 function User() {
-  const [users, setUsers] = useState([]);
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [isError, setIsError] = useState(false);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('/admin/users/list', {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json',
-            Authorization: `${token}`
-          },
-          crossdomain: true
-        });
-        setUsers(res.data.message);
-        setIsAuthorized(true);
-      } catch (e) {
-        console.log(e);
-        setIsAuthorized(false);
-      }
-    };
-    fetchUsers();
-  }, [users.length]);
+  const [
+    { response: users, loading: fetchLoading, error: fetchError },
+    doFetch
+  ] = useFetch({ endpoint: '/admin/users/list' });
+  const [{ error: mutationError }, upsertData] = useMutation();
 
   const toggleUserRole = async (email, role) => {
-    try {
-      const token = localStorage.getItem('token');
-      const data = JSON.stringify({
-        user: {
-          email,
-          role: role === 'admin' ? 'user' : 'admin'
-        }
-      });
-      await axios.post('/admin/users/update-role', data, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${token}`
-        },
-        crossdomain: true
-      });
-      setUsers([]);
-    } catch (e) {
-      console.log(e);
-      setIsError(true);
-    }
+    const data = JSON.stringify({
+      user: {
+        email,
+        role: role === 'admin' ? 'user' : 'admin'
+      }
+    });
+    await upsertData({
+      method: 'post',
+      endpoint: '/admin/users/update-role',
+      data
+    });
+    await doFetch(true);
   };
 
   const userList =
+    users &&
     users.length > 0 &&
     users.map((user, index) => (
       <tr key={index} style={{ minHeight: 50 }}>
@@ -64,7 +37,7 @@ function User() {
               type="checkbox"
               checked={user.role.includes('admin')}
               disabled={user.role === 'superadmin'}
-              onChange={e => toggleUserRole(user.email, user.role)}
+              onChange={() => toggleUserRole(user.email, user.role)}
             />
             <span>{user.role}</span>
           </label>
@@ -72,24 +45,27 @@ function User() {
       </tr>
     ));
 
-  return !isError ? (
-    isAuthorized && (
-      <>
-        <h4>User Admin Page</h4>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role (checked if admin!)</th>
-            </tr>
-          </thead>
-          <tbody>{userList}</tbody>
-        </table>
-      </>
-    )
+  if (fetchLoading) return null;
+
+  return !fetchError && !mutationError ? (
+    <>
+      <h4>User Admin Page</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role (checked if admin!)</th>
+          </tr>
+        </thead>
+        <tbody>{userList}</tbody>
+      </table>
+    </>
   ) : (
-    <p>Error fetching data</p>
+    // )
+    <p>
+      Error fetching data! Check your credentials or contact your administrator
+    </p>
   );
 }
 
