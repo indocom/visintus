@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import useMutation from '../../hooks/useMutation';
 import M from 'materialize-css';
-import FileUpload from './FileUpload';
+import FileUpload from './utils/FileUpload';
 
 const Highlight = props => {
   const [

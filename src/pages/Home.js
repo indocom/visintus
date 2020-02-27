@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-import InterestingArea from '../components/home/InterestingArea.js';
+import CategoriesHighlights from '../components/home/CategoriesHighlights.js';
 import Carousel from '../components/Carousel.js';
-import PlanAVisit from '../components/home/PlanAVisit.js';
 import NotFound from './404.js';
 
 class Home extends Component {
@@ -38,9 +38,16 @@ class Home extends Component {
       <div className="Home">
         <Carousel banners={this.state.highlights} />
         <div className="container area">
-          <InterestingArea categories={this.state.categories} />
+          <CategoriesHighlights categories={this.state.categories} />
         </div>
-        <PlanAVisit />
+        <div
+          className="planAVisit center"
+          style={{ paddingBottom: '70px', width: '100%' }}
+        >
+          <Link to="/itin" className="waves-effect waves-light btn btn-large">
+            Plan A Visit!
+          </Link>
+        </div>
       </div>
     ) : (
       <NotFound />

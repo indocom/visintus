@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import BannerDetails from './Banner';
-import PlanDetails from './Plan';
-import RepDetails from './Reps';
+import { BannerDetails, PlanDetails, RepDetails } from './categories';
 
 export default props => {
   let slug = props.match.params.slug;
