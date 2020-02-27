@@ -5,13 +5,17 @@ import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
 import Category from './pages/Category';
 import Footer from './components/layout/Footer';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
 import Itinerary from './pages/Itinerary';
 import { Dashboard } from './pages/Admin';
 import Checkout from './pages/Checkout';
 import NotFound from './pages/404';
-import { Verify, ForgotPassword, ResetPassword } from './pages/Password';
+import {
+  Verify,
+  ForgotPassword,
+  ResetPassword,
+  Login,
+  Signup
+} from './pages/users';
 
 class App extends Component {
   render() {
