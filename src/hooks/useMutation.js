@@ -14,7 +14,10 @@ const useMutation = () => {
     data,
     needAuthorization = true,
     auth,
-    showToast = true
+    showToast = true,
+    successMessage,
+    errorMessage,
+    pushTo
   }) => {
     setError(null);
     setLoading(true);
@@ -40,10 +43,23 @@ const useMutation = () => {
       setResponse(res.data.message);
 
       if (showToast) {
-        M.toast({
-          html: `<div>Update data successful! ${res.data.message}!</div>`,
-          classes: 'teal rounded center top'
-        });
+        if (successMessage) {
+          M.toast({
+            html: `<div>${successMessage}</div>`,
+            classes: 'teal rounded center top'
+          });
+        } else {
+          M.toast({
+            html: `<div>Update data successful! ${res.data.message}!</div>`,
+            classes: 'teal rounded center top'
+          });
+        }
+      }
+
+      if (pushTo) {
+        setTimeout(() => {
+          window.location.replace(pushTo);
+        }, 1000);
       }
     } catch (e) {
       if (e.response) {

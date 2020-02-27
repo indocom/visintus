@@ -18,15 +18,10 @@ function Verify(props) {
       method: 'post',
       endpoint: '/users/verify',
       data,
-      needAuthorization: false
+      needAuthorization: false,
+      successMessage: 'Your email has been verified. Please login again!',
+      pushTo: '/login'
     });
-    if (!error) {
-      M.toast({
-        html: `<div>Your email has been verified. Please login again!</div>`,
-        classes: 'teal rounded center top'
-      });
-      props.history.push('/login');
-    }
   };
 
   return (
@@ -78,18 +73,9 @@ function ResetPassword(props) {
       endpoint: '/users/reset-password',
       data,
       auth: token,
-      showToast: false
+      successMessage: 'Your password has changed. Please login again!',
+      pushTo: '/login'
     });
-
-    if (!error) {
-      M.toast({
-        html: `<div>Your password has changed. Please login again!</div>`,
-        classes: 'teal rounded center top'
-      });
-      setTimeout(() => {
-        props.history.push('/login');
-      }, 1000);
-    }
   };
 
   return (
@@ -136,8 +122,7 @@ function ForgotPassword() {
       method: 'post',
       endpoint: '/users/forgot-password',
       data: { user: { email } },
-      needAuthorization: false,
-      showToast: false
+      needAuthorization: false
     });
 
     console.log(error);
