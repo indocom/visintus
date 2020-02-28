@@ -13,8 +13,9 @@ const Itin = props => {
 
   useEffect(() => {
     let collapsible = document.querySelectorAll('.collapsible');
-    M.Collapsible.init(collapsible);
-    console.log('collapsible deployed');
+    M.Collapsible.init(collapsible, {
+      accordion: false
+    });
   }, []);
 
   useEffect(() => {

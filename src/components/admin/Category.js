@@ -3,7 +3,6 @@ import useFetch from '../../hooks/useFetch';
 import useMutation from '../../hooks/useMutation';
 import M from 'materialize-css';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 const Category = props => {
   const [

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import Loading from './Loading';
-import '../css/Carousel.css';
+import '../css/carousel.css';
 import carouselUtils from './carouselUtils';
 
 class Carousel extends Component {

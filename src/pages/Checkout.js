@@ -17,7 +17,7 @@ const Checkout = props => {
     const fetchPlanInfo = async () => {
       try {
         let categories = JSON.stringify({ categories: props.itin });
-        const res = await axios.post('/plan-info', categories, {
+        const res = await axios.post('categories/plan-info', categories, {
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json'
@@ -147,7 +147,7 @@ const Checkout = props => {
               />
             </div>
             <div className="input-field">
-              <label htmlFor="visitDate">Visit Date</label>
+              <label htmlFor="visitDate">Visit Date (DD/MM/YYYY) </label>
               <input
                 type="text"
                 id="visitDate"

@@ -2,8 +2,8 @@ import React from 'react';
 
 const Footer = props => {
   return (
-    <div className="grey lighten-4" style={{ paddingTop: 20 }}>
-      <footer className="page-footer indigo darken-4">
+    <>
+      <footer className="page-footer black darken-4">
         <div className="container">
           <div className="row">
             <div className="col s12 m4">
@@ -72,7 +72,7 @@ const Footer = props => {
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 };
 

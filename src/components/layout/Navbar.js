@@ -36,7 +36,7 @@ const Navbar = props => {
   };
 
   return (
-    <nav className="nav-wrapper indigo darken-4">
+    <nav className="nav-wrapper black">
       <ul id="dropdownLogout" className="dropdown-content">
         <li>
           <Link to="/">Account</Link>
@@ -58,7 +58,12 @@ const Navbar = props => {
         </Link>
         <ul className="right">
           <li>
-            <NavLink to="/itinerary">Itin</NavLink>
+            <a target="_blank" href="https:pi-nus.org">
+              PINUS Homepage
+            </a>
+          </li>
+          <li>
+            <NavLink to="/itinerary">Itinerary</NavLink>
           </li>
           {isLoggedIn === 'true' ? (
             <li>
@@ -75,9 +80,7 @@ const Navbar = props => {
               </a>
             </li>
           ) : (
-            <li>
-              <NavLink to="/login">Login</NavLink>
-            </li>
+            <li>{/* <NavLink to="/login">Login</NavLink> */}</li>
           )}
         </ul>
       </div>

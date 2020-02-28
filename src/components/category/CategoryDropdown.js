@@ -80,7 +80,9 @@ const AreaDropdown = props => {
 
   useEffect(() => {
     let collapsible = document.querySelectorAll('.collapsible');
-    M.Collapsible.init(collapsible, {});
+    M.Collapsible.init(collapsible, {
+      accordion: false
+    });
   }, []);
 
   return (

@@ -44,7 +44,10 @@ class Home extends Component {
           className="planAVisit center"
           style={{ paddingBottom: '70px', width: '100%' }}
         >
-          <Link to="/itin" className="waves-effect waves-light btn btn-large">
+          <Link
+            to="/itinerary"
+            className="waves-effect waves-light btn btn-large"
+          >
             Plan A Visit!
           </Link>
         </div>
