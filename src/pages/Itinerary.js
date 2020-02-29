@@ -22,7 +22,6 @@ const Itin = props => {
     const fetchPlanInfo = async () => {
       try {
         let categories = JSON.stringify({ categories: props.itin });
-        console.log(categories);
         const res = await axios.post('/categories/plan-info', categories, {
           headers: {
             'Access-Control-Allow-Origin': '*',
@@ -30,7 +29,6 @@ const Itin = props => {
           },
           crossdomain: true
         });
-        console.log(res);
         setPlan(res.data.message);
       } catch (e) {
         console.log(e);
@@ -53,9 +51,9 @@ const Itin = props => {
 
   const handleCheckout = e => {
     e.preventDefault();
-    console.log(props);
 
-    /* TODO: POST itin data to backend */
+    /* TODO: POST itin data to backend when user is logged in*/
+    /* current implementation just take from localStorage */
 
     props.history.push('/checkout');
   };
@@ -77,7 +75,6 @@ const Itin = props => {
   let planList =
     Object.keys(plan).length > 0
       ? Object.entries(plan).map(([slug, data]) => {
-          console.log(data);
           return (
             <li key={slug}>
               <div className="collapsible-header">
@@ -135,9 +132,9 @@ const Itin = props => {
 
   let buttons = (
     <div className="dropdownButtonContainer">
-      <div className="btn" style={{ marginRight: 10 }} onClick={handleSave}>
+      {/* <div className="btn" style={{ marginRight: 10 }} onClick={handleSave}>
         Save
-      </div>
+      </div> */}
       <div className="btn" onClick={handleCheckout}>
         Save &amp; Checkout
       </div>

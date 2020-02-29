@@ -11,7 +11,6 @@ const Checkout = props => {
   const [organization, setOrganization] = useState('');
   const [visitDate, setVisitDate] = useState('');
   const [remarks, setRemarks] = useState('');
-  console.log(itin);
 
   useEffect(() => {
     const fetchPlanInfo = async () => {
@@ -24,7 +23,6 @@ const Checkout = props => {
           },
           crossdomain: true
         });
-        console.log(res);
         setItin(res.data.message);
       } catch (e) {
         console.log(e);
@@ -39,11 +37,10 @@ const Checkout = props => {
       disableWeekends: true,
       minDate: new Date()
     });
-  }, []);
+  }, [props]);
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(props, name, email, visitDate, organization, remarks);
 
     let order = JSON.stringify({
       categories: props.itin,
@@ -64,10 +61,8 @@ const Checkout = props => {
       crossdomain: true
     });
 
-    console.log(res);
-
     M.toast({
-      html: '<h1>Booking successful!</h1>',
+      html: '<div>Booking successful!</div>',
       classes: 'teal rounded center top'
     });
     props.history.push('/');
@@ -200,7 +195,6 @@ const Checkout = props => {
 };
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     itin: state.plan.itin
   };
