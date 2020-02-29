@@ -12,15 +12,13 @@ const Navbar = props => {
   const role = localStorage.getItem('role');
 
   useEffect(() => {
-    console.log('hello');
     let elems = document.querySelectorAll('.dropdown-trigger');
     M.Dropdown.init(elems);
   }, []);
 
   const handleLogout = e => {
     e.preventDefault();
-    console.log('handleLogout', token);
-    console.log('handleLogout', props);
+
     const awaitLogOut = new Promise((resolve, reject) => {
       props.logOutUser(token);
       localStorage.setItem('token', null);
@@ -29,8 +27,9 @@ const Navbar = props => {
       localStorage.setItem('role', null);
       setTimeout(() => resolve('logout success'));
     });
+
     awaitLogOut.then(value => {
-      console.log(value);
+      // console.log(value);
       window.location.replace('/');
     });
   };

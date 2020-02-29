@@ -11,7 +11,6 @@ class Login extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem('token');
-    console.log('CDM', token);
   }
 
   handleReload = e => {
@@ -28,7 +27,6 @@ class Login extends Component {
     e.preventDefault();
     if (this.props.isLoggedIn) {
       const token = localStorage.getItem('token');
-      console.log('handleSubmit', token);
       this.props.logOutUser(token);
       localStorage.setItem('token', null);
       localStorage.setItem('isLoggedIn', false);
@@ -40,7 +38,6 @@ class Login extends Component {
         setTimeout(() => resolve(this.props.authError), 500);
       });
       awaitSignIn.then(value => {
-        console.log('Promise', value);
         if (!value) {
           this.handleReload();
         }
@@ -83,7 +80,6 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log('mapStateToProps', state.auth);
   return {
     authError: state.auth.authError,
     isLoggedIn: state.auth.isLoggedIn

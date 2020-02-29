@@ -40,8 +40,6 @@ const signUpFailed = err => {
 };
 
 export const signInUser = ({ email, password }) => {
-  console.log('signInUser', email);
-  console.log('signInUser', password);
   const data = JSON.stringify({
     user: {
       email: email,
@@ -56,11 +54,9 @@ export const signInUser = ({ email, password }) => {
         }
       })
       .then(response => {
-        console.log('signInUser', response);
         const { token } = response.data.message;
         const { role } = response.data.message.user;
         const { initials } = response.data.message.user;
-        console.log(token);
         localStorage.setItem('token', token);
         localStorage.setItem('isLoggedIn', true);
         localStorage.setItem('role', role);
@@ -89,11 +85,9 @@ export const logOutUser = token => {
         }
       })
       .then(response => {
-        console.log('logOutUser', response);
         dispatch(logOutSuccess());
       })
       .catch(error => {
-        console.log(token);
         console.log('logOutUser', error);
         dispatch(logOutFailed());
       });
@@ -101,7 +95,6 @@ export const logOutUser = token => {
 };
 
 export const signUpUser = ({ email, password, firstName, lastName }) => {
-  console.log(email, password, firstName, lastName);
   return dispatch => {
     axios
       .post('/users/register', {
@@ -112,7 +105,6 @@ export const signUpUser = ({ email, password, firstName, lastName }) => {
         }
       })
       .then(response => {
-        console.log('signUpUser', response);
         const { role } = response.data.message.userData;
         const { initials } = response.data.message.userData;
         const { token } = response.data.message;

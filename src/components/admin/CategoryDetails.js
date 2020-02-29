@@ -21,13 +21,13 @@ export default props => {
           crossdomain: true
         })
         .catch(err => console.log(err));
+
       if (data) {
         if (!data.message) return;
         setDetails(data.message);
       } else {
         console.log(`Error in loading /admin/categories/${slug}`);
       }
-      console.log(details);
     }
     FetchAllDetails();
   }, [details.length]);

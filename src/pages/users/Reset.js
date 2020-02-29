@@ -4,12 +4,10 @@ import useMutation from '../../hooks/useMutation';
 import M from 'materialize-css';
 
 function ResetPassword(props) {
-  console.log(props);
   const [newPassword, setNewPassword] = useState('');
   const [checkpassword, setCheckPassword] = useState('');
   const [{ response, error }, upsertData] = useMutation();
   const { email, token } = queryString.parse(props.location.search);
-  console.log(email, token);
 
   const data = {
     user: {

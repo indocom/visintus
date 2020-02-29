@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 const CategoriesHighlights = props => {
   const { categories } = props;
-  // console.log(categories)
   const categoriesList =
     categories.length > 0 ? (
       categories.map((category, index) => {

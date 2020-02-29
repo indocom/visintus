@@ -73,11 +73,10 @@ class UpsertPlan extends Component {
 
   handleSubmit = async e => {
     const data = JSON.stringify({
-      authToken: 'visintus',
       plan: this.state
     });
-    console.log(data);
     const token = localStorage.getItem('token');
+
     await axios
       .post(
         `/admin/categories/${this.props.slug}/plans` + this.endpoint,

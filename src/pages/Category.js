@@ -21,7 +21,6 @@ class Category extends Component {
     const slug = this.props.match.params.slug;
     try {
       let res = await axios.get(`/categories/${slug}`);
-      console.log(res);
       let data = res.data;
       this.setState({
         banners: data.message.banners,

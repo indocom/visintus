@@ -43,7 +43,6 @@ const FileUpload = ({ endpoint }) => {
         });
       }
     }
-    console.log(selectedFile);
   };
 
   const handleFileUpload = async e => {

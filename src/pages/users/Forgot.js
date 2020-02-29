@@ -17,7 +17,6 @@ function ForgotPassword() {
       needAuthorization: false
     });
 
-    console.log(error);
     if (!error) {
       setIsActive(true);
     }

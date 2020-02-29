@@ -88,7 +88,6 @@ const UpsertCategory = props => {
   }, []);
 
   const handleSelectFile = e => {
-    console.log(e.target.files[0]);
     setSelectedFile(e.target.files[0]);
     M.toast({
       html: '<div>Remember to save!</div>',
@@ -137,7 +136,6 @@ const UpsertCategory = props => {
         logo_url: !props.data.logo_url ? logoURL : props.data.logo_url
       }
     });
-    console.log(data);
 
     await upsertData({
       method: 'post',

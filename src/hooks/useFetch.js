@@ -30,7 +30,6 @@ const useFetch = ({ endpoint, needAuthorization = true }) => {
           headers
         });
 
-        console.log(res.data.message);
         setResponse(res.data.message);
         setIsStale(false);
       } catch (e) {
