@@ -1,4 +1,4 @@
-# Emailer:
+# Emailer
 
 :information_source: JSON Format
 

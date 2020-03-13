@@ -1,4 +1,4 @@
-# Categories:
+# Categories
 
 :information_source: JSON Format
 

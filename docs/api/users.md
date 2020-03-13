@@ -1,4 +1,4 @@
-# Users:
+# Users
 
 :information_source: JSON Format
 

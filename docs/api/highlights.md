@@ -1,4 +1,4 @@
-# Highlights:
+# Highlights
 
 :information_source: JSON Format
 
