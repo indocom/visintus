@@ -41,6 +41,27 @@ const config = convict({
     }
   },
 
+  fileStorage: {
+    images: {
+      doc: 'File storage location for images',
+      format: '*',
+      default: __dirname + '/../../public/images'
+    }
+  },
+
+  host: {
+    backend: {
+      doc: 'URL for backend',
+      format: '*',
+      default: 'localhost:3000'
+    },
+    frontend: {
+      doc: 'URL for frontend',
+      format: '*',
+      default: 'localhost:3001'
+    }
+  },
+
   user: {
     accessTokenExp: {
       doc: 'Expiration time for access token in seconds',

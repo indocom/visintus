@@ -37,6 +37,9 @@ const config = require('./config');
 const { setupDbConnection } = require('./app/middleware/db');
 setupDbConnection(config.get('db'));
 
+var dir = path.join(__dirname, '..', 'public');
+app.use('/static', express.static(dir));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

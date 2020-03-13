@@ -11,4 +11,12 @@ router.post(
   ImagesController.upload
 );
 
+router.post(
+  '/unlink',
+  auth.requireAuth,
+  auth.roleAuthorization(['admin', 'superadmin']),
+  ImagesValidator.unlink,
+  ImagesController.unlink
+);
+
 module.exports = router;
