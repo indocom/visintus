@@ -10,6 +10,8 @@ const {
   buildSuccObject
 } = require('../middleware/utils.js');
 
+const ApplicationMailer = require('../mailers/application_mailer');
+
 /*********************
  * Private functions *
  *********************/
@@ -147,10 +149,13 @@ exports.checkoutPlans = async (req, res) => {
     return;
   }
 
-  queryPlanInfos(queries, { name: 1, slug: 1, 'plans.name': 1, 'plans._id': 1 })
+  queryPlanInfos(queries, { name: 1, slug: 1, plans: 1 })
     .then(result => {
-      console.log(JSON.stringify(result), req.body.orderInfo);
-      handleSuccess(res, buildSuccObject('Your order has been recorded'));
+      ApplicationMailer.checkoutItinerary(req.body.orderInfo, result)
+        .then((info, response) => {
+          handleSuccess(res, buildSuccObject('Your order has been recorded'));
+        })
+        .catch(err => handleError(res, buildErrObject(422, err.message)));
     })
-    .catch(error => handleError(res, buildErrObject(422, error.message)));
+    .catch(err => handleError(res, buildErrObject(422, err.message)));
 };
