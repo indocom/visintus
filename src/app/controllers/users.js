@@ -158,12 +158,14 @@ exports.register = async (req, res) => {
     }
 
     const user = await registerUser(req.body.user);
-    UserMailer.verifyRegistration(user);
-
-    handleSuccess(
-      res,
-      buildSuccObject('User has been created. Please verify your email!')
-    );
+    UserMailer.verifyRegistration(user)
+      .then((info, response) => {
+        handleSuccess(
+          res,
+          buildSuccObject('User has been created. Please verify your email!')
+        );
+      })
+      .catch(err => handleError(err, buildErrObject(422, err.message)));
   } catch (err) {
     handleError(res, buildErrObject(422, err.message));
   }
@@ -196,12 +198,14 @@ exports.forgotPassword = async (req, res) => {
     const user = await findVerifiedUserByEmail(req.body.user.email);
     const token = await generateResetPasswordToken(user);
 
-    UserMailer.resetPassword(user, token);
-
-    handleSuccess(
-      res,
-      buildSuccObject('An email to reset password has been sent')
-    );
+    UserMailer.resetPassword(user, token)
+      .then((info, response) => {
+        handleSuccess(
+          res,
+          buildSuccObject('An email to reset password has been sent')
+        );
+      })
+      .catch(err => handleError(res, buildErrObject(err.message)));
   } catch (err) {
     handleError(res, buildErrObject(422, err.message));
   }

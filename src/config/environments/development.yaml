@@ -1,5 +1,5 @@
 db:
   name: "visintus_development"
 host:
-  backend: "localhost:3000"
-  frontend: "localhost:3001"
+  backend: "http://localhost:3000"
+  frontend: "http://localhost:3001"
