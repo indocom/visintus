@@ -9,7 +9,7 @@ const {
   handleSuccess,
   buildErrObject,
   buildSuccObject
-} = require('../middleware/utils.js');
+} = require('../middleware/utils');
 
 exports.upload = async (req, res) => {
   var fileName;

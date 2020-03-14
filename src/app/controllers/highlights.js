@@ -5,7 +5,7 @@ const {
   handleSuccess,
   buildErrObject,
   buildSuccObject
-} = require('../middleware/utils.js');
+} = require('../middleware/utils');
 
 /*********************
  * Private functions *

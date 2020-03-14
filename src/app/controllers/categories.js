@@ -8,7 +8,7 @@ const {
   handleSuccess,
   buildErrObject,
   buildSuccObject
-} = require('../middleware/utils.js');
+} = require('../middleware/utils');
 
 const ApplicationMailer = require('../mailers/application_mailer');
 
@@ -72,7 +72,7 @@ exports.createCategory = async (req, res) => {
     .then(category =>
       handleSuccess(res, buildSuccObject('New category created'))
     )
-    .catch(error => handleError(res, buildErrObject(422, error.message)));
+    .catch(err => handleError(res, buildErrObject(422, err.message)));
 };
 
 exports.updateCategory = async (req, res) => {
@@ -87,7 +87,7 @@ exports.updateCategory = async (req, res) => {
         else handleError(res, buildErrObject(422, 'No changes made'));
       } else handleError(res, buildErrObject(422, 'Category not found'));
     })
-    .catch(error => handleError(res, buildErrObject(422, error.message)));
+    .catch(err => handleError(res, buildErrObject(422, err.message)));
 };
 
 exports.deleteCategory = async (req, res) => {
@@ -96,7 +96,7 @@ exports.deleteCategory = async (req, res) => {
       if (result.n) handleSuccess(res, buildSuccObject('Category deleted'));
       else handleError(res, buildErrObject(422, 'Category not found'));
     })
-    .catch(error => handleError(res, buildErrObject(422, error.message)));
+    .catch(err => handleError(res, buildErrObject(422, err.message)));
 };
 
 exports.getCategoryList = async (req, res) => {
@@ -104,7 +104,7 @@ exports.getCategoryList = async (req, res) => {
     .select('-_id name slug logo_url')
     .lean()
     .then(categoryList => handleSuccess(res, buildSuccObject(categoryList)))
-    .catch(error => handleError(res, buildErrObject(422, error.message)));
+    .catch(err => handleError(res, buildErrObject(422, err.message)));
 };
 
 exports.getCategoryInfo = async (req, res) => {
@@ -115,7 +115,7 @@ exports.getCategoryInfo = async (req, res) => {
       if (category) handleSuccess(res, buildSuccObject(category));
       else handleError(res, buildErrObject(422, 'Category not found'));
     })
-    .catch(error => handleError(res, buildErrObject(422, error.message)));
+    .catch(err => handleError(res, buildErrObject(422, err.message)));
 };
 
 exports.getPlansInfo = async (req, res) => {
@@ -138,7 +138,7 @@ exports.getPlansInfo = async (req, res) => {
 
       handleSuccess(res, buildSuccObject(resultObj));
     })
-    .catch(error => handleError(res, buildErrObject(422, error.message)));
+    .catch(err => handleError(res, buildErrObject(422, err.message)));
 };
 
 exports.checkoutPlans = async (req, res) => {
