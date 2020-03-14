@@ -1,13 +1,14 @@
 # Emailer
 
-:information_source: JSON Format
+## Start proxy server
 
-All requests must have JSON format. Hence, you have to set "Content-Type" field in the header to be "application/json".
+```
+maildev
+```
 
-## Start the server:
+By default, MailDev SMTP server runs on 0.0.0.0:1025.
 
-start maildev = maildev --outgoing-host smtp.gmail.com
+## Access email dashboard
 
-## Viewing the email:
-
-Access localhost:1080
+There is a web application to help you read the emails easily. 
+You can access it by opening http://localhost:1080.
