@@ -1,5 +1,8 @@
 const fs = require('fs');
 const ejs = require('ejs');
+const querystring = require('querystring');
+
+const config = require('../../config');
 const emailer = require('../middleware/emailer');
 const emailTemplatesDir = __dirname + '/../views/mailers/user_mailer/';
 
@@ -10,13 +13,19 @@ exports.verifyRegistration = async user => {
     'ascii'
   );
 
-  console.log(emailTemplatesDir);
+  var verificationUrl = config.get('host.frontend') + '/verify';
+  verificationUrl +=
+    '?' +
+    querystring.stringify({
+      email: user.email,
+      id: user.id
+    });
 
   const data = {
-    from: 'PINUS <no-reply@pi-nus.org>',
+    from: 'PINUS Visit <no-reply@pi-nus.org>',
     to: user.email,
     subject: 'Registration Confirmation',
-    html: ejs.render(file, { user })
+    html: ejs.render(file, { user, verificationUrl })
   };
 
   emailer.sendMail(data, (err, info, response) => {
@@ -31,11 +40,19 @@ exports.resetPassword = async (user, token) => {
     'ascii'
   );
 
+  var resetPasswordUrl = config.get('host.frontend') + '/reset';
+  resetPasswordUrl +=
+    '?' +
+    querystring.stringify({
+      email: user.email,
+      token
+    });
+
   const data = {
-    from: 'PINUS <no-reply@pi-nus.org>',
+    from: 'PINUS Visit <no-reply@pi-nus.org>',
     to: user.email,
     subject: 'Reset Password Request',
-    html: ejs.render(file, { user, token })
+    html: ejs.render(file, { user, resetPasswordUrl })
   };
 
   emailer.sendMail(data, (err, info, response) => {
