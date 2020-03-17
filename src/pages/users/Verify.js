@@ -1,6 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
 import useMutation from '../../hooks/useMutation';
+import ErrorPage from '../404';
 
 function Verify(props) {
   const [{ response, error }, upsertData] = useMutation();
@@ -22,13 +23,14 @@ function Verify(props) {
     });
   };
 
-  return (
+  return email && id ? (
     <div className="container center">
       <div style={{ minHeight: 50 }}></div>
       <h3>You're almost there!</h3>
       <h6>
         We just need to verify your email address before you can book a visit
         with us! <br />
+        <br />
         Just smash that button below and BOOM, you're good to go.
       </h6>
       <div style={{ minHeight: 30 }}></div>
@@ -36,6 +38,8 @@ function Verify(props) {
         Verify my email!
       </div>
     </div>
+  ) : (
+    <ErrorPage />
   );
 }
 

@@ -3,6 +3,8 @@ import queryString from 'query-string';
 import useMutation from '../../hooks/useMutation';
 import M from 'materialize-css';
 
+import ErrorPage from '../404';
+
 function ResetPassword(props) {
   const [newPassword, setNewPassword] = useState('');
   const [checkpassword, setCheckPassword] = useState('');
@@ -38,7 +40,7 @@ function ResetPassword(props) {
     });
   };
 
-  return (
+  return email && token ? (
     <div className="container center">
       <div style={{ minHeight: 50 }}></div>
       <form className="grey lighten-4" onSubmit={handleSubmit}>
@@ -67,6 +69,8 @@ function ResetPassword(props) {
       </form>
       <div style={{ minHeight: 30 }}></div>
     </div>
+  ) : (
+    <ErrorPage />
   );
 }
 
