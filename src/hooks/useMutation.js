@@ -50,7 +50,7 @@ const useMutation = () => {
           });
         } else {
           M.toast({
-            html: `<div>Update data successful! ${res.data.message}!</div>`,
+            html: `<div>${res.data.message}!</div>`,
             classes: 'teal rounded center top'
           });
         }
@@ -73,7 +73,7 @@ const useMutation = () => {
       if (showToast) {
         if (e.response) {
           M.toast({
-            html: `<div>Update data failed! ${e.response.data.error.message}!</div>`,
+            html: `<div>${e.response.data.error.message}!</div>`,
             classes: 'red rounded center top'
           });
         } else if (e.request) {
