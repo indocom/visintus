@@ -17,7 +17,7 @@ You may refer to the [official documentation](https://docs.mongodb.com/manual/ad
 
 2. Create the databases
 
-  By default, the backend service uses the following databases:
+  By default, the backend service uses the following databases:  
     - Production: `visintus`
     - Development: `visintus_development`
     - Test: `visintus_test`  
