@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import queryString from 'query-string';
-import useMutation from '../../hooks/useMutation';
+import useMutation from 'hooks/useMutation';
 import M from 'materialize-css';
 
 import ErrorPage from '../404';

@@ -1,6 +1,6 @@
 import React from 'react';
-import useFetch from '../../hooks/useFetch';
-import useMutation from '../../hooks/useMutation';
+import useFetch from 'hooks/useFetch';
+import useMutation from 'hooks/useMutation';
 
 function User() {
   const [
