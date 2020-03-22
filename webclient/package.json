@@ -34,11 +34,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -53,7 +48,6 @@
   },
   "proxy": "http://localhost:3000",
   "devDependencies": {
-    "husky": "^4.2.3",
     "redux-devtools-extension": "^2.13.8"
   }
 }

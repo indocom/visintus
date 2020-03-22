@@ -31,25 +31,25 @@ You may refer to the [official documentation](https://docs.mongodb.com/manual/ad
   - If you don't have the environment file yet, go to your favorite code editor and create a .env file. 
     To do so, copy from the .env.example file and specify the required values based on your own configuration.
 
-- Run `npm install` to install all dependencies.
+- Run `yarn install` to install all dependencies.
 
-- Run ```npm run dev:db:seed``` to seed the database. When you get [OK], just click `CTRL+C` to stop.
+- Run `yarn run dev:db:seed` to seed the database. When you get [OK], just click `CTRL+C` to stop.
 
 ### Running the backend
 
 - Ensure that you have MongoDB running on your background service and you have completed the basic setup.
-- Run `npm run dev` on the back-end folder and make sure you get db connection [OK]
+- Run `yarn run dev` on the back-end folder and make sure you get db connection [OK]
 - To test if all you've done correctly, visit https://localhost:3000 and you should see "Welcome to Visintus API"
 
 ### Setup the webclient
 
 - Navigate to the `webclient` folder.
-- Run `npm install` to install all dependencies.
+- Run `yarn install` to install all dependencies.
 
 ### Running the webclient
 
 - Ensure that you have the backend service running.
-- Run `npm start`
+- Run `yarn start`
 - Visit https://localhost:3001 to view the web.
 
 ### Setup MailDev
@@ -60,7 +60,7 @@ In the development mode, it will try to access a proxy at `localhost:1025` to "s
 In this project, we use MailDev to configure the proxy and display the emails.
 To setup MailDev, you can just follow the instructions below:
 
-- Install MailDev by running: `npm install -g maildev`.
+- Install MailDev by running: `yarn install -g maildev`.
 - Open a separate terminal and run `maildev`.
 - Open https://localhost:1080 to open maildev in the browser.
 
