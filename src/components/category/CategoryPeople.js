@@ -1,4 +1,5 @@
 import React from 'react';
+import 'css/image.css';
 
 const AreaPeople = props => {
   const { reps } = props;
@@ -10,8 +11,10 @@ const AreaPeople = props => {
           key={person._id}
         >
           <div className="card ayellow team">
-            <div className="card-image">
-              <img src={person.photo_url} alt="Representative" />
+            <div className="card-image image-box-1-1">
+              <div className="image-content">
+                <img src={person.photo_url} alt="Representative" />
+              </div>
             </div>
             <div className="details">
               <h3>{person.name}</h3>

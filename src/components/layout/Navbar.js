@@ -88,7 +88,7 @@ const Navbar = props => {
         </a>
         <img
           src={Logo}
-          class="hide-on-large-only"
+          className="hide-on-large-only"
           alt="PINUS Logo"
           style={{
             height: 40,

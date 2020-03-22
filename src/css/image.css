@@ -1,17 +1,13 @@
 .image-box-1-1,
-.image-box-2-1,
-.image-box-1-2,
-.image-box-4-3,
-.image-box-16-9 {
+.image-box-2-3,
+.image-box-4-3 {
   position: relative;
   width: 100%;
 }
 
 .image-box-1-1:before,
-.image-box-2-1:before,
-.image-box-1-2:before,
-.image-box-4-3:before,
-.image-box-16-9:before {
+.image-box-3-4:before,
+.image-box-4-3:before {
   content: '';
   display: block;
 }
@@ -20,20 +16,12 @@
   padding-top: 100%;
 }
 
-.image-box-2-1:before {
-  padding-top: 50%;
-}
-
-.image-box-1-2:before {
-  padding-top: 200%;
+.image-box-3-4:before {
+  padding-top: 133%;
 }
 
 .image-box-4-3:before {
   padding-top: 75%;
-}
-
-.image-box-16-9:before {
-  padding-top: 56.25%;
 }
 
 .image-content {

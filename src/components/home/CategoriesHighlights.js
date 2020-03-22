@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './image.css';
+import 'css/image.css';
 
 const CategoriesHighlights = props => {
   const { categories } = props;
@@ -10,13 +10,17 @@ const CategoriesHighlights = props => {
         return (
           <div className="col s6 l4 card z-depth-0 grey lighten-4" key={index}>
             <div
-              className="card-image waves-effect waves-block waves-light image-content"
+              className="card-image waves-effect waves-block waves-light"
               style={{ borderRadius: 5, boxShadow: '1px 3px 10px #aaa' }}
             >
               {
                 <Link to={`/categories/${category.slug}`}>
                   <span className="card-title">{category.name}</span>
-                  <img src={category.logo_url} alt="logo" />
+                  <div className="image-box-4-3">
+                    <div className="image-content">
+                      <img src={category.logo_url} alt="logo" />
+                    </div>
+                  </div>
                 </Link>
               }
             </div>
