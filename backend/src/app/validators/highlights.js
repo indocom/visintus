@@ -4,15 +4,32 @@ const validator = require('../middleware/validator');
 
 exports.createHighlight = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'highlight',
+    const schemaBody = {
       properties: {
-        image_url: { type: 'string', pattern: validator.regexes.url },
-        description: { type: 'string', maxLength: 200 },
-        hyperlink: { type: 'string' }
-      }
+        highlight: {
+          properties: {
+            image_url: {
+              type: 'string',
+              format: 'uri'
+            },
+            description: {
+              type: 'string',
+              pattern: validator.regexes.safeChars,
+              maxLength: 200
+            },
+            hyperlink: {
+              type: 'string',
+              format: 'uri'
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -21,12 +38,18 @@ exports.createHighlight = async (req, res, next) => {
 
 exports.deleteHighlight = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
-        highlightId: { type: 'string', pattern: validator.regexes.objectID }
-      }
+        highlightId: {
+          type: 'string',
+          pattern: validator.regexes.highlightId
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
+
+    await validator.approve(schemaParams, req.params);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -39,21 +62,43 @@ exports.getAllHighlights = async (req, res, next) => {
 
 exports.updateHighlight = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
-        highlightId: { type: 'string', pattern: validator.regexes.objectID }
+        highlightId: {
+          type: 'string',
+          pattern: validator.regexes.highlightId
+        },
+        additionalProperties: false
       }
     };
-    const schema = {
-      id: 'highlight',
+
+    const schemaBody = {
       properties: {
-        image_url: { type: 'string', pattern: validator.regexes.url },
-        description: { type: 'string', maxLength: 200 },
-        hyperlink: { type: 'string' }
-      }
+        highlight: {
+          properties: {
+            image_url: {
+              type: 'string',
+              format: 'uri'
+            },
+            description: {
+              type: 'string',
+              pattern: validator.regexes.safeChars,
+              maxLength: 200
+            },
+            hyperlink: {
+              type: 'string',
+              format: 'uri'
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaParams, req.params);
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));

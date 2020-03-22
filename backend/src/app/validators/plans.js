@@ -4,23 +4,39 @@ const validator = require('../middleware/validator');
 
 exports.createPlan = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
         slug: {
           type: 'string',
           pattern: validator.regexes.slug
         }
-      }
+      },
+      additionalProperties: false
     };
-    const schema = {
-      id: 'plan',
+
+    const schemaBody = {
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string', maxLength: 200 }
-      }
+        plan: {
+          properties: {
+            name: {
+              type: 'string',
+              pattern: validator.regexes.name
+            },
+            description: {
+              type: 'string',
+              pattern: validator.regexes.safeChars,
+              maxLength: 200
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaParams, req.params);
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -29,16 +45,22 @@ exports.createPlan = async (req, res, next) => {
 
 exports.deletePlan = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
         slug: {
           type: 'string',
           pattern: validator.regexes.slug
         },
-        planId: { type: 'string', pattern: validator.regexes.objectID }
-      }
+        planId: {
+          type: 'string',
+          pattern: validator.regexes.planId
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
+
+    await validator.approve(schemaParams, req.params);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -47,24 +69,43 @@ exports.deletePlan = async (req, res, next) => {
 
 exports.updatePlan = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
         slug: {
           type: 'string',
           pattern: validator.regexes.slug
         },
-        planId: { type: 'string', pattern: validator.regexes.objectID }
-      }
+        planId: {
+          type: 'string',
+          pattern: validator.regexes.planId
+        }
+      },
+      additionalProperties: false
     };
-    const schema = {
-      id: 'plan',
+
+    const schemaBody = {
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string', maxLength: 200 }
-      }
+        plan: {
+          properties: {
+            name: {
+              type: 'string',
+              pattern: validator.regexes.name
+            },
+            description: {
+              type: 'string',
+              pattern: validator.regexes.safeChars,
+              maxLength: 200
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaParams, req.params);
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));

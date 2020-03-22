@@ -4,17 +4,39 @@ const validator = require('../middleware/validator');
 
 exports.checkoutPlans = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'orderInfo',
+    const schemaBody = {
       properties: {
-        name: { type: 'string' },
-        email: { type: 'string', format: 'email' },
-        visitDate: { type: 'string' },
-        organization: { type: 'string' },
-        remarks: { type: 'string' }
-      }
+        orderInfo: {
+          properties: {
+            name: {
+              type: 'string',
+              pattern: validator.regexes.name
+            },
+            email: {
+              type: 'string',
+              format: 'email'
+            },
+            visitDate: {
+              type: 'string',
+              format: 'date' // YYYY-MM-DD
+            },
+            organization: {
+              type: 'string',
+              pattern: validator.regexes.name
+            },
+            remarks: {
+              type: 'string',
+              pattern: validator.regexes.safeChars
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -23,15 +45,32 @@ exports.checkoutPlans = async (req, res, next) => {
 
 exports.createCategory = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'category',
+    const schemaBody = {
       properties: {
-        name: { type: 'string' },
-        logo_url: { type: 'string', pattern: validator.regexes.url },
-        description: { type: 'string', maxLength: 200 }
-      }
+        category: {
+          properties: {
+            name: {
+              type: 'string',
+              pattern: validator.regexes.name
+            },
+            logo_url: {
+              type: 'string',
+              format: 'uri'
+            },
+            description: {
+              type: 'string',
+              pattern: validator.regexes.safeChars,
+              maxLength: 200
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -40,12 +79,18 @@ exports.createCategory = async (req, res, next) => {
 
 exports.deleteCategory = async (req, res, next) => {
   try {
-    const schema = {
+    const schemaParams = {
       properties: {
-        slug: { type: 'string', pattern: validator.regexes.slug }
-      }
+        slug: {
+          type: 'string',
+          pattern: validator.regexes.slug
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.params);
+
+    await validator.approve(schemaParams, req.params);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -53,32 +98,51 @@ exports.deleteCategory = async (req, res, next) => {
 };
 
 exports.getCategoryInfo = async (req, res, next) => {
-  next();
-};
-
-exports.getCategoryList = async (req, res, next) => {
   try {
-    const schema = {
+    const schemaParams = {
       properties: {
-        slug: { type: 'string', pattern: validator.regexes.slug }
-      }
+        slug: {
+          type: 'string',
+          pattern: validator.regexes.slug
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.params);
+
+    await validator.approve(schemaParams, req.params);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
   }
 };
 
+exports.getCategoryList = async (req, res, next) => {
+  next();
+};
+
 exports.getPlansInfo = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'categories',
+    const schemaBody = {
       properties: {
-        $slug: { type: 'string' }
-      }
+        categories: {
+          patternProperties: {
+            '[\\w-]': {
+              type: 'array',
+              items: {
+                type: 'string',
+                pattern: validator.regexes.planId
+              }
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -87,21 +151,36 @@ exports.getPlansInfo = async (req, res, next) => {
 
 exports.updateCategory = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
-        slug: { type: 'string', pattern: validator.regexes.slug }
-      }
+        slug: {
+          type: 'string',
+          pattern: validator.regexes.slug
+        }
+      },
+      additionalProperties: false
     };
-    const schema = {
-      id: 'category',
+
+    const schemaBody = {
       properties: {
-        name: { type: 'string' },
-        logo_url: { type: 'string', pattern: validator.regexes.url },
-        description: { type: 'string', maxLength: 200 }
-      }
+        category: {
+          properties: {
+            name: { type: 'string' },
+            logo_url: {
+              type: 'string',
+              format: 'uri'
+            },
+            description: { type: 'string', maxLength: 200 }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaParams, req.params);
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));

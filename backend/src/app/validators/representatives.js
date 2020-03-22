@@ -4,24 +4,39 @@ const validator = require('../middleware/validator');
 
 exports.createRepresentative = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
         slug: {
           type: 'string',
           pattern: validator.regexes.slug
         }
-      }
+      },
+      additionalProperties: false
     };
-    const schema = {
-      id: 'representative',
+
+    const schemaBody = {
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string', maxLength: 200 },
-        photo_url: { type: 'string', pattern: validator.regexes.url }
-      }
+        representative: {
+          properties: {
+            name: {
+              type: 'string',
+              pattern: validator.regexes.name
+            },
+            description: { type: 'string', maxLength: 200 },
+            photo_url: {
+              type: 'string',
+              format: 'uri'
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaParams, req.params);
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -30,7 +45,7 @@ exports.createRepresentative = async (req, res, next) => {
 
 exports.deleteRepresentative = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
         slug: {
           type: 'string',
@@ -38,11 +53,14 @@ exports.deleteRepresentative = async (req, res, next) => {
         },
         representativeId: {
           type: 'string',
-          pattern: validator.regexes.objectID
+          pattern: validator.regexes.representativeId
         }
-      }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.params);
+
+    await validator.approve(schemaParams, req.params);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -51,7 +69,7 @@ exports.deleteRepresentative = async (req, res, next) => {
 
 exports.updateRepresentative = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
         slug: {
           type: 'string',
@@ -59,20 +77,39 @@ exports.updateRepresentative = async (req, res, next) => {
         },
         representativeId: {
           type: 'string',
-          pattern: validator.regexes.objectID
+          pattern: validator.regexes.representativeId
         }
-      }
+      },
+      additionalProperties: false
     };
-    const schema = {
-      id: 'representative',
+
+    const schemaBody = {
       properties: {
-        name: { type: 'string' },
-        description: { type: 'string', maxLength: 200 },
-        photo_url: { type: 'string' }
-      }
+        representative: {
+          properties: {
+            name: {
+              type: 'string',
+              pattern: validator.regexes.name
+            },
+            description: {
+              type: 'string',
+              pattern: validator.regexes.safeChars,
+              maxLength: 200
+            },
+            photo_url: {
+              type: 'string',
+              format: 'uri'
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaParams, req.params);
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));

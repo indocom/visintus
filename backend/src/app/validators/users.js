@@ -4,13 +4,23 @@ const validator = require('../middleware/validator');
 
 exports.forgotPassword = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'user',
+    const schemaBody = {
       properties: {
-        email: { type: 'string', format: 'email' }
-      }
+        user: {
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email'
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -23,14 +33,27 @@ exports.list = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'user',
+    const schemaBody = {
       properties: {
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string' }
-      }
+        user: {
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email'
+            },
+            password: {
+              type: 'string',
+              pattern: validator.regexes.safeChars
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -38,32 +61,36 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = async (req, res, next) => {
-  try {
-    const schema = {
-      id: 'user',
-      properties: {
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string' }
-      }
-    };
-    await validator.approve(schema, req.body);
-    next();
-  } catch (error) {
-    handleError(res, buildErrObject(422, error.message));
-  }
+  next();
 };
 
 exports.register = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'user',
+    const schemaBody = {
       properties: {
-        name: { type: 'string' },
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string' }
-      }
+        user: {
+          properties: {
+            name: {
+              type: 'string',
+              pattern: validator.regexes.name
+            },
+            email: {
+              type: 'string',
+              format: 'email'
+            },
+            password: {
+              type: 'string',
+              pattern: validator.regexes.safeChars
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -72,14 +99,27 @@ exports.register = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'user',
+    const schemaBody = {
       properties: {
-        email: { type: 'string', format: 'email' },
-        newPassword: { type: 'string' }
-      }
+        user: {
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email'
+            },
+            newPassword: {
+              type: 'string',
+              pattern: validator.regexes.safeChars
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -88,14 +128,27 @@ exports.resetPassword = async (req, res, next) => {
 
 exports.updateRole = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'user',
+    const schemaBody = {
       properties: {
-        email: { type: 'string', format: 'email' },
-        role: { type: 'string', enum: ['user', 'admin'] }
-      }
+        user: {
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email'
+            },
+            role: {
+              type: 'string',
+              enum: ['user', 'admin']
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -104,14 +157,27 @@ exports.updateRole = async (req, res, next) => {
 
 exports.verify = async (req, res, next) => {
   try {
-    const schema = {
-      id: 'user',
+    const schemaBody = {
       properties: {
-        email: { type: 'string', format: 'email' },
-        verificationId: { type: 'string' }
-      }
+        user: {
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email'
+            },
+            verificationId: {
+              type: 'string',
+              pattern: validator.regexes.verificationId
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));

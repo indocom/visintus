@@ -43,6 +43,6 @@ exports.buildErrObject = (code, message) => {
  */
 exports.buildSuccObject = message => {
   return {
-    message: message
+    message
   };
 };

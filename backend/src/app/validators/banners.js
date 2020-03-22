@@ -4,22 +4,35 @@ const validator = require('../middleware/validator');
 
 exports.createBanner = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
         slug: {
           type: 'string',
-          pattern: slugRegex
-        }
-      }
+          pattern: validator.regexes.slug
+        },
+        additionalProperties: false
+      },
+      additionalProperties: false
     };
-    const schema = {
-      id: 'banner',
+
+    const schemaBody = {
       properties: {
-        image_url: { type: 'string', pattern: validator.regexes.url }
-      }
+        banner: {
+          properties: {
+            image_url: {
+              type: 'string',
+              format: 'uri'
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
-    await validator.approve(schema, req.body);
+
+    await validator.approve(schemaParams, req.params);
+    await validator.approve(schemaBody, req.body);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));
@@ -28,16 +41,22 @@ exports.createBanner = async (req, res, next) => {
 
 exports.deleteBanner = async (req, res, next) => {
   try {
-    const paramSchema = {
+    const schemaParams = {
       properties: {
         slug: {
           type: 'string',
           pattern: validator.regexes.slug
         },
-        bannerId: { type: 'string', pattern: validator.regexes.objectID }
-      }
+        bannerId: {
+          type: 'string',
+          pattern: validator.regexes.bannerId
+        }
+      },
+      additionalProperties: false
     };
-    await validator.approve(paramSchema, req.params);
+
+    await validator.approve(schemaParams, req.params);
+
     next();
   } catch (error) {
     handleError(res, buildErrObject(422, error.message));

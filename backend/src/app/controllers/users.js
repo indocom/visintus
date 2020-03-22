@@ -233,7 +233,6 @@ exports.resetPassword = async (req, res) => {
 /* Signout called by route */
 exports.logout = async (req, res) => {
   try {
-    await invalidateToken(user);
     handleSuccess(res, buildSuccObject('User logged out'));
   } catch (err) {
     handleError(res, buildErrObject(422, err.message));
