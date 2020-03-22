@@ -1,0 +1,40 @@
+.image-box-1-1,
+.image-box-2-3,
+.image-box-4-3 {
+  position: relative;
+  width: 100%;
+}
+
+.image-box-1-1:before,
+.image-box-3-4:before,
+.image-box-4-3:before {
+  content: '';
+  display: block;
+}
+
+.image-box-1-1:before {
+  padding-top: 100%;
+}
+
+.image-box-3-4:before {
+  padding-top: 133%;
+}
+
+.image-box-4-3:before {
+  padding-top: 75%;
+}
+
+.image-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: none;
+}
+
+.image-content img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
