@@ -1,11 +1,12 @@
 {
-  "name": "visintus-backend",
+  "name": "backend",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./src/bin/www",
     "dev": "NODE_ENV=development nodemon ./src/bin/www",
-    "db:seed:dev": "NODE_ENV=development node ./src/seed.js"
+    "db:seed:dev": "NODE_ENV=development node ./src/seed.js",
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
