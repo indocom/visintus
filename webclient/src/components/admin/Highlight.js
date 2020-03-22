@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import useFetch from '../../hooks/useFetch';
-import useMutation from '../../hooks/useMutation';
+import useFetch from 'hooks/useFetch';
+import useMutation from 'hooks/useMutation';
 import M from 'materialize-css';
 import FileUpload from './utils/FileUpload';
 
@@ -98,7 +98,7 @@ const UpsertHighlight = props => {
 
     const data = JSON.stringify({
       highlight: {
-        image_url: !imageURL ? props.data.image_url : imageURL,
+        image_url: !imageURL ? props.data.image_url : imageURL.image.url,
         description,
         hyperlink
       }

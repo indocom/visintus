@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import useMutation from '../../../hooks/useMutation';
+import useMutation from 'hooks/useMutation';
 import M from 'materialize-css';
 import axios from 'axios';
 
@@ -69,6 +69,7 @@ const UpsertBanner = props => {
   };
 
   const handleFileUpload = async e => {
+    e.preventDefault();
     const data = new FormData();
     data.append('file', selectedFile);
 
@@ -95,7 +96,7 @@ const UpsertBanner = props => {
     e.preventDefault();
     const data = JSON.stringify({
       banner: {
-        image_url: imageURL
+        image_url: imageURL.image.url
       }
     });
     console.log(data);

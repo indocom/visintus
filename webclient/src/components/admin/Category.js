@@ -1,8 +1,9 @@
 import React, { Component, useEffect, useState } from 'react';
-import useFetch from '../../hooks/useFetch';
-import useMutation from '../../hooks/useMutation';
+import useFetch from 'hooks/useFetch';
+import useMutation from 'hooks/useMutation';
 import M from 'materialize-css';
 import { Link } from 'react-router-dom';
+import FileUpload from './utils/FileUpload';
 
 const Category = props => {
   const [
@@ -74,11 +75,10 @@ const Category = props => {
 const UpsertCategory = props => {
   const [name, setName] = useState(props.data.name);
   const [description, setDescription] = useState(props.data.description);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [
-    { response: logoURL, error: mutationError },
-    upsertData
-  ] = useMutation();
+  const [logoURL, FileUploadForm] = FileUpload({
+    endpoint: '/images/upload'
+  });
+  const [{ error: mutationError }, upsertData] = useMutation();
 
   const title = props.slug === '' ? 'Add Category' : 'Update Category';
   const endpoint = props.slug === '' ? '' : `/${props.slug}`;
@@ -86,39 +86,6 @@ const UpsertCategory = props => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  const handleSelectFile = e => {
-    setSelectedFile(e.target.files[0]);
-    M.toast({
-      html: '<div>Remember to save!</div>',
-      classes: 'amber rounded center top'
-    });
-  };
-
-  const handleFileUpload = async e => {
-    e.preventDefault();
-
-    const data = new FormData();
-    data.append('file', selectedFile);
-
-    await upsertData({
-      method: 'post',
-      endpoint: `/images/upload`,
-      data
-    });
-
-    if (mutationError) {
-      M.toast({
-        html: `<div>Image failed to upload!</div><div> ${e}! </div>`,
-        classes: 'red rounded center top'
-      });
-    } else {
-      M.toast({
-        html: '<div>Image uploaded!</div>',
-        classes: 'green rounded center top'
-      });
-    }
-  };
 
   const handleSubmit = async e => {
     if (!logoURL && !props.data.image_url) {
@@ -133,7 +100,7 @@ const UpsertCategory = props => {
     const data = JSON.stringify({
       category: {
         name,
-        logo_url: !props.data.logo_url ? logoURL : props.data.logo_url
+        logo_url: !logoURL ? props.data.logo_url : logoURL.image.url
       }
     });
 
@@ -142,30 +109,25 @@ const UpsertCategory = props => {
       endpoint: '/admin/categories' + endpoint,
       data
     });
+
+    if (mutationError) {
+      M.toast({
+        html: `<div>${title} failed</div><div> ${mutationError}! </div>`,
+        classes: 'red rounded center top'
+      });
+    } else {
+      M.toast({
+        html: `<div>${title} successful!</div>`,
+        classes: 'green rounded center top'
+      });
+    }
   };
 
   return (
     <>
       <h5 className="grey-text text-darken-3">{title}</h5>
-      <form
-        style={{ padding: 15, backgroundColor: '#eee' }}
-        onSubmit={handleFileUpload}
-      >
-        <div className="file-field input-field">
-          <div className="btn">
-            <span>Insert picture here</span>
-            <input type="file" accept="image/*" onChange={handleSelectFile} />
-          </div>
-          <div className="file-path-wrapper">
-            <input
-              className="file-path validate"
-              type="text"
-              placeholder="Insert file here"
-            />
-          </div>
-          <input type="submit" className="btn" value="save" />
-        </div>
-      </form>
+
+      <FileUploadForm />
 
       <form
         onSubmit={handleSubmit}
