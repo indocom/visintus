@@ -7,6 +7,7 @@ const createError = require('http-errors');
 const express = require('express');
 const logger = require('morgan');
 const path = require('path');
+const fs = require('fs');
 
 // Setup application
 const app = express();
@@ -36,6 +37,12 @@ const config = require('./config');
 
 const { setupDbConnection } = require('./app/middleware/db');
 setupDbConnection(config.get('db'));
+
+// Create directory to serve static files
+const imagesDir = config.get('fileStorage.images')
+if (!fs.existsSync(imagesDir)){
+  fs.mkdirSync(imagesDir, { recursive: true });
+}
 
 var dir = path.join(__dirname, '..', 'public');
 app.use('/static', express.static(dir));

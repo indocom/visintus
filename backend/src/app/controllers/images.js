@@ -29,16 +29,16 @@ exports.upload = async (req, res) => {
       handleError(res, buildErrObject(500, err.message));
     } else if (err) {
       handleError(res, buildErrObject(500, err.message));
+    } else {
+      handleSuccess(
+        res,
+        buildSuccObject({
+          image: {
+            url: config.get('host.backend') + '/static/images/' + fileName
+          }
+        })
+      );
     }
-
-    handleSuccess(
-      res,
-      buildSuccObject({
-        image: {
-          url: config.get('host.backend') + '/static/images/' + fileName
-        }
-      })
-    );
   });
 };
 
