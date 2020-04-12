@@ -5,7 +5,7 @@ import Logo from '../../assets/images/logo.png';
 const Footer = props => {
   return (
     <>
-      <footer class="footer">
+      <footer className="footer">
         <div className="footer__logo">
           <img
             src={Logo}
