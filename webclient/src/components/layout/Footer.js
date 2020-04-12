@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../css/footer.css';
-import Logo from '../../assets/logo-whitetxt.png';
+import Logo from '../../assets/images/logo.png';
 
 const Footer = props => {
   return (
@@ -9,10 +9,10 @@ const Footer = props => {
         <div className="footer__logo">
           <img
             src={Logo}
-            alt="PINUS Logo"
-            style={{ height: 50, marginTop: 5 }}
+            alt="Logo"
+            style={{ height: 100, marginTop: 10, marginBottom: -10 }}
           />
-          <h3>PINUS</h3>
+          <h3>VISIT</h3>
           <h5>Perhimpunan Indonesia NUS</h5>
         </div>
         <div className="footer__links">
@@ -21,27 +21,15 @@ const Footer = props => {
               <h5>USEFUL LINKS</h5>
             </li>
             <li>
-              <a
-                href="https://pi-nus.org/#aboutus"
-                style={{ color: 'inherit' }}
-              >
-                About Us
+              <a href="https://pi-nus.org" style={{ color: 'inherit' }}>
+                PINUS Homepage
               </a>
             </li>
             <li>
-              <a href="https://pi-nus.org/#vis-mis">Vision &amp; Mission</a>
+              <a href="https://visit.pi-nus.org">Visit Homepage</a>
             </li>
             <li>
-              <a href="https://pi-nus.org/#externalEvents">External Events</a>
-            </li>
-            <li>
-              <a href="https://pi-nus.org/#internalEvents">Internal Events</a>
-            </li>
-            <li>
-              <a href="https://pi-nus.org/#publications">Publication</a>
-            </li>
-            <li>
-              <a href="https://pi-nus.org/#team">Our Team</a>
+              <a href="https://visit.pi-nus.org/itinerary">Itinerary</a>
             </li>
           </ul>
           <ul className="footer__col">
@@ -56,14 +44,12 @@ const Footer = props => {
             </li>
             <li>
               <div>
-                <i className="fas fa-phone"> </i>
-                +65 9160 1877
+                <i className="fas fa-phone"> </i> &nbsp; +65 9160 1877
               </div>
             </li>
             <li>
               <div>
-                <i className="fas fa-envelope"></i>
-                mail@pi-nus.org
+                <i className="fas fa-envelope"></i> &nbsp; visit@pi-nus.org
               </div>
             </li>
           </ul>
@@ -94,11 +80,6 @@ const Footer = props => {
               </div>
             </li>
           </ul>
-        </div>
-        <div className="back-to-top">
-          <a href="#">
-            Back to top &nbsp; <i className="fas fa-chevron-circle-up"></i>
-          </a>
         </div>
         <div className="ending">
           Copyright @2020 PINUS. All rights reserved.

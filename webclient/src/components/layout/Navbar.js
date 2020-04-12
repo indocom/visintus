@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { logOutUser } from '../../store/actions/authActions.js';
 import M from 'materialize-css';
-import Logo from '../../assets/logo-whitetxt.png';
+import Logo from '../../assets/images/logo.png';
 
 const Navbar = props => {
   const isLoggedIn = localStorage.getItem('isLoggedIn');
