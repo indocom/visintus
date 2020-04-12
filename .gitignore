@@ -1,5 +1,9 @@
 # dependencies
 /node_modules
 
+# IDE
+.idea/
+
 # misc
 *.DS_Store
+

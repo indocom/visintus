@@ -20,7 +20,6 @@ const Navbar = props => {
   useEffect(() => {
     let elems = document.querySelectorAll('.sidenav');
     M.Sidenav.init(elems);
-    console.log('hello');
   }, []);
 
   const handleLogout = e => {
