@@ -9,13 +9,13 @@ const Category = props => {
   const [
     { response: categories, loading: fetchLoading, error: fetchError },
     doFetch
-  ] = useFetch({ endpoint: '/admin/categories' });
+  ] = useFetch({ endpoint: '/api/admin/categories' });
   const [{ error: mutationError }, upsertData] = useMutation();
 
   const handleRemove = async slug => {
     upsertData({
       method: 'delete',
-      endpoint: `/admin/categories/${slug}`
+      endpoint: `/api/admin/categories/${slug}`
     });
     doFetch();
     if (mutationError) {
@@ -76,7 +76,7 @@ const UpsertCategory = props => {
   const [name, setName] = useState(props.data.name);
   const [description, setDescription] = useState(props.data.description);
   const [logoURL, FileUploadForm] = FileUpload({
-    endpoint: '/images/upload'
+    endpoint: '/api/images/upload'
   });
   const [{ error: mutationError }, upsertData] = useMutation();
 
@@ -106,7 +106,7 @@ const UpsertCategory = props => {
 
     await upsertData({
       method: 'post',
-      endpoint: '/admin/categories' + endpoint,
+      endpoint: '/api/admin/categories' + endpoint,
       data
     });
 

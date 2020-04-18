@@ -12,9 +12,8 @@ export default props => {
     async function FetchAllDetails() {
       const token = localStorage.getItem('token');
       let { data } = await axios
-        .get(`/admin/categories/${slug}`, {
+        .get(`/api/admin/categories/${slug}`, {
           headers: {
-            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
             Authorization: `${token}`
           },

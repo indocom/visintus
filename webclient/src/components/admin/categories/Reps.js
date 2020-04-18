@@ -5,7 +5,7 @@ const RepDetails = ({ reps, handleUpsert, slug, setDetails }) => {
   const handleRemove = async _id => {
     const token = localStorage.getItem('token');
     await axios
-      .delete(`/admin/categories/${slug}/representatives/${_id}`, {
+      .delete(`/api/admin/categories/${slug}/representatives/${_id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
@@ -81,11 +81,10 @@ class UpsertRep extends Component {
     const token = localStorage.getItem('token');
     await axios
       .post(
-        `/admin/categories/${this.props.slug}/representatives` + this.endpoint,
+        `/api/admin/categories/${this.props.slug}/representatives` + this.endpoint,
         data,
         {
           headers: {
-            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
             Authorization: `${token}`
           },

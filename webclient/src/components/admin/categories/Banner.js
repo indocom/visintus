@@ -8,7 +8,7 @@ const BannerDetails = ({ banners, slug, setDetails }) => {
   const handleRemove = async (id, slug) => {
     const token = localStorage.getItem('token');
     await axios
-      .delete(`/admin/categories/${slug}/banners/${id}`, {
+      .delete(`/api/admin/categories/${slug}/banners/${id}`, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',

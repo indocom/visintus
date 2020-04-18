@@ -6,7 +6,7 @@ function User() {
   const [
     { response: users, loading: fetchLoading, error: fetchError },
     doFetch
-  ] = useFetch({ endpoint: '/admin/users/list' });
+  ] = useFetch({ endpoint: '/api/admin/users/list' });
   const [{ error: mutationError }, upsertData] = useMutation();
 
   const toggleUserRole = async (email, role) => {
@@ -18,7 +18,7 @@ function User() {
     });
     await upsertData({
       method: 'post',
-      endpoint: '/admin/users/update-role',
+      endpoint: '/api/admin/users/update-role',
       data
     });
     await doFetch();
