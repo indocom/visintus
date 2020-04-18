@@ -8,13 +8,13 @@ const Highlight = props => {
   const [
     { response: highlights, loading: fetchLoading, error: fetchError },
     doFetch
-  ] = useFetch({ endpoint: '/admin/highlights' });
+  ] = useFetch({ endpoint: '/api/admin/highlights' });
   const [{ error: mutationError }, upsertData] = useMutation();
 
   const handleRemove = async id => {
     upsertData({
       method: 'delete',
-      endpoint: `/admin/highlights/${id}`
+      endpoint: `/api/admin/highlights/${id}`
     });
     doFetch();
     if (mutationError) {
@@ -75,7 +75,7 @@ const UpsertHighlight = props => {
   const [description, setDescription] = useState(props.data.description);
   const [hyperlink, setHyperlink] = useState(props.data.hyperlink);
   const [imageURL, FileUploadForm] = FileUpload({
-    endpoint: '/images/upload'
+    endpoint: '/api/images/upload'
   });
   const [{ error: mutationError }, upsertData] = useMutation();
 
@@ -106,7 +106,7 @@ const UpsertHighlight = props => {
 
     await upsertData({
       method: 'post',
-      endpoint: '/admin/highlights' + endpoint,
+      endpoint: '/api/admin/highlights' + endpoint,
       data
     });
 

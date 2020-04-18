@@ -48,7 +48,7 @@ export const signInUser = ({ email, password }) => {
   });
   return dispatch => {
     axios
-      .post('users/login', data, {
+      .post('api/users/login', data, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -77,7 +77,7 @@ export const logOutUser = token => {
   });
   return dispatch => {
     axios
-      .post('/users/logout', data, {
+      .post('/api/users/logout', data, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export const logOutUser = token => {
 export const signUpUser = ({ email, password, firstName, lastName }) => {
   return dispatch => {
     axios
-      .post('/users/register', {
+      .post('/api/users/register', {
         user: {
           name: firstName + ' ' + lastName,
           email: email,

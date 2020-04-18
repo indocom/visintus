@@ -5,9 +5,8 @@ const PlanDetails = ({ plans, handleUpsert, slug, setDetails }) => {
   const handleRemove = async _id => {
     const token = localStorage.getItem('token');
     await axios
-      .delete(`/admin/categories/${slug}/plans/${_id}`, {
+      .delete(`/api/admin/categories/${slug}/plans/${_id}`, {
         headers: {
-          'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
           Authorization: `${token}`
         },
@@ -79,7 +78,7 @@ class UpsertPlan extends Component {
 
     await axios
       .post(
-        `/admin/categories/${this.props.slug}/plans` + this.endpoint,
+        `/api/admin/categories/${this.props.slug}/plans` + this.endpoint,
         data,
         {
           headers: {

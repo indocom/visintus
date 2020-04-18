@@ -16,12 +16,10 @@ const Checkout = props => {
     const fetchPlanInfo = async () => {
       try {
         let categories = JSON.stringify({ categories: props.itin });
-        const res = await axios.post('categories/plan-info', categories, {
+        const res = await axios.post('/api/categories/plan-info', categories, {
           headers: {
-            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json'
-          },
-          crossdomain: true
+          }
         });
         setItin(res.data.message);
       } catch (e) {
@@ -55,10 +53,8 @@ const Checkout = props => {
 
     const res = axios.post('/checkout', order, {
       headers: {
-        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json'
-      },
-      crossdomain: true
+      }
     });
 
     M.toast({

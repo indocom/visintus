@@ -20,7 +20,7 @@ class Category extends Component {
   async fetchCategoryData() {
     const slug = this.props.match.params.slug;
     try {
-      let res = await axios.get(`/categories/${slug}`);
+      let res = await axios.get(`/api/categories/${slug}`);
       let data = res.data;
       this.setState({
         banners: data.message.banners,
