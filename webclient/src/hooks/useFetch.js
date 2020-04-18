@@ -14,7 +14,6 @@ const useFetch = ({ endpoint, needAuthorization = true }) => {
       setLoading(true);
       try {
         let headers = {
-          'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         };
 
