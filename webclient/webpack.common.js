@@ -16,13 +16,13 @@ module.exports = {
       filename: "./index.html"
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css',
+      filename: '[name].[chunkhash].css',
+      chunkFilename: '[id].[css',
       ignoreOrder: false,
     }),
   ],
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].[chunkhash].bundle.js',
     path: outputDirectory,
     publicPath: '/'
   },
