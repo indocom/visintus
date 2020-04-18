@@ -1,22 +1,39 @@
+const fs = require('fs');
+const path = require('path');
 const router = require('express').Router();
+const config = require('./../config');
 
-router.options('/*', function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, Content-Length, X-Requested-With, \
-    Access-Control-Allow-Origin, Access-Control-Allow-Headers, \
-    Access-Control-Request-Method, Access-Control-Request-Headers'
-  );
-  res.header('Access-Control-Allow-Credentials', true);
-  res.send(200);
+const express = require('express');
+
+// Serve front-end code
+const distDir = path.join(__dirname, '../../dist');
+router.use('/', express.static(distDir));
+
+// Create directory to serve static images
+const imagesDir = config.get('fileStorage.images')
+if (!fs.existsSync(imagesDir)) {
+  fs.mkdirSync(imagesDir, {recursive: true});
+}
+
+// Serve static images
+router.use('/static', express.static(imagesDir));
+
+// Server API
+router.use('/api', require('./api'));
+
+// catch 404 and forward to error handler
+router.use(function (req, res, next) {
+  next(createError(404));
 });
 
-router.get('/', (req, res) => {
-  res.send('Welcome to visintus API!\n');
-});
+// error handler
+router.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-router.use('/', require('./api'));
+  res.status(err.status || 500);
+  res.send();
+});
 
 module.exports = router;
