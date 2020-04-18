@@ -32,7 +32,7 @@ function ResetPassword(props) {
 
     await upsertData({
       method: 'post',
-      endpoint: '/users/reset-password',
+      endpoint: '/api/users/reset-password',
       data,
       auth: token,
       successMessage: 'Your password has changed. Please login again!',

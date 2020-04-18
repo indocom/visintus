@@ -17,12 +17,12 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash].css',
-      chunkFilename: '[id].[css',
+      chunkFilename: '[id].[chunkhash].css',
       ignoreOrder: false,
     }),
   ],
   output: {
-    filename: '[name].[chunkhash].bundle.js',
+    filename: '[name].[hash].bundle.js',
     path: outputDirectory,
     publicPath: '/'
   },

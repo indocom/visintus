@@ -15,7 +15,7 @@ exports.verifyRegistration = async user => {
     );
 
     var verificationUrl =
-      config.get('host.frontend') +
+      config.get('host') +
       '/verify' +
       '?' +
       querystring.stringify({
@@ -46,7 +46,7 @@ exports.resetPassword = async (user, token) => {
     );
 
     var resetPasswordUrl =
-      config.get('host.frontend') +
+      config.get('host') +
       '/reset' +
       '?' +
       querystring.stringify({

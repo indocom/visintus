@@ -1,5 +1,3 @@
 db:
   name: "visintus_production"
-host:
-  backend: "http://api.visit.pi-nus.org"
-  frontend: "http://visit.pi-nus.org"
+host: "http://localhost:3000"

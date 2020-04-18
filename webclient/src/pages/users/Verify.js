@@ -15,7 +15,7 @@ function Verify(props) {
   const handleSubmit = async e => {
     await upsertData({
       method: 'post',
-      endpoint: '/users/verify',
+      endpoint: '/api/users/verify',
       data,
       needAuthorization: false,
       successMessage: 'Your email has been verified. Please login again!',

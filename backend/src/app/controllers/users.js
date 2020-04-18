@@ -165,7 +165,7 @@ exports.register = async (req, res) => {
           buildSuccObject('User has been created. Please verify your email!')
         );
       })
-      .catch(err => handleError(err, buildErrObject(422, err.message)));
+      .catch(err => handleError(res, buildErrObject(422, err.message)));
   } catch (err) {
     handleError(res, buildErrObject(422, err.message));
   }
