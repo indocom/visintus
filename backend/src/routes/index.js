@@ -16,10 +16,19 @@ if (!fs.existsSync(imagesDir)) {
 }
 
 // Serve static images
-router.use('/static', express.static(imagesDir));
+router.use('/static/images', express.static(imagesDir));
 
 // Server API
 router.use('/api', require('./api'));
+
+// By default, always serve index.html file
+router.get('/*', function (req, res) {
+  res.sendFile(path.join(distDir, 'index.html'), function (err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
+})
 
 // catch 404 and forward to error handler
 router.use(function (req, res, next) {

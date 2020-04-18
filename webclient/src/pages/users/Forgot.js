@@ -12,7 +12,7 @@ function ForgotPassword() {
 
     await upsertData({
       method: 'post',
-      endpoint: '/users/forgot-password',
+      endpoint: '/api/users/forgot-password',
       data: { user: { email } },
       needAuthorization: false
     });

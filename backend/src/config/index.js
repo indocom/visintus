@@ -50,16 +50,10 @@ const config = convict({
   },
 
   host: {
-    backend: {
-      doc: 'URL for backend',
-      format: '*',
-      default: 'localhost:3000'
-    },
-    frontend: {
-      doc: 'URL for frontend',
-      format: '*',
-      default: 'localhost:3001'
-    }
+    doc: 'Server URL',
+    format: '*',
+    default: 'http://localhost:3000',
+    env: 'HOST'
   },
 
   user: {

@@ -14,7 +14,7 @@ exports.checkoutItinerary = async (orderInfo, itinerary) => {
 
     for (var i = 0; i < itinerary.length; i++) {
       itinerary[i].link =
-        config.get('host.frontend') + '/categories/' + itinerary[i].slug;
+        config.get('host') + '/categories/' + itinerary[i].slug;
     }
 
     console.log(orderInfo, itinerary);
