@@ -14,8 +14,8 @@ class Home extends Component {
   };
   async componentDidMount() {
     try {
-      let highlightsData = await axios.get('/highlights');
-      let categoriesData = await axios.get('/categories');
+      let highlightsData = await axios.get('/api/highlights');
+      let categoriesData = await axios.get('/api/categories');
       highlightsData = highlightsData.data;
       categoriesData = categoriesData.data;
       this.setState({
