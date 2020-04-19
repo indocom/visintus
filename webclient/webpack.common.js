@@ -28,9 +28,10 @@ module.exports = {
   },
   resolve: {
     alias: {
-      hooks: path.resolve(__dirname, 'src/hooks/'),
-      css: path.resolve(__dirname, 'src/css/'),
       components: path.resolve(__dirname, 'src/components/'),
+      constants: path.resolve(__dirname, 'src/constants/'),
+      css: path.resolve(__dirname, 'src/css/'),
+      hooks: path.resolve(__dirname, 'src/hooks/'),
       pages: path.resolve(__dirname, 'src/pages/'),
     }
   },

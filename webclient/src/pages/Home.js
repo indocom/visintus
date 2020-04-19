@@ -6,18 +6,23 @@ import CategoriesHighlights from '../components/home/CategoriesHighlights.js';
 import Carousel from '../components/Carousel.js';
 import { client } from 'hooks/client.js';
 import Loading from 'components/Loading.js';
+import {
+  QUERY_KEY_CATEGORIES,
+  QUERY_KEY_HIGHLIGHTS
+} from 'constants/query-keys';
+import { API_CATEGORIES, API_HIGHLIGHTS } from 'constants/api-url';
 
 const Home = () => {
   const {
     status: highlightsStatus,
     data: highlights,
     error: highlightsError
-  } = useQuery('highlights', () => client('api/highlights'));
+  } = useQuery(QUERY_KEY_HIGHLIGHTS, () => client(API_HIGHLIGHTS));
   const {
     status: categoriesStatus,
     data: categories,
     error: categoriesError
-  } = useQuery('categories', () => client('api/categories'));
+  } = useQuery(QUERY_KEY_CATEGORIES, () => client(API_CATEGORIES));
 
   return (
     <div className="Home">
