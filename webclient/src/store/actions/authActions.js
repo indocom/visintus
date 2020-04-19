@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { getParsedCommandLineOfConfigFile } from 'typescript';
 
 const loginSuccess = token => {
   return {
