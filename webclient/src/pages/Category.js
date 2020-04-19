@@ -1,67 +1,38 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { useQuery } from 'react-query';
 
 import CategoryDropdown from '../components/category/CategoryDropdown';
 import CategoryPeople from '../components/category/CategoryPeople';
 import Carousel from '../components/Carousel';
 import NotFound from './404';
+import Loading from 'components/Loading';
+import { client } from 'hooks/client';
+import { QUERY_KEY_CATEGORY } from 'constants/query-keys';
+import { API_CATEGORIES } from 'constants/api-url';
 
 import '../index.css';
 import '../css/area.css';
 
-class Category extends Component {
-  state = {
-    banners: [],
-    plans: [],
-    reps: [],
-    isError: false
-  };
+const Category = props => {
+  const slug = props.match.params.slug;
+  const { status, data, error } = useQuery(
+    [QUERY_KEY_CATEGORY, slug],
+    (_, slug) => client(`${API_CATEGORIES}/${slug}`)
+  );
 
-  async fetchCategoryData() {
-    const slug = this.props.match.params.slug;
-    try {
-      let res = await axios.get(`/api/categories/${slug}`);
-      let data = res.data;
-      this.setState({
-        banners: data.message.banners,
-        plans: data.message.plans,
-        reps: data.message.representatives,
-        isError: false
-      });
-    } catch {
-      this.setState({
-        banners: [],
-        plans: [],
-        reps: [],
-        isError: true
-      });
-    }
+  if (status === 'loading') {
+    return <Loading />;
   }
 
-  componentDidMount() {
-    this.fetchCategoryData();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.match.params.slug !== this.props.match.params.slug) {
-      this.fetchCategoryData();
-    }
-  }
-
-  render() {
-    return !this.state.isError ? (
-      <div className="container area">
-        <Carousel banners={this.state.banners} />
-        <CategoryDropdown
-          plans={this.state.plans}
-          slug={this.props.match.params.slug}
-        />
-        <CategoryPeople reps={this.state.reps} />
-      </div>
-    ) : (
-      <NotFound />
-    );
-  }
-}
+  return !error ? (
+    <div className="container area">
+      <Carousel banners={data.banners} />
+      <CategoryDropdown plans={data.plans} slug={props.match.params.slug} />
+      <CategoryPeople reps={data.representatives} />
+    </div>
+  ) : (
+    <NotFound />
+  );
+};
 
 export default Category;
