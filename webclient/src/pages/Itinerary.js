@@ -56,20 +56,6 @@ const Itin = props => {
     props.history.push('/checkout');
   };
 
-  // const display = value => {
-  //   const id = '#' + value.slug;
-  //   const getElem = document.querySelector(`${id}`);
-  //   if (getElem.style.position === 'relative') {
-  //     getElem.style.position = 'absolute';
-  //     getElem.style.opacity = '0';
-  //     getElem.style.transition = 'all 0s linear';
-  //   } else {
-  //     getElem.style.position = 'relative';
-  //     getElem.style.opacity = '1';
-  //     getElem.style.transition = 'all 0.3s linear';
-  //   }
-  // };
-
   let planList =
     Object.keys(plan).length > 0
       ? Object.entries(plan).map(([slug, data]) => {
@@ -133,7 +119,7 @@ const Itin = props => {
       {/* <div className="btn" style={{ marginRight: 10 }} onClick={handleSave}>
         Save
       </div> */}
-      <div className="btn" onClick={handleCheckout}>
+      <div className="btn" onClick={handleCheckout} style={{ zIndex: 0 }}>
         Save &amp; Checkout
       </div>
     </div>
@@ -144,10 +130,10 @@ const Itin = props => {
       <Link to="/">&lt;&lt;&lt; Continue planning</Link>
       <h5>Your itinerary</h5>
       <div className="dropdownItin">
-        {planList === null ? <p> You haven't make any plans yet </p> : null}
+        {!planList && <p> You haven't make any plans yet </p>}
         <ul className="collapsible">{planList}</ul>
         <br />
-        {planList === null ? null : buttons}
+        {planList && buttons}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import {
   CategoryDetails,
   User
 } from '../components/admin';
+import { LOGIN } from 'constants/url';
 
 export const Dashboard = props => {
   const { match } = props;
@@ -49,7 +50,7 @@ export const Dashboard = props => {
       </BrowserRouter>
     );
   } else {
-    return <Redirect to="/login" />;
+    return <Redirect to={LOGIN} />;
   }
 };
 

@@ -19,6 +19,7 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
 
   if (body) {
     config.body = JSON.stringify(body);
+    console.log(body);
   }
 
   return await fetch(`/${endpoint}`, config).then(async response => {
@@ -29,13 +30,34 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
     }
 
     const data = await response.json();
+    console.log(data);
+
     if (response.ok) {
+      if (customConfig.showSuccess) {
+        M.toast({
+          html: `<div>${data.message}</div>`,
+          classes: 'teal rounded center top'
+        });
+      }
+
+      if (customConfig.redirectTo) {
+        window.location.assign(customConfig.redirectTo);
+        return;
+      }
+
+      if (
+        customConfig.onSuccess &&
+        typeof customConfig.onSuccess === 'function'
+      ) {
+        customConfig.onSuccess();
+      }
+
       return data.message;
     } else {
       if (customConfig.showError) {
         console.log(data);
         M.toast({
-          html: `<div>Error fetching data! ${data}!</div>`,
+          html: `<div>${data.error.message}!</div>`,
           classes: 'red rounded center top'
         });
       }
