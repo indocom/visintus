@@ -1,5 +1,5 @@
 import React from 'react';
-import 'css/image.css';
+import '~/css/image.css';
 
 const AreaPeople = props => {
   const { reps } = props;

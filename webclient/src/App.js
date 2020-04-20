@@ -16,7 +16,7 @@ import {
   Login,
   Signup
 } from './pages/users';
-import * as url from 'constants/url';
+import * as url from '~/constants/url';
 
 class App extends Component {
   render() {

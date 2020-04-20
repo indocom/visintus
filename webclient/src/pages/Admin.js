@@ -6,7 +6,7 @@ import {
   CategoryDetails,
   User
 } from '../components/admin';
-import { LOGIN } from 'constants/url';
+import { LOGIN } from '~/constants/url';
 
 export const Dashboard = props => {
   const { match } = props;

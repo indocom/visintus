@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import M from 'materialize-css';
 // import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { addPlan, removePlan } from '../../store/actions/planActions';
+import { addPlan, removePlan } from '~/store/actions/planActions';
 
 const AreaDropdown = props => {
   const [isAdded, setIsAdded] = useState([]);

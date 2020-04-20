@@ -5,10 +5,10 @@ import CategoryDropdown from '../components/category/CategoryDropdown';
 import CategoryPeople from '../components/category/CategoryPeople';
 import Carousel from '../components/Carousel';
 import NotFound from './404';
-import Loading from 'components/Loading';
-import { client } from 'hooks/client';
-import { QUERY_KEY_CATEGORY } from 'constants/query-keys';
-import { API_CATEGORIES } from 'constants/api-url';
+import Loading from '~/components/Loading';
+import { client } from '~/hooks/client';
+import { QUERY_KEY_CATEGORY } from '~/constants/query-keys';
+import { API_CATEGORIES } from '~/constants/api-url';
 
 import '../index.css';
 import '../css/area.css';

@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import useMutation from 'hooks/useMutation';
+import useMutation from '~/hooks/useMutation';
 import M from 'materialize-css';
 import axios from 'axios';
 

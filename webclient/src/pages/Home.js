@@ -4,13 +4,13 @@ import { useQuery } from 'react-query';
 
 import CategoriesHighlights from '../components/home/CategoriesHighlights.js';
 import Carousel from '../components/Carousel.js';
-import { client } from 'hooks/client.js';
-import Loading from 'components/Loading.js';
+import Loading from '~/components/Loading.js';
+import { client } from '~/hooks/client.js';
 import {
   QUERY_KEY_CATEGORIES,
   QUERY_KEY_HIGHLIGHTS
-} from 'constants/query-keys';
-import { API_CATEGORIES, API_HIGHLIGHTS } from 'constants/api-url';
+} from '~/constants/query-keys';
+import { API_CATEGORIES, API_HIGHLIGHTS } from '~/constants/api-url';
 
 const Home = () => {
   const {

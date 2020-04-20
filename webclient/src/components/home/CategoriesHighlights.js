@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import 'css/image.css';
+import '~/css/image.css';
 
 const CategoriesHighlights = props => {
   const { categories } = props;

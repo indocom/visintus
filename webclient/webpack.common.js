@@ -28,11 +28,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      components: path.resolve(__dirname, 'src/components/'),
-      constants: path.resolve(__dirname, 'src/constants/'),
-      css: path.resolve(__dirname, 'src/css/'),
-      hooks: path.resolve(__dirname, 'src/hooks/'),
-      pages: path.resolve(__dirname, 'src/pages/'),
+      "~" : path.resolve(__dirname, 'src/'),
+      // constants: path.resolve(__dirname, 'src/constants/'),
+      // css: path.resolve(__dirname, 'src/css/'),
+      // hooks: path.resolve(__dirname, 'src/hooks/'),
+      // pages: path.resolve(__dirname, 'src/pages/'),
     }
   },
   module: {

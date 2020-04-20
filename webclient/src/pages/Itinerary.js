@@ -1,7 +1,7 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { useQuery } from 'react-query';
 import M from 'materialize-css';
 
 import { removePlan, removeCategory } from '../store/actions/planActions';
@@ -9,8 +9,6 @@ import { removePlan, removeCategory } from '../store/actions/planActions';
 import '../css/itin.css';
 
 const Itin = props => {
-  const [plan, setPlan] = useState({});
-
   useEffect(() => {
     let collapsible = document.querySelectorAll('.collapsible');
     M.Collapsible.init(collapsible, {
@@ -18,22 +16,15 @@ const Itin = props => {
     });
   }, []);
 
-  useEffect(() => {
-    const fetchPlanInfo = async () => {
-      try {
-        let categories = JSON.stringify({ categories: props.itin });
-        const res = await axios.post('/api/categories/plan-info', categories, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        setPlan(res.data.message);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchPlanInfo();
-  }, [props.itin]);
+  const { status: planStatus, data: plan, error: planError } = useQuery(
+    QUERY_KEY_PLAN_INFO,
+    () =>
+      client(API_CATEGORIES_PLANINFO, {
+        body: {
+          categories: props.itin
+        }
+      })
+  );
 
   const handleRemoveCategory = slug => {
     props.removeCategory(slug);

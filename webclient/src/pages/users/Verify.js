@@ -1,6 +1,6 @@
 import React from 'react';
 import queryString from 'query-string';
-import useMutation from 'hooks/useMutation';
+import useMutation from '~/hooks/useMutation';
 import ErrorPage from '../404';
 
 function Verify(props) {

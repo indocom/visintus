@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
-import useFetch from 'hooks/useFetch';
-import useMutation from 'hooks/useMutation';
+import useFetch from '~/hooks/useFetch';
+import useMutation from '~/hooks/useMutation';
 import M from 'materialize-css';
 import { Link } from 'react-router-dom';
 import FileUpload from './utils/FileUpload';

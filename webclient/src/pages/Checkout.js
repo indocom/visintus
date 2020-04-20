@@ -1,12 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import M from 'materialize-css';
 import { useQuery } from 'react-query';
-import { client } from 'hooks/client';
-import { API_CATEGORIES_PLANINFO, API_CHECKOUT } from 'constants/api-url';
-import { QUERY_KEY_PLAN_INFO } from 'constants/query-keys';
+import { client } from '~/hooks/client';
+import { API_CATEGORIES_PLANINFO, API_CHECKOUT } from '~/constants/api-url';
+import { QUERY_KEY_PLAN_INFO } from '~/constants/query-keys';
 
 const Checkout = props => {
   const [name, setName] = useState('');
