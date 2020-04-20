@@ -74,9 +74,7 @@ const Highlight = props => {
 const UpsertHighlight = props => {
   const [description, setDescription] = useState(props.data.description);
   const [hyperlink, setHyperlink] = useState(props.data.hyperlink);
-  const [imageURL, FileUploadForm] = FileUpload({
-    endpoint: '/api/images/upload'
-  });
+  const [imageURL, FileUploadForm] = FileUpload();
 
   const [upsert] = useMutation(postUpdate, {
     onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_HIGHLIGHTS)
@@ -109,7 +107,7 @@ const UpsertHighlight = props => {
 
     const data = {
       highlight: {
-        image_url: !imageURL ? props.data.image_url : imageURL.image.url,
+        image_url: !imageURL ? props.data.image_url : imageURL,
         description,
         hyperlink
       }

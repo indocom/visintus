@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
-import useMutation from '~/hooks/useMutation';
 import M from 'materialize-css';
+import { useMutation } from 'react-query';
 
-const FileUpload = ({ endpoint }) => {
+import { client } from '~/hooks/client';
+import { API_FILE_UPLOAD } from '~/constants/api-url';
+
+const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [
-    { response: imageURL, error: mutationError },
-    upsertData
-  ] = useMutation();
+  const [imageUrl, setImageUrl] = useState('');
+  const [upsert] = useMutation(postFile, {
+    onSuccess: data => {
+      setImageUrl(data?.image?.url);
+    }
+  });
+
+  function postFile(data) {
+    return client(API_FILE_UPLOAD, {
+      file: data,
+      showSuccess: true,
+      showError: true
+    });
+  }
 
   const checkMimeType = e => {
     let files = e.target.files;
@@ -48,32 +61,18 @@ const FileUpload = ({ endpoint }) => {
   const handleFileUpload = async e => {
     e.preventDefault();
 
-    const data = new FormData();
-    data.append('file', selectedFile);
-
-    await upsertData({
-      method: 'post',
-      endpoint,
-      data,
-      dataType: 'application/octet-stream'
-    });
-
-    if (mutationError) {
-      M.toast({
-        html: `<div>Image failed to upload!</div><div> ${e}! </div>`,
-        classes: 'red rounded center top'
-      });
-    } else if (!selectedFile) {
+    if (!selectedFile) {
       M.toast({
         html: '<div>No valid file chosen yet!</div>',
         classes: 'red rounded center top'
       });
-    } else {
-      M.toast({
-        html: '<div>Image uploaded!</div>',
-        classes: 'green rounded center top'
-      });
+      return;
     }
+
+    const data = new FormData();
+    data.append('file', selectedFile);
+
+    upsert(data);
   };
 
   const FileUploadForm = () => {
@@ -109,7 +108,7 @@ const FileUpload = ({ endpoint }) => {
     );
   };
 
-  return [imageURL, FileUploadForm];
+  return [imageUrl, FileUploadForm];
 };
 
 export default FileUpload;

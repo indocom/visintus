@@ -3,12 +3,14 @@ import M from 'materialize-css';
 // customConfig params
 // - headers
 // - method
+// - body : will be JSONified.
+// - file (There is some unique things about files)!
 // - showSuccess : boolean
 // - showError : boolean
 // - onSuccess : fn
 // - redirecTo: string (starting with /)
 
-export async function client(endpoint, { body, ...customConfig } = {}) {
+export async function client(endpoint, { body, file, ...customConfig } = {}) {
   const token = localStorage.getItem('token');
   const headers = { 'Content-Type': 'application/json' };
 
@@ -19,7 +21,7 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
   console.log(endpoint);
 
   const config = {
-    method: customConfig.method ?? (body ? 'POST' : 'GET'),
+    method: customConfig.method ?? (body || file ? 'POST' : 'GET'),
     headers: {
       ...headers,
       ...customConfig.headers
@@ -27,6 +29,12 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
   };
 
   console.log(config);
+
+  if (file) {
+    config.body = file;
+    delete config.headers['Content-Type'];
+    console.log(config);
+  }
 
   if (body) {
     config.body = JSON.stringify(body);
@@ -63,12 +71,12 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
         customConfig.onSuccess();
       }
 
-      return data.message;
+      return data?.message;
     } else {
       if (customConfig.showError) {
         console.log(data);
         M.toast({
-          html: `<div>${data.error.message}!</div>`,
+          html: `<div>${data?.error?.message}!</div>`,
           classes: 'red rounded center top'
         });
       }

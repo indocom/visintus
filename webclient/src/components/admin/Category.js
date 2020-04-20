@@ -73,9 +73,7 @@ const Category = props => {
 const UpsertCategory = props => {
   const [name, setName] = useState(props.data.name);
   const [description, setDescription] = useState(props.data.description);
-  const [logoURL, FileUploadForm] = FileUpload({
-    endpoint: '/api/images/upload'
-  });
+  const [logoURL, FileUploadForm] = FileUpload();
 
   const [upsert] = useMutation(postUpdate, {
     onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_CATEGORY)
@@ -109,7 +107,7 @@ const UpsertCategory = props => {
     const data = {
       category: {
         name,
-        logo_url: !logoURL ? props.data.logo_url : logoURL.image.url
+        logo_url: !logoURL ? props.data.logo_url : logoURL
       }
     };
 
