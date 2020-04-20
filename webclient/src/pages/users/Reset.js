@@ -31,7 +31,7 @@ function ResetPassword(props) {
       return;
     }
 
-    postResetPassword(data);
+    postResetPassword(data, token);
   };
 
   return email && token ? (
@@ -68,9 +68,12 @@ function ResetPassword(props) {
   );
 }
 
-function postResetPassword(data) {
+function postResetPassword(data, token) {
   client(API_RESET_PSWD, {
     body: data,
+    headers: {
+      Authorization: token
+    },
     redirectTo: '/login',
     showSuccess: true
     // showError: true

@@ -17,7 +17,6 @@ const FileUpload = () => {
   function postFile(data) {
     return client(API_FILE_UPLOAD, {
       file: data,
-      showSuccess: true,
       showError: true
     });
   }
