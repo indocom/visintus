@@ -2,6 +2,7 @@ import M from 'materialize-css';
 
 // customConfig params
 // - headers
+// - method
 // - showSuccess : boolean
 // - showError : boolean
 // - onSuccess : fn
@@ -15,14 +16,17 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
     headers.Authorization = `${token}`;
   }
 
+  console.log(endpoint);
+
   const config = {
-    method: body ? 'POST' : 'GET',
-    ...customConfig,
+    method: customConfig.method ?? (body ? 'POST' : 'GET'),
     headers: {
       ...headers,
       ...customConfig.headers
     }
   };
+
+  console.log(config);
 
   if (body) {
     config.body = JSON.stringify(body);

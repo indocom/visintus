@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import useFetch from '~/hooks/useFetch';
-import useMutation from '~/hooks/useMutation';
+import { useQuery, useMutation, queryCache } from 'react-query';
 import M from 'materialize-css';
+
 import FileUpload from './utils/FileUpload';
+import { client } from '~/hooks/client';
+import { QUERY_KEY_ADMIN_HIGHLIGHTS } from '~/constants/query-keys';
+import { API_ADMIN_HIGHLIGHTS } from '~/constants/api-url';
 
 const Highlight = props => {
-  const [
-    { response: highlights, loading: fetchLoading, error: fetchError },
-    doFetch
-  ] = useFetch({ endpoint: '/api/admin/highlights' });
-  const [{ error: mutationError }, upsertData] = useMutation();
-
-  const handleRemove = async id => {
-    upsertData({
-      method: 'delete',
-      endpoint: `/api/admin/highlights/${id}`
-    });
-    doFetch();
-    if (mutationError) {
-      M.toast({
-        html: `<div>Failed to remove!</div><div> ${mutationError}! </div>`,
-        classes: 'red rounded center top'
-      });
+  const { data: highlights, status: fetchStatus, error: fetchError } = useQuery(
+    QUERY_KEY_ADMIN_HIGHLIGHTS,
+    () => client(API_ADMIN_HIGHLIGHTS),
+    {
+      staleTime: 1000
     }
-  };
+  );
+
+  const [remove] = useMutation(handleRemove, {
+    onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_HIGHLIGHTS)
+  });
+
+  function handleRemove(id) {
+    client(API_ADMIN_HIGHLIGHTS + `/${id}`, {
+      method: 'DELETE',
+      showSuccess: true,
+      showError: true
+    });
+  }
 
   const highlightsList =
     highlights && highlights.length > 0 ? (
@@ -45,10 +48,7 @@ const Highlight = props => {
               >
                 Update
               </button>
-              <button
-                className="btn red"
-                onClick={() => handleRemove(highlight._id)}
-              >
+              <button className="btn red" onClick={() => remove(highlight._id)}>
                 Remove
               </button>
             </div>
@@ -61,7 +61,7 @@ const Highlight = props => {
       <div className="center">No data yet :(</div>
     );
 
-  if (fetchLoading) return null;
+  if (fetchStatus === 'loading') return null;
   return !fetchError ? (
     <ul>{highlightsList}</ul>
   ) : (
@@ -77,7 +77,19 @@ const UpsertHighlight = props => {
   const [imageURL, FileUploadForm] = FileUpload({
     endpoint: '/api/images/upload'
   });
-  const [{ error: mutationError }, upsertData] = useMutation();
+
+  const [upsert] = useMutation(postUpdate, {
+    onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_HIGHLIGHTS)
+  });
+
+  function postUpdate(data) {
+    console.log(endpoint);
+    client(API_ADMIN_HIGHLIGHTS + `/${endpoint}`, {
+      body: data,
+      showSuccess: true,
+      showError: true
+    });
+  }
 
   const title = props.slug === '' ? 'Add Highlight' : 'Update Highlight';
   const endpoint = props.slug === '' ? '' : `/${props.slug}`;
@@ -96,31 +108,15 @@ const UpsertHighlight = props => {
       return;
     }
 
-    const data = JSON.stringify({
+    const data = {
       highlight: {
         image_url: !imageURL ? props.data.image_url : imageURL.image.url,
         description,
         hyperlink
       }
-    });
+    };
 
-    await upsertData({
-      method: 'post',
-      endpoint: '/api/admin/highlights' + endpoint,
-      data
-    });
-
-    if (mutationError) {
-      M.toast({
-        html: `<div>${title} failed</div><div> ${mutationError}! </div>`,
-        classes: 'red rounded center top'
-      });
-    } else {
-      M.toast({
-        html: `<div>${title} successful!</div>`,
-        classes: 'green rounded center top'
-      });
-    }
+    upsert(data);
   };
 
   return (
