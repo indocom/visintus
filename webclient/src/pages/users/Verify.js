@@ -1,10 +1,11 @@
 import React from 'react';
 import queryString from 'query-string';
-import useMutation from '~/hooks/useMutation';
 import ErrorPage from '../404';
 
+import { client } from '~/hooks/client';
+import { API_VERIFY } from '~/constants/api-url';
+
 function Verify(props) {
-  const [{ response, error }, upsertData] = useMutation();
   const { email, id } = queryString.parse(props.location.search);
   const data = {
     user: {
@@ -13,14 +14,9 @@ function Verify(props) {
     }
   };
   const handleSubmit = async e => {
-    await upsertData({
-      method: 'post',
-      endpoint: '/api/users/verify',
-      data,
-      needAuthorization: false,
-      successMessage: 'Your email has been verified. Please login again!',
-      pushTo: '/login'
-    });
+    e.preventDefault();
+
+    postVerify(data);
   };
 
   return email && id ? (
@@ -43,4 +39,12 @@ function Verify(props) {
   );
 }
 
+function postVerify(data) {
+  client(API_VERIFY, {
+    body: data,
+    redirectTo: '/login',
+    showSuccess: true
+    // showError: true
+  });
+}
 export default Verify;

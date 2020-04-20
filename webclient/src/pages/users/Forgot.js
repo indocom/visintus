@@ -1,25 +1,20 @@
 import React, { useState } from 'react';
-import useMutation from '~/hooks/useMutation';
+// import useMutation from '~/hooks/useMutation';
 import { Link } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { client } from '~/hooks/client';
+import { API_FORGOT_PSWD } from '~/constants/api-url';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [isActive, setIsActive] = useState(false);
-  const [{ response, error }, upsertData] = useMutation();
+  const [mutate] = useMutation(postForgetRequest, {
+    onSuccess: () => setIsActive(true)
+  });
 
   const handleSubmit = async e => {
     e.preventDefault();
-
-    await upsertData({
-      method: 'post',
-      endpoint: '/api/users/forgot-password',
-      data: { user: { email } },
-      needAuthorization: false
-    });
-
-    if (!error) {
-      setIsActive(true);
-    }
+    mutate(email);
   };
 
   return (
@@ -65,6 +60,15 @@ function ForgotPassword() {
       )}
     </div>
   );
+}
+
+function postForgetRequest(email) {
+  client(API_FORGOT_PSWD, {
+    body: {
+      user: { email }
+    }
+    // showError: true
+  });
 }
 
 export default ForgotPassword;

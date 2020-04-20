@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { client } from '~/hooks/client';
+import { QUERY_KEY_PLAN_INFO } from '~/constants/query-keys';
+import { API_CATEGORIES_PLANINFO } from '~/constants/api-url';
 import M from 'materialize-css';
 
 import { removePlan, removeCategory } from '../store/actions/planActions';
@@ -9,13 +12,6 @@ import { removePlan, removeCategory } from '../store/actions/planActions';
 import '../css/itin.css';
 
 const Itin = props => {
-  useEffect(() => {
-    let collapsible = document.querySelectorAll('.collapsible');
-    M.Collapsible.init(collapsible, {
-      accordion: false
-    });
-  }, []);
-
   const { status: planStatus, data: plan, error: planError } = useQuery(
     QUERY_KEY_PLAN_INFO,
     () =>
@@ -25,6 +21,13 @@ const Itin = props => {
         }
       })
   );
+
+  useEffect(() => {
+    let collapsible = document.querySelectorAll('.collapsible');
+    M.Collapsible.init(collapsible, {
+      accordion: false
+    });
+  }, []);
 
   const handleRemoveCategory = slug => {
     props.removeCategory(slug);
@@ -48,7 +51,7 @@ const Itin = props => {
   };
 
   let planList =
-    Object.keys(plan).length > 0
+    plan && Object.keys(plan).length > 0
       ? Object.entries(plan).map(([slug, data]) => {
           return (
             <li key={slug}>

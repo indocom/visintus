@@ -1,5 +1,12 @@
 import M from 'materialize-css';
 
+// customConfig params
+// - headers
+// - showSuccess : boolean
+// - showError : boolean
+// - onSuccess : fn
+// - redirecTo: string (starting with /)
+
 export async function client(endpoint, { body, ...customConfig } = {}) {
   const token = localStorage.getItem('token');
   const headers = { 'Content-Type': 'application/json' };
