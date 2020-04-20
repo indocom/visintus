@@ -5,3 +5,4 @@ export const QUERY_KEY_PLAN_INFO = 'plan-info';
 
 export const QUERY_KEY_ADMIN_USERS = 'admin-users';
 export const QUERY_KEY_ADMIN_HIGHLIGHTS = 'admin-highlights';
+export const QUERY_KEY_ADMIN_CATEGORY = 'admin-category';

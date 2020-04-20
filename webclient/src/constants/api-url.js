@@ -11,3 +11,5 @@ export const API_ADMIN_USERS = 'api/admin/users/list';
 export const API_ADMIN_USERS_UPDATE = 'api/admin/users/update-role';
 
 export const API_ADMIN_HIGHLIGHTS = 'api/admin/highlights';
+
+export const API_ADMIN_CATEGORY = 'api/admin/categories';

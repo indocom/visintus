@@ -83,8 +83,7 @@ const UpsertHighlight = props => {
   });
 
   function postUpdate(data) {
-    console.log(endpoint);
-    client(API_ADMIN_HIGHLIGHTS + `/${endpoint}`, {
+    client(API_ADMIN_HIGHLIGHTS + `${endpoint}`, {
       body: data,
       showSuccess: true,
       showError: true
