@@ -18,8 +18,6 @@ export async function client(endpoint, { body, file, ...customConfig } = {}) {
     headers.Authorization = `${token}`;
   }
 
-  console.log(endpoint);
-
   const config = {
     method: customConfig.method ?? (body || file ? 'POST' : 'GET'),
     headers: {
@@ -28,17 +26,13 @@ export async function client(endpoint, { body, file, ...customConfig } = {}) {
     }
   };
 
-  console.log(config);
-
   if (file) {
     config.body = file;
     delete config.headers['Content-Type'];
-    console.log(config);
   }
 
   if (body) {
     config.body = JSON.stringify(body);
-    console.log(body);
   }
 
   return await fetch(`/${endpoint}`, config).then(async response => {
@@ -49,7 +43,6 @@ export async function client(endpoint, { body, file, ...customConfig } = {}) {
     }
 
     const data = await response.json();
-    console.log(data);
 
     if (response.ok) {
       if (customConfig.showSuccess) {
@@ -74,7 +67,6 @@ export async function client(endpoint, { body, file, ...customConfig } = {}) {
       return data?.message;
     } else {
       if (customConfig.showError) {
-        console.log(data);
         M.toast({
           html: `<div>${data?.error?.message}!</div>`,
           classes: 'red rounded center top'

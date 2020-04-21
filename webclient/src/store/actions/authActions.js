@@ -63,14 +63,14 @@ export const signInUser = ({ email, password }) => {
         dispatch(loginSuccess(response.data.message.token));
       })
       .catch(error => {
-        console.log('signInUser', error);
+        // console.log('signInUser', error);
         dispatch(loginFailed());
       });
   };
 };
 
 export const logOutUser = token => {
-  console.log('logOutUser', token);
+  // console.log('logOutUser', token);
   const data = JSON.stringify({
     token: token
   });
@@ -87,7 +87,7 @@ export const logOutUser = token => {
         dispatch(logOutSuccess());
       })
       .catch(error => {
-        console.log('logOutUser', error);
+        // console.log('logOutUser', error);
         dispatch(logOutFailed());
       });
   };
@@ -114,7 +114,7 @@ export const signUpUser = ({ email, password, firstName, lastName }) => {
         dispatch(signUpSuccess());
       })
       .catch(error => {
-        console.log('signUpUser', error);
+        // console.log('signUpUser', error);
         dispatch(signUpFailed(error));
       });
   };

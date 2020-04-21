@@ -1,40 +1,112 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useQuery } from 'react-query';
+
+import { client } from '~/hooks/client';
+import { QUERY_KEY_ADMIN_CATEGORY_DETAILS } from '~/constants/query-keys';
+import { API_ADMIN_CATEGORY } from '~/constants/api-url';
 
 import { BannerDetails, PlanDetails, RepDetails } from './categories';
 
+const PLAN_DETAIL = 'plans';
+const BANNER_DETAIL = 'banners';
+const REP_DETAIL = 'representatives';
+const DEFAULT_PAGE_OPEN = PLAN_DETAIL;
+
 export default props => {
   let slug = props.match.params.slug;
-  let [details, setDetails] = useState([]);
-  let [detailType, setDetailType] = useState('plans');
+  let [pageOpen, setPageOpen] = useState(DEFAULT_PAGE_OPEN);
 
-  useEffect(() => {
-    async function FetchAllDetails() {
-      const token = localStorage.getItem('token');
-      let { data } = await axios
-        .get(`/api/admin/categories/${slug}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `${token}`
-          },
-          crossdomain: true
-        })
-        .catch(err => console.log(err));
+  const {
+    data: categoryDetails,
+    status: fetchStatus,
+    error: fetchError
+  } = useQuery(QUERY_KEY_ADMIN_CATEGORY_DETAILS, () =>
+    client(API_ADMIN_CATEGORY + `/${slug}`)
+  );
 
-      if (data) {
-        if (!data.message) return;
-        setDetails(data.message);
-      } else {
-        console.log(`Error in loading /admin/categories/${slug}`);
-      }
-    }
-    FetchAllDetails();
-  }, [details.length]);
+  const allDetailsView = fetchStatus === 'success' && (
+    <div className="row">
+      <div className="col s2">
+        <p
+          className="btn-large white black-text"
+          style={
+            pageOpen === BANNER_DETAIL
+              ? { display: 'block' }
+              : { display: 'block', boxShadow: 'none' }
+          }
+          onClick={() => setPageOpen(BANNER_DETAIL)}
+        >
+          Banners
+        </p>
+        <p
+          className="btn-large white black-text"
+          style={
+            pageOpen === PLAN_DETAIL
+              ? { display: 'block' }
+              : { display: 'block', boxShadow: 'none' }
+          }
+          onClick={() => setPageOpen(PLAN_DETAIL)}
+        >
+          plans
+        </p>
+        <p
+          className="btn-large white black-text"
+          style={
+            pageOpen === REP_DETAIL
+              ? { display: 'block' }
+              : { display: 'block', boxShadow: 'none' }
+          }
+          onClick={() => setPageOpen(REP_DETAIL)}
+        >
+          reps
+        </p>
+      </div>
+      <div className="col s9 offset-s1 white z-depth-1">
+        {(() => {
+          switch (pageOpen) {
+            case PLAN_DETAIL:
+              return (
+                <PlanDetails
+                  details={categoryDetails?.plans}
+                  detailType={PLAN_DETAIL}
+                  slug={slug}
+                />
+              );
+            case BANNER_DETAIL:
+              return (
+                <BannerDetails
+                  details={categoryDetails?.banners}
+                  detailType={BANNER_DETAIL}
+                  slug={slug}
+                />
+              );
+            case REP_DETAIL:
+              return (
+                <RepDetails
+                  details={categoryDetails?.representatives}
+                  detailType={REP_DETAIL}
+                  slug={slug}
+                />
+              );
+            default:
+              return null;
+          }
+        })()}
+      </div>
+    </div>
+  );
+
+  if (fetchError) {
+    allDetailsView = <p>Some error happened!</p>;
+  }
 
   return (
-    <>
+    <div style={{ width: '90%' }}>
       <h4>
-        Category Details Page
+        <p style={{ fontSize: 24, display: 'inline' }}>
+          Category Details ( {slug} )
+        </p>
         <div
           className="btn right"
           onClick={() => {
@@ -44,75 +116,7 @@ export default props => {
           Back to all categories
         </div>
       </h4>
-      <div className="row">
-        <div className="col s2">
-          <p
-            className="btn-large white black-text"
-            style={
-              detailType === 'banners'
-                ? { display: 'block' }
-                : { display: 'block', boxShadow: 'none' }
-            }
-            onClick={() => setDetailType('banners')}
-          >
-            Banners
-          </p>
-          <p
-            className="btn-large white black-text"
-            style={
-              detailType === 'plans'
-                ? { display: 'block' }
-                : { display: 'block', boxShadow: 'none' }
-            }
-            onClick={() => setDetailType('plans')}
-          >
-            plans
-          </p>
-          <p
-            className="btn-large white black-text"
-            style={
-              detailType === 'reps'
-                ? { display: 'block' }
-                : { display: 'block', boxShadow: 'none' }
-            }
-            onClick={() => setDetailType('reps')}
-          >
-            reps
-          </p>
-        </div>
-        <div className="col s9 offset-s1 white z-depth-1">
-          {(() => {
-            switch (detailType) {
-              case 'banners':
-                return (
-                  <BannerDetails
-                    banners={details.banners}
-                    setDetails={setDetails}
-                    slug={slug}
-                  />
-                );
-              case 'plans':
-                return (
-                  <PlanDetails
-                    plans={details.plans}
-                    setDetails={setDetails}
-                    slug={slug}
-                  />
-                );
-              case 'reps':
-                return (
-                  <RepDetails
-                    reps={details.representatives}
-                    setDetails={setDetails}
-                    slug={slug}
-                  />
-                );
-              default:
-                return null;
-            }
-          })()}
-        </div>
-      </div>
-    </>
+      {allDetailsView}
+    </div>
   );
 };
