@@ -4,16 +4,16 @@ import Logo from '../../assets/images/logo.png';
 
 const Footer = props => {
   return (
-    <>
-      <footer className="footer">
+    <footer className="footer">
+      <div className="container">
         <div className="footer__logo">
           <img
             src={Logo}
             alt="Logo"
-            style={{ height: 100, marginTop: 10, marginBottom: -10 }}
+            style={{ height: 75, marginTop: 5, marginBottom: -25 }}
           />
           <h3>VISIT</h3>
-          <h5>Perhimpunan Indonesia NUS</h5>
+          <h6>Perhimpunan Indonesia NUS</h6>
         </div>
         <div className="footer__links">
           <ul className="footer__col">
@@ -81,11 +81,13 @@ const Footer = props => {
             </li>
           </ul>
         </div>
-        <div className="ending">
-          Copyright @2020 PINUS. All rights reserved.
-        </div>
-      </footer>
-    </>
+      </div>
+      <div className="spacer" />
+      <div className="spacer" />
+      <div className="ending">
+        &copy; 2020 - Present Perhimpunan Indonesia NUS. All rights reserved
+      </div>
+    </footer>
   );
 };
 
