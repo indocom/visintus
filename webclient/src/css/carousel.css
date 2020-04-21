@@ -83,6 +83,10 @@
   background: rgba(0, 0, 0, 0.75);
 }
 
+.carousel__indicator:active {
+  background: rgba(0, 0, 0, 0.75);
+}
+
 .is-hidden {
   display: none;
 }
