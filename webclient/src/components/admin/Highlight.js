@@ -8,13 +8,11 @@ import { QUERY_KEY_ADMIN_HIGHLIGHTS } from '~/constants/query-keys';
 import { API_ADMIN_HIGHLIGHTS } from '~/constants/api-url';
 
 const Highlight = props => {
-  const { data: highlights, status: fetchStatus, error: fetchError } = useQuery(
-    QUERY_KEY_ADMIN_HIGHLIGHTS,
-    () => client(API_ADMIN_HIGHLIGHTS),
-    {
-      staleTime: 1000
-    }
-  );
+  const {
+    data: highlights,
+    status: fetchStatus,
+    error: fetchError
+  } = useQuery(QUERY_KEY_ADMIN_HIGHLIGHTS, () => client(API_ADMIN_HIGHLIGHTS));
 
   const [remove] = useMutation(handleRemove, {
     onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_HIGHLIGHTS)
