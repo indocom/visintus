@@ -120,11 +120,6 @@ const UpsertBanner = ({ slug, detailType, closeForm }) => {
           classes: 'amber rounded center top'
         });
       }
-    } else {
-      M.toast({
-        html: '<div>Only jpg / jpeg / png allowed!</div>',
-        classes: 'red rounded center top'
-      });
     }
   };
 
