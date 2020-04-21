@@ -1,0 +1,12 @@
+.card .card-image .card-title {
+  background: rgba(0, 0, 0, 0.3);
+  width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+  .card .card-image .card-title {
+    padding: 15px;
+    font-size: 16px;
+    margin: auto;
+  }
+}

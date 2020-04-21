@@ -43,15 +43,17 @@ const Navbar = props => {
   return (
     <>
       <ul id="nav-mobile" className="sidenav">
+        <li style={{ height: 20 }}></li>
         <li>
-          <a id="logo-container" href="#landing">
+          <Link to="/" id="logo-container">
             <img
               src={Logo}
               alt="PINUS Logo"
               style={{ height: 50, marginTop: 5 }}
             />
-          </a>
+          </Link>
         </li>
+        <li style={{ height: 20 }}></li>
         <li>
           <a target="_blank" href="https:pi-nus.org">
             PINUS Homepage
@@ -60,7 +62,7 @@ const Navbar = props => {
         <li>
           <NavLink to="/itinerary">Itinerary</NavLink>
         </li>
-        {isLoggedIn === 'true' ? (
+        {/* {isLoggedIn === 'true' ? (
           <>
             <li>
               <NavLink to="/">Account</NavLink>
@@ -77,25 +79,32 @@ const Navbar = props => {
             </li>
           </>
         ) : (
-          <li> <NavLink to="/login"> Login </NavLink> </li>
-        )}
+          <li>
+            {' '}
+            <NavLink to="/login"> Login </NavLink>{' '}
+          </li>
+        )} */}
       </ul>
 
       <nav className="nav-wrapper black ">
         <a href="#" data-target="nav-mobile" className="sidenav-trigger">
           <i className="fas fa-bars"></i>
         </a>
-        <img
-          src={Logo}
-          className="hide-on-large-only"
-          alt="PINUS Logo"
-          style={{
-            height: 40,
-            marginTop: 8,
-            position: 'absolute',
-            left: 'calc(50% - 70px)'
-          }}
-        />
+        <Link to="/" className="brand-logo hide-on-large-only">
+          <span style={{ textTransform: 'uppercase' }}>
+            <img
+              src={Logo}
+              alt="PINUS Logo"
+              style={{
+                height: 40,
+                verticalAlign: 'middle',
+                paddingRight: 10,
+                transform: 'translateY(-5px)'
+              }}
+            />
+            Visit
+          </span>
+        </Link>
 
         <ul id="dropdownLogout" className="dropdown-content">
           <li>
@@ -115,7 +124,19 @@ const Navbar = props => {
 
         <div className="container hide-on-med-and-down">
           <Link to="/" className="brand-logo">
-            Visintus
+            <span style={{ textTransform: 'uppercase' }}>
+              <img
+                src={Logo}
+                alt="PINUS Logo"
+                style={{
+                  height: 40,
+                  verticalAlign: 'middle',
+                  paddingRight: 10,
+                  transform: 'translateY(-5px)'
+                }}
+              />
+              Visit
+            </span>
           </Link>
           <ul className="right">
             <li>
@@ -126,7 +147,7 @@ const Navbar = props => {
             <li>
               <NavLink to="/itinerary">Itinerary</NavLink>
             </li>
-            {isLoggedIn === 'true' ? (
+            {/* {isLoggedIn === 'true' ? (
               <li>
                 <a
                   className="dropdown-trigger"
@@ -141,8 +162,11 @@ const Navbar = props => {
                 </a>
               </li>
             ) : (
-              <li> <NavLink to="/login">Login</NavLink> </li>
-            )}
+              <li>
+                {' '}
+                <NavLink to="/login">Login</NavLink>{' '}
+              </li>
+            )} */}
           </ul>
         </div>
       </nav>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '~/css/image.css';
+import './categories-highlights.css';
 
 const CategoriesHighlights = props => {
   const { categories } = props;
@@ -8,7 +9,10 @@ const CategoriesHighlights = props => {
     categories.length > 0 ? (
       categories.map((category, index) => {
         return (
-          <div className="col s6 l4 card z-depth-0 grey lighten-4" key={index}>
+          <div
+            className="col s12 m6 l4 card z-depth-0 grey lighten-4"
+            key={index}
+          >
             <div
               className="card-image waves-effect waves-block waves-light"
               style={{ borderRadius: 5, boxShadow: '1px 3px 10px #aaa' }}

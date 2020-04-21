@@ -9,11 +9,9 @@
 }
 
 .people .team {
-  margin: 0 10px 20px;
+  margin: 0 auto 20px;
   position: relative;
   width: 100%;
-  min-height: 250px;
-  float: left;
   background: #fff;
   box-sizing: border-box;
   overflow: hidden;
@@ -22,9 +20,10 @@
 .people .team img {
   width: 100%;
   transition: 0.7s;
+  object-fit: cover;
 }
 .people .team:hover img {
-  transform: scale(1.15);
+  transform: scale(1.1);
 }
 .people .team .details {
   position: absolute;
