@@ -2,7 +2,7 @@ import React from 'react';
 import queryString from 'query-string';
 import ErrorPage from '../404';
 
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { API_VERIFY } from '~/constants/api-url';
 
 function Verify(props) {

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useQuery, useMutation, queryCache } from 'react-query';
 
 import FileUpload from './utils/FileUpload';
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { QUERY_KEY_ADMIN_CATEGORY } from '~/constants/query-keys';
 import { API_ADMIN_CATEGORY } from '~/constants/api-url';
 

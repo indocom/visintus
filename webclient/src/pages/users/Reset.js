@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import queryString from 'query-string';
 import M from 'materialize-css';
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { API_RESET_PSWD } from '~/constants/api-url';
 
 import ErrorPage from '../404';

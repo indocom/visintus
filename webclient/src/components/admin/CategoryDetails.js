@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { QUERY_KEY_ADMIN_CATEGORY_DETAILS } from '~/constants/query-keys';
 import { API_ADMIN_CATEGORY } from '~/constants/api-url';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation, queryCache } from 'react-query';
 
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { QUERY_KEY_ADMIN_CATEGORY_DETAILS } from '~/constants/query-keys';
 import { API_ADMIN_CATEGORY } from '~/constants/api-url';
 

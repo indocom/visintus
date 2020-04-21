@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import M from 'materialize-css';
 import { useMutation } from 'react-query';
 
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { API_FILE_UPLOAD } from '~/constants/api-url';
 
 const FileUpload = () => {

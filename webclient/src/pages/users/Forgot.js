@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from 'react-query';
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { API_FORGOT_PSWD } from '~/constants/api-url';
 
 function ForgotPassword() {

@@ -3,7 +3,7 @@ import { useQuery, useMutation, queryCache } from 'react-query';
 import M from 'materialize-css';
 
 import FileUpload from './utils/FileUpload';
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { QUERY_KEY_ADMIN_HIGHLIGHTS } from '~/constants/query-keys';
 import { API_ADMIN_HIGHLIGHTS } from '~/constants/api-url';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery, useMutation, queryCache } from 'react-query';
 
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { QUERY_KEY_ADMIN_USERS } from '~/constants/query-keys';
 import { API_ADMIN_USERS, API_ADMIN_USERS_UPDATE } from '~/constants/api-url';
 

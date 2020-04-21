@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import CategoriesHighlights from '../components/home/CategoriesHighlights.js';
 import Carousel from '../components/Carousel.js';
 import Loading from '~/components/Loading.js';
-import { client } from '~/hooks/client.js';
+import { client } from '~/utils/client.js';
 import {
   QUERY_KEY_CATEGORIES,
   QUERY_KEY_HIGHLIGHTS

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import M from 'materialize-css';
 import { useQuery } from 'react-query';
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { API_CATEGORIES_PLANINFO, API_CHECKOUT } from '~/constants/api-url';
 import { QUERY_KEY_PLAN_INFO } from '~/constants/query-keys';
 

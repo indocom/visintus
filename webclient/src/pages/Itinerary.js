@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { client } from '~/hooks/client';
+import { client } from '~/utils/client';
 import { QUERY_KEY_PLAN_INFO } from '~/constants/query-keys';
 import { API_CATEGORIES_PLANINFO } from '~/constants/api-url';
 import M from 'materialize-css';
