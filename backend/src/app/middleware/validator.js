@@ -23,7 +23,7 @@ const OBJECT_ID_REGEX = '^[a-f\\d]{24}$';
 exports.regexes = {
   name: "^[\\w ,.'-]+$",
   slug: '^[\\w-]+$',
-  safeChars: "^[\\w.~()'!*:@,;+? -]*$",
+  safeChars: "^[\\w.~()'!*:@,;+? -\\n\\r]*$",
 
   bannerId: OBJECT_ID_REGEX,
   highlightId: OBJECT_ID_REGEX,
