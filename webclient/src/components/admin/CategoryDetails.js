@@ -21,8 +21,12 @@ export default props => {
     data: categoryDetails,
     status: fetchStatus,
     error: fetchError
-  } = useQuery(QUERY_KEY_ADMIN_CATEGORY_DETAILS, () =>
-    client(API_ADMIN_CATEGORY + `/${slug}`)
+  } = useQuery(
+    QUERY_KEY_ADMIN_CATEGORY_DETAILS,
+    () => client(API_ADMIN_CATEGORY + `/${slug}`),
+    {
+      staleTime: 5000
+    }
   );
 
   const allDetailsView = fetchStatus === 'success' && (
