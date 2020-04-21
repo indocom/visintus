@@ -45,13 +45,13 @@ const Navbar = props => {
       <ul id="nav-mobile" className="sidenav">
         <li style={{ height: 20 }}></li>
         <li>
-          <a id="logo-container" href="#landing">
+          <Link to="/" id="logo-container">
             <img
               src={Logo}
               alt="PINUS Logo"
               style={{ height: 50, marginTop: 5 }}
             />
-          </a>
+          </Link>
         </li>
         <li style={{ height: 20 }}></li>
         <li>
@@ -62,7 +62,7 @@ const Navbar = props => {
         <li>
           <NavLink to="/itinerary">Itinerary</NavLink>
         </li>
-        {isLoggedIn === 'true' ? (
+        {/* {isLoggedIn === 'true' ? (
           <>
             <li>
               <NavLink to="/">Account</NavLink>
@@ -83,7 +83,7 @@ const Navbar = props => {
             {' '}
             <NavLink to="/login"> Login </NavLink>{' '}
           </li>
-        )}
+        )} */}
       </ul>
 
       <nav className="nav-wrapper black ">
@@ -147,7 +147,7 @@ const Navbar = props => {
             <li>
               <NavLink to="/itinerary">Itinerary</NavLink>
             </li>
-            {isLoggedIn === 'true' ? (
+            {/* {isLoggedIn === 'true' ? (
               <li>
                 <a
                   className="dropdown-trigger"
@@ -166,7 +166,7 @@ const Navbar = props => {
                 {' '}
                 <NavLink to="/login">Login</NavLink>{' '}
               </li>
-            )}
+            )} */}
           </ul>
         </div>
       </nav>
