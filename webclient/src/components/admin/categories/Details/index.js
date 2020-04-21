@@ -5,11 +5,11 @@ export default function Details({
   details,
   slug,
   detailType,
-  initialState = {},
+  baseState = {},
   upsertComponent
 }) {
   let [isActive, setIsActive] = useState(false); //is UpsertData active
-  let [detailInfo, setDetailInfo] = useState(initialState);
+  let [detailInfo, setDetailInfo] = useState(baseState);
 
   //   {
   //   _id: '',
@@ -30,6 +30,7 @@ export default function Details({
         slug={slug}
         detailInfo={detailInfo}
         closeForm={() => setIsActive(!isActive)}
+        refetch={refetch}
       />
     );
   };
@@ -39,13 +40,7 @@ export default function Details({
       <h5 id="header" style={{ textTransform: 'capitalize' }}>
         {detailType} Details
         <button
-          onClick={() =>
-            handleUpsert({
-              _id: '',
-              name: '',
-              description: ''
-            })
-          }
+          onClick={() => handleUpsert(baseState)}
           className="btn btn-small right"
         >
           Add {detailType}

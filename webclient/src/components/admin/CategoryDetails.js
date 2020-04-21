@@ -25,7 +25,7 @@ export default props => {
     QUERY_KEY_ADMIN_CATEGORY_DETAILS,
     () => client(API_ADMIN_CATEGORY + `/${slug}`),
     {
-      staleTime: 5000
+      staleTime: 10000
     }
   );
 

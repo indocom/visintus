@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation, queryCache } from 'react-query';
 import M from 'materialize-css';
-import axios from 'axios';
-import FileUpload from '../utils/FileUpload';
+
 import { client } from '~/utils/client';
 import { QUERY_KEY_ADMIN_CATEGORY_DETAILS } from '~/constants/query-keys';
 import { API_ADMIN_CATEGORY, API_FILE_UPLOAD } from '~/constants/api-url';
@@ -14,7 +13,7 @@ const BannerDetails = ({ details, detailType, slug }) => {
   });
 
   function handleRemove(_id) {
-    client(API_ADMIN_CATEGORY + `/${slug}/${detailType}/${_id}`, {
+    return client(API_ADMIN_CATEGORY + `/${slug}/${detailType}/${_id}`, {
       method: 'DELETE',
       showSuccess: true,
       showError: true
@@ -158,12 +157,6 @@ const UpsertBanner = ({ slug, detailType, closeForm }) => {
     };
 
     upsert(data);
-
-    // await upsertData({
-    //   method: 'post',
-    //   endpoint: `/admin/categories/${slug}/${detailType}`,
-    //   data
-    // });
   };
 
   return (

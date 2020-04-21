@@ -7,7 +7,7 @@ export default ({ details, slug, detailType }) => (
     details={details}
     detailType={detailType}
     slug={slug}
-    initialState={{
+    baseState={{
       _id: '',
       name: '',
       description: ''

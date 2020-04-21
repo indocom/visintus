@@ -5,6 +5,42 @@ import { useMutation } from 'react-query';
 import { client } from '~/utils/client';
 import { API_FILE_UPLOAD } from '~/constants/api-url';
 
+export function postFile(data) {
+  return client(API_FILE_UPLOAD, {
+    file: data,
+    onSuccess: () => {
+      M.toast({
+        html: `<div>File uploaded!</div>`,
+        classes: 'teal rounded center top'
+      });
+    },
+    showError: true
+  });
+}
+
+export const checkMimeType = e => {
+  let files = e.target.files;
+  let err = '';
+  const types = ['image/png', 'image/jpeg', 'image/jpg'];
+
+  for (let x = 0; x < files.length; x++) {
+    if (!types.includes(files[x].type)) {
+      err += files[x].type + ' is not a supported format\n';
+    }
+  }
+
+  if (err !== '') {
+    // if message not same old that mean has error
+    e.target.value = null; // discard selected file
+    M.toast({
+      html: `<div>${err}</div>`,
+      classes: 'red rounded center top'
+    });
+    return false;
+  }
+  return true;
+};
+
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
@@ -13,36 +49,6 @@ const FileUpload = () => {
       setImageUrl(data?.image?.url);
     }
   });
-
-  function postFile(data) {
-    return client(API_FILE_UPLOAD, {
-      file: data,
-      showError: true
-    });
-  }
-
-  const checkMimeType = e => {
-    let files = e.target.files;
-    let err = '';
-    const types = ['image/png', 'image/jpeg', 'image/jpg'];
-
-    for (let x = 0; x < files.length; x++) {
-      if (!types.includes(files[x].type)) {
-        err += files[x].type + ' is not a supported format\n';
-      }
-    }
-
-    if (err !== '') {
-      // if message not same old that mean has error
-      e.target.value = null; // discard selected file
-      M.toast({
-        html: `<div>${err}</div>`,
-        classes: 'red rounded center top'
-      });
-      return false;
-    }
-    return true;
-  };
 
   const handleSelectFile = e => {
     setSelectedFile(null);

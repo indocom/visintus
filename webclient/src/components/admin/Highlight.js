@@ -75,11 +75,14 @@ const UpsertHighlight = props => {
   const [imageURL, FileUploadForm] = FileUpload();
 
   const [upsert] = useMutation(postUpdate, {
-    onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_HIGHLIGHTS)
+    onSuccess: () => {
+      queryCache.refetchQueries(QUERY_KEY_ADMIN_HIGHLIGHTS);
+      props.closeForm();
+    }
   });
 
   function postUpdate(data) {
-    client(API_ADMIN_HIGHLIGHTS + `${endpoint}`, {
+    return client(API_ADMIN_HIGHLIGHTS + `${endpoint}`, {
       body: data,
       showSuccess: true,
       showError: true
@@ -94,8 +97,9 @@ const UpsertHighlight = props => {
   }, []);
 
   const handleSubmit = async e => {
+    e.preventDefault();
+
     if (!imageURL && !props.data.image_url) {
-      e.preventDefault();
       M.toast({
         html: `<div>Please upload image first!</div>`,
         classes: 'red rounded center top'

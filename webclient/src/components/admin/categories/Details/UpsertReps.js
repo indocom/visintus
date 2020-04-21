@@ -14,7 +14,9 @@ const UpsertReps = ({ detailInfo, slug, detailType, closeForm }) => {
 
   const [upsert] = useMutation(postUpdate, {
     onSuccess: () => {
-      queryCache.refetchQueries(QUERY_KEY_ADMIN_CATEGORY_DETAILS);
+      queryCache.refetchQueries(
+        query => query.queryKey === QUERY_KEY_ADMIN_CATEGORY_DETAILS
+      );
       closeForm();
     }
   });
@@ -71,6 +73,7 @@ const UpsertReps = ({ detailInfo, slug, detailType, closeForm }) => {
 
       <FileUploadForm />
 
+      {/* <img src={state.photo_url}></img> */}
       <form
         onSubmit={handleSubmit}
         style={{ padding: 15, backgroundColor: '#eee' }}
