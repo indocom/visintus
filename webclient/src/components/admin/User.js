@@ -1,27 +1,36 @@
 import React from 'react';
-import useFetch from 'hooks/useFetch';
-import useMutation from 'hooks/useMutation';
+import { useQuery, useMutation, queryCache } from 'react-query';
+
+import { client } from '~/utils/client';
+import { QUERY_KEY_ADMIN_USERS } from '~/constants/query-keys';
+import { API_ADMIN_USERS, API_ADMIN_USERS_UPDATE } from '~/constants/api-url';
 
 function User() {
-  const [
-    { response: users, loading: fetchLoading, error: fetchError },
-    doFetch
-  ] = useFetch({ endpoint: '/api/admin/users/list' });
-  const [{ error: mutationError }, upsertData] = useMutation();
+  const {
+    data: users,
+    status: fetchStatus,
+    error: fetchError
+  } = useQuery(QUERY_KEY_ADMIN_USERS, () => client(API_ADMIN_USERS));
+  const [mutate] = useMutation(postRoleUpdate, {
+    onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_USERS)
+  });
+
+  function postRoleUpdate(data) {
+    client(API_ADMIN_USERS_UPDATE, {
+      body: data,
+      showSuccess: true,
+      showError: true
+    });
+  }
 
   const toggleUserRole = async (email, role) => {
-    const data = JSON.stringify({
+    const data = {
       user: {
         email,
         role: role === 'admin' ? 'user' : 'admin'
       }
-    });
-    await upsertData({
-      method: 'post',
-      endpoint: '/api/admin/users/update-role',
-      data
-    });
-    await doFetch();
+    };
+    mutate(data);
   };
 
   const userList =
@@ -45,9 +54,9 @@ function User() {
       </tr>
     ));
 
-  if (fetchLoading) return null;
+  if (fetchStatus === 'loading') return null;
 
-  return !fetchError && !mutationError ? (
+  return !fetchError ? (
     <>
       <h4>User Admin Page</h4>
       <table>

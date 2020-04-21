@@ -1,36 +1,54 @@
 import React, { useState } from 'react';
-import useMutation from 'hooks/useMutation';
 import M from 'materialize-css';
+import { useMutation } from 'react-query';
 
-const FileUpload = ({ endpoint }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [
-    { response: imageURL, error: mutationError },
-    upsertData
-  ] = useMutation();
+import { client } from '~/utils/client';
+import { API_FILE_UPLOAD } from '~/constants/api-url';
 
-  const checkMimeType = e => {
-    let files = e.target.files;
-    let err = '';
-    const types = ['image/png', 'image/jpeg', 'image/jpg'];
-
-    for (let x = 0; x < files.length; x++) {
-      if (!types.includes(files[x].type)) {
-        err += files[x].type + ' is not a supported format\n';
-      }
-    }
-
-    if (err !== '') {
-      // if message not same old that mean has error
-      e.target.value = null; // discard selected file
+export function postFile(data) {
+  return client(API_FILE_UPLOAD, {
+    file: data,
+    onSuccess: () => {
       M.toast({
-        html: `<div>${err}</div>`,
-        classes: 'red rounded center top'
+        html: `<div>File uploaded!</div>`,
+        classes: 'teal rounded center top'
       });
-      return false;
+    },
+    showError: true
+  });
+}
+
+export const checkMimeType = e => {
+  let files = e.target.files;
+  let err = '';
+  const types = ['image/png', 'image/jpeg', 'image/jpg'];
+
+  for (let x = 0; x < files.length; x++) {
+    if (!types.includes(files[x].type)) {
+      err += files[x].type + ' is not a supported format\n';
     }
-    return true;
-  };
+  }
+
+  if (err !== '') {
+    // if message not same old that mean has error
+    e.target.value = null; // discard selected file
+    M.toast({
+      html: `<div>${err}</div>`,
+      classes: 'red rounded center top'
+    });
+    return false;
+  }
+  return true;
+};
+
+const FileUpload = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
+  const [upsert] = useMutation(postFile, {
+    onSuccess: data => {
+      setImageUrl(data?.image?.url);
+    }
+  });
 
   const handleSelectFile = e => {
     setSelectedFile(null);
@@ -48,32 +66,18 @@ const FileUpload = ({ endpoint }) => {
   const handleFileUpload = async e => {
     e.preventDefault();
 
-    const data = new FormData();
-    data.append('file', selectedFile);
-
-    await upsertData({
-      method: 'post',
-      endpoint,
-      data,
-      dataType: 'application/octet-stream'
-    });
-
-    if (mutationError) {
-      M.toast({
-        html: `<div>Image failed to upload!</div><div> ${e}! </div>`,
-        classes: 'red rounded center top'
-      });
-    } else if (!selectedFile) {
+    if (!selectedFile) {
       M.toast({
         html: '<div>No valid file chosen yet!</div>',
         classes: 'red rounded center top'
       });
-    } else {
-      M.toast({
-        html: '<div>Image uploaded!</div>',
-        classes: 'green rounded center top'
-      });
+      return;
     }
+
+    const data = new FormData();
+    data.append('file', selectedFile);
+
+    upsert(data);
   };
 
   const FileUploadForm = () => {
@@ -109,7 +113,7 @@ const FileUpload = ({ endpoint }) => {
     );
   };
 
-  return [imageURL, FileUploadForm];
+  return [imageUrl, FileUploadForm];
 };
 
 export default FileUpload;

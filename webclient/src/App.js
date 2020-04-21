@@ -16,6 +16,7 @@ import {
   Login,
   Signup
 } from './pages/users';
+import * as url from '~/constants/url';
 
 class App extends Component {
   render() {
@@ -25,16 +26,20 @@ class App extends Component {
           <Navbar />
           <div className="main-container grey lighten-4">
             <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/categories/:slug" component={Category} />
-              <Route path="/login" component={Login} />
-              <Route path="/signup" component={Signup} />
-              <Route path="/itinerary" component={Itinerary} />
-              <Route path="/checkout" component={Checkout} />
-              <Route path="/admin" component={Dashboard} />
-              <Route path="/verify" component={Verify} />
-              <Route exact path="/reset" component={ResetPassword} />
-              <Route path="/forgot" component={ForgotPassword} />
+              <Route exact path={url.HOME} component={Home} />
+              <Route path={url.CATEGORIES} component={Category} />
+              <Route path={url.LOGIN} component={Login} />
+              <Route path={url.SIGNUP} component={Signup} />
+              <Route path={url.ITINERARY} component={Itinerary} />
+              <Route path={url.CHECKOUT} component={Checkout} />
+              <Route path={url.ADMIN} component={Dashboard} />
+              <Route path={url.VERIFY_ACC} component={Verify} />
+              <Route
+                exact
+                path={url.RESET_PASSWORD}
+                component={ResetPassword}
+              />
+              <Route path={url.FORGOT_PASSWORD} component={ForgotPassword} />
               <Route component={NotFound} />
             </Switch>
           </div>

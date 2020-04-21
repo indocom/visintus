@@ -1,30 +1,31 @@
 import React, { Component, useEffect, useState } from 'react';
-import useFetch from 'hooks/useFetch';
-import useMutation from 'hooks/useMutation';
 import M from 'materialize-css';
 import { Link } from 'react-router-dom';
+import { useQuery, useMutation, queryCache } from 'react-query';
+
 import FileUpload from './utils/FileUpload';
+import { client } from '~/utils/client';
+import { QUERY_KEY_ADMIN_CATEGORY } from '~/constants/query-keys';
+import { API_ADMIN_CATEGORY } from '~/constants/api-url';
 
 const Category = props => {
-  const [
-    { response: categories, loading: fetchLoading, error: fetchError },
-    doFetch
-  ] = useFetch({ endpoint: '/api/admin/categories' });
-  const [{ error: mutationError }, upsertData] = useMutation();
+  const {
+    data: categories,
+    status: fetchStatus,
+    error: fetchError
+  } = useQuery(QUERY_KEY_ADMIN_CATEGORY, () => client(API_ADMIN_CATEGORY));
 
-  const handleRemove = async slug => {
-    upsertData({
-      method: 'delete',
-      endpoint: `/api/admin/categories/${slug}`
+  const [remove] = useMutation(handleRemove, {
+    onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_CATEGORY)
+  });
+
+  function handleRemove(slug) {
+    client(API_ADMIN_CATEGORY + `/${slug}`, {
+      method: 'DELETE',
+      showSuccess: true,
+      showError: true
     });
-    doFetch();
-    if (mutationError) {
-      M.toast({
-        html: `<div>Failed to remove!</div><div> ${mutationError}! </div>`,
-        classes: 'red rounded center top'
-      });
-    }
-  };
+  }
 
   const categoriesList =
     categories && categories.length > 0 ? (
@@ -48,10 +49,7 @@ const Category = props => {
               >
                 Update
               </button>
-              <button
-                className="btn red"
-                onClick={() => handleRemove(category.slug)}
-              >
+              <button className="btn red" onClick={() => remove(category.slug)}>
                 Remove
               </button>
             </div>
@@ -62,7 +60,7 @@ const Category = props => {
       <div className="center">No data yet :(</div>
     );
 
-  if (fetchLoading) return null;
+  if (fetchStatus === 'loading') return null;
   return !fetchError ? (
     <ul>{categoriesList}</ul>
   ) : (
@@ -75,10 +73,19 @@ const Category = props => {
 const UpsertCategory = props => {
   const [name, setName] = useState(props.data.name);
   const [description, setDescription] = useState(props.data.description);
-  const [logoURL, FileUploadForm] = FileUpload({
-    endpoint: '/api/images/upload'
+  const [logoURL, FileUploadForm] = FileUpload();
+
+  const [upsert] = useMutation(postUpdate, {
+    onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_CATEGORY)
   });
-  const [{ error: mutationError }, upsertData] = useMutation();
+
+  function postUpdate(data) {
+    client(API_ADMIN_CATEGORY + `/${endpoint}`, {
+      body: data,
+      showSuccess: true,
+      showError: true
+    });
+  }
 
   const title = props.slug === '' ? 'Add Category' : 'Update Category';
   const endpoint = props.slug === '' ? '' : `/${props.slug}`;
@@ -97,30 +104,14 @@ const UpsertCategory = props => {
       return;
     }
 
-    const data = JSON.stringify({
+    const data = {
       category: {
         name,
-        logo_url: !logoURL ? props.data.logo_url : logoURL.image.url
+        logo_url: !logoURL ? props.data.logo_url : logoURL
       }
-    });
+    };
 
-    await upsertData({
-      method: 'post',
-      endpoint: '/api/admin/categories' + endpoint,
-      data
-    });
-
-    if (mutationError) {
-      M.toast({
-        html: `<div>${title} failed</div><div> ${mutationError}! </div>`,
-        classes: 'red rounded center top'
-      });
-    } else {
-      M.toast({
-        html: `<div>${title} successful!</div>`,
-        classes: 'green rounded center top'
-      });
-    }
+    upsert(data);
   };
 
   return (

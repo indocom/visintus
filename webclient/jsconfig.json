@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "css/*": ["./css/*"],
-      "hooks/*": ["./hooks/*"]
+      "~/*": ["./*"]
     }
   },
   "exclude": ["node_modules"]

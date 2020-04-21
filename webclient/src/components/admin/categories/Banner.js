@@ -1,28 +1,26 @@
-import React, { Component, useState } from 'react';
-import useMutation from 'hooks/useMutation';
+import React, { useState, useEffect } from 'react';
+import { useMutation, queryCache } from 'react-query';
 import M from 'materialize-css';
-import axios from 'axios';
 
-const BannerDetails = ({ banners, slug, setDetails }) => {
+import { client } from '~/utils/client';
+import { QUERY_KEY_ADMIN_CATEGORY_DETAILS } from '~/constants/query-keys';
+import { API_ADMIN_CATEGORY, API_FILE_UPLOAD } from '~/constants/api-url';
+
+const BannerDetails = ({ details, detailType, slug }) => {
   const [isActive, setIsActive] = useState(false);
-  const handleRemove = async (id, slug) => {
-    const token = localStorage.getItem('token');
-    await axios
-      .delete(`/api/admin/categories/${slug}/banners/${id}`, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-          Authorization: `${token}`
-        },
-        crossdomain: true
-      })
-      .then(res => res.status === 200 && setDetails([]))
-      .catch(err => console.log(err));
-  };
+  const [remove] = useMutation(handleRemove, {
+    onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_CATEGORY_DETAILS)
+  });
 
-  const handleAdd = () => {
-    setIsActive(!isActive);
-  };
+  function handleRemove(_id) {
+    return client(API_ADMIN_CATEGORY + `/${slug}/${detailType}/${_id}`, {
+      method: 'DELETE',
+      showSuccess: true,
+      showError: true
+    });
+  }
+
+  const handleAdd = () => setIsActive(!isActive);
 
   return (
     <>
@@ -32,16 +30,21 @@ const BannerDetails = ({ banners, slug, setDetails }) => {
           Add banner
         </div>
       </h5>
-      {isActive && <UpsertBanner slug={slug} />}
+      {isActive && (
+        <UpsertBanner
+          detailType={detailType}
+          slug={slug}
+          closeForm={() => setIsActive(false)}
+        />
+      )}
       <ul>
-        {banners &&
-          banners.length &&
-          banners.map((detail, index) => (
+        {details?.length &&
+          details.map((detail, index) => (
             <li key={index} style={{ minHeight: 50 }}>
               {detail.image_url}
               <div
                 className="btn btn-small right red"
-                onClick={() => handleRemove(detail._id, slug)}
+                onClick={() => remove(detail._id)}
               >
                 Remove
               </div>
@@ -52,60 +55,108 @@ const BannerDetails = ({ banners, slug, setDetails }) => {
   );
 };
 
-const UpsertBanner = props => {
+const UpsertBanner = ({ slug, detailType, closeForm }) => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [
-    { response: imageURL, error: mutationError },
-    upsertData
-  ] = useMutation();
+  const [imageUrl, setImageUrl] = useState('');
+  const [uploadFile] = useMutation(postFile, {
+    onSuccess: data => {
+      setImageUrl(data?.image?.url);
+      queryCache.refetchQueries(QUERY_KEY_ADMIN_CATEGORY_DETAILS);
+    }
+  });
+  const [upsert] = useMutation(postUpdate, {
+    onSuccess: () => {
+      closeForm();
+      queryCache.refetchQueries(QUERY_KEY_ADMIN_CATEGORY_DETAILS);
+    }
+  });
+
+  function postFile(data) {
+    return client(API_FILE_UPLOAD, {
+      file: data,
+      showError: true
+    });
+  }
+
+  function postUpdate(data) {
+    client(API_ADMIN_CATEGORY + `/${slug}/${detailType}`, {
+      body: data,
+      showError: true,
+      showSuccess: true
+    });
+  }
+
+  const checkMimeType = e => {
+    let files = e.target.files;
+    let err = '';
+    const types = ['image/png', 'image/jpeg', 'image/jpg'];
+
+    for (let x = 0; x < files.length; x++) {
+      if (!types.includes(files[x].type)) {
+        err += files[x].type + ' is not a supported format\n';
+      }
+    }
+
+    if (err !== '') {
+      // if message not same old that mean has error
+      e.target.value = null; // discard selected file
+      M.toast({
+        html: `<div>${err}</div>`,
+        classes: 'red rounded center top'
+      });
+      return false;
+    }
+    return true;
+  };
 
   const handleSelectFile = e => {
-    console.log(e.target.files[0]);
-    setSelectedFile(e.target.files[0]);
-    M.toast({
-      html: '<div>Remember to save!</div>',
-      classes: 'amber rounded center top'
-    });
+    setSelectedFile(null);
+    if (checkMimeType(e)) {
+      setSelectedFile(e.target.files[0]);
+      if (!selectedFile) {
+        M.toast({
+          html: '<div>Remember to save!</div>',
+          classes: 'amber rounded center top'
+        });
+      }
+    }
   };
 
   const handleFileUpload = async e => {
     e.preventDefault();
+
+    if (!selectedFile) {
+      M.toast({
+        html: '<div>No valid file chosen yet!</div>',
+        classes: 'red rounded center top'
+      });
+      return;
+    }
+
     const data = new FormData();
     data.append('file', selectedFile);
 
-    await upsertData({
-      method: 'post',
-      endpoint: `/images/upload`,
-      data
-    });
-
-    if (mutationError) {
-      M.toast({
-        html: `<div>Image failed to upload!</div><div> ${e}! </div>`,
-        classes: 'red rounded center top'
-      });
-    } else {
-      M.toast({
-        html: '<div>Image uploaded!</div>',
-        classes: 'green rounded center top'
-      });
-    }
+    uploadFile(data);
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const data = JSON.stringify({
-      banner: {
-        image_url: imageURL.image.url
-      }
-    });
-    console.log(data);
 
-    await upsertData({
-      method: 'post',
-      endpoint: `/admin/categories/${props.slug}/banners`,
-      data
-    });
+    if (!imageUrl) {
+      M.toast({
+        html: '<div>Have you clicked the SAVE button?</div>',
+        classes: 'red rounded center top'
+      });
+      return;
+    }
+
+    const data = {
+      banner: {
+        image_url: imageUrl
+      }
+    };
+
+    upsert(data);
   };
 
   return (
@@ -143,3 +194,87 @@ const UpsertBanner = props => {
 };
 
 export default BannerDetails;
+
+// CANT UNDERSTAND WHY if use FileUpload, every time I insert a picture, it refetch QUERY_KEY_ADMIN_CATEGORY_DETAILS!!!
+
+// const UpsertBanner = ({slug, detailType}) => {
+//   const [imageURL, FileUploadForm] = FileUpload();
+
+//   const [upsert] = useMutation(postUpdate, {
+//     onSuccess: () => queryCache.refetchQueries(QUERY_KEY_ADMIN_CATEGORY_DETAILS)
+//   });
+
+//   function postUpdate(data) {
+//     client(API_ADMIN_CATEGORY + `/${slug}/${detailType}`, {
+//       body: data,
+//       showSuccess: true,
+//       showError: true
+//     });
+//   }
+
+//   const title = 'Add Banners';
+
+//   useEffect(() => {
+//     window.scrollTo(0, 0);
+//   }, []);
+
+//   const handleSubmit = async e => {
+//     e.preventDefault();
+//     console.log(imageURL);
+
+//     if (!imageURL) {
+//       e.preventDefault();
+//       M.toast({
+//         html: `<div>Please upload image first!</div>`,
+//         classes: 'red rounded center top'
+//       });
+//       return;
+//     }
+
+//     const data = {
+//       banner: {
+//         image_url: imageURL?.image?.url
+//       }
+//     };
+
+//     upsert(data);
+//   };
+
+//   return (
+//     <>
+//       <h5 className="grey-text text-darken-3">{title}</h5>
+
+//       <FileUploadForm />
+
+//       <form
+//         onSubmit={handleSubmit}
+//         style={{ padding: 15, backgroundColor: '#eee' }}
+//       >
+//         {slug && (
+//           <div className="input-field">
+//             <label htmlFor="image_url" className="active">
+//               Image URL
+//             </label>
+//             <input
+//               type="text"
+//               id="image_url"
+//               value={imageURL}
+//               required
+//               disabled
+//             />
+//           </div>
+//         )}
+
+//         <button className="btn">{title}</button>
+//         <div
+//           className="btn"
+//           onClick={() => {
+//             props.closeForm();
+//           }}
+//         >
+//           Cancel
+//         </div>
+//       </form>
+//     </>
+//   );
+// };

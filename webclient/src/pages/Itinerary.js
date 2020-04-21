@@ -1,7 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { useQuery } from 'react-query';
+import { client } from '~/utils/client';
+import { QUERY_KEY_PLAN_INFO } from '~/constants/query-keys';
+import { API_CATEGORIES_PLANINFO } from '~/constants/api-url';
 import M from 'materialize-css';
 
 import { removePlan, removeCategory } from '../store/actions/planActions';
@@ -9,7 +12,15 @@ import { removePlan, removeCategory } from '../store/actions/planActions';
 import '../css/itin.css';
 
 const Itin = props => {
-  const [plan, setPlan] = useState({});
+  const { status: planStatus, data: plan, error: planError } = useQuery(
+    QUERY_KEY_PLAN_INFO,
+    () =>
+      client(API_CATEGORIES_PLANINFO, {
+        body: {
+          categories: props.itin
+        }
+      })
+  );
 
   useEffect(() => {
     let collapsible = document.querySelectorAll('.collapsible');
@@ -17,23 +28,6 @@ const Itin = props => {
       accordion: false
     });
   }, []);
-
-  useEffect(() => {
-    const fetchPlanInfo = async () => {
-      try {
-        let categories = JSON.stringify({ categories: props.itin });
-        const res = await axios.post('/api/categories/plan-info', categories, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        setPlan(res.data.message);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchPlanInfo();
-  }, [props.itin]);
 
   const handleRemoveCategory = slug => {
     props.removeCategory(slug);
@@ -56,22 +50,8 @@ const Itin = props => {
     props.history.push('/checkout');
   };
 
-  // const display = value => {
-  //   const id = '#' + value.slug;
-  //   const getElem = document.querySelector(`${id}`);
-  //   if (getElem.style.position === 'relative') {
-  //     getElem.style.position = 'absolute';
-  //     getElem.style.opacity = '0';
-  //     getElem.style.transition = 'all 0s linear';
-  //   } else {
-  //     getElem.style.position = 'relative';
-  //     getElem.style.opacity = '1';
-  //     getElem.style.transition = 'all 0.3s linear';
-  //   }
-  // };
-
   let planList =
-    Object.keys(plan).length > 0
+    plan && Object.keys(plan).length > 0
       ? Object.entries(plan).map(([slug, data]) => {
           return (
             <li key={slug}>
@@ -133,7 +113,7 @@ const Itin = props => {
       {/* <div className="btn" style={{ marginRight: 10 }} onClick={handleSave}>
         Save
       </div> */}
-      <div className="btn" onClick={handleCheckout}>
+      <div className="btn" onClick={handleCheckout} style={{ zIndex: 0 }}>
         Save &amp; Checkout
       </div>
     </div>
@@ -144,10 +124,10 @@ const Itin = props => {
       <Link to="/">&lt;&lt;&lt; Continue planning</Link>
       <h5>Your itinerary</h5>
       <div className="dropdownItin">
-        {planList === null ? <p> You haven't make any plans yet </p> : null}
+        {!planList && <p> You haven't make any plans yet </p>}
         <ul className="collapsible">{planList}</ul>
         <br />
-        {planList === null ? null : buttons}
+        {planList && buttons}
       </div>
     </div>
   );

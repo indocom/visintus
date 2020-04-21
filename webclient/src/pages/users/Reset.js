@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import queryString from 'query-string';
-import useMutation from 'hooks/useMutation';
 import M from 'materialize-css';
+import { client } from '~/utils/client';
+import { API_RESET_PSWD } from '~/constants/api-url';
 
 import ErrorPage from '../404';
 
 function ResetPassword(props) {
   const [newPassword, setNewPassword] = useState('');
   const [checkpassword, setCheckPassword] = useState('');
-  const [{ response, error }, upsertData] = useMutation();
   const { email, token } = queryString.parse(props.location.search);
 
   const data = {
@@ -28,16 +28,10 @@ function ResetPassword(props) {
       });
       setCheckPassword('');
       setNewPassword('');
+      return;
     }
 
-    await upsertData({
-      method: 'post',
-      endpoint: '/api/users/reset-password',
-      data,
-      auth: token,
-      successMessage: 'Your password has changed. Please login again!',
-      pushTo: '/login'
-    });
+    postResetPassword(data, token);
   };
 
   return email && token ? (
@@ -72,6 +66,18 @@ function ResetPassword(props) {
   ) : (
     <ErrorPage />
   );
+}
+
+function postResetPassword(data, token) {
+  client(API_RESET_PSWD, {
+    body: data,
+    headers: {
+      Authorization: token
+    },
+    redirectTo: '/login',
+    showSuccess: true
+    // showError: true
+  });
 }
 
 export default ResetPassword;

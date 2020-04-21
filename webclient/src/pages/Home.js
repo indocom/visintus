@@ -1,61 +1,56 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useQuery } from 'react-query';
 
 import CategoriesHighlights from '../components/home/CategoriesHighlights.js';
 import Carousel from '../components/Carousel.js';
-import NotFound from './404.js';
+import Loading from '~/components/Loading.js';
+import { client } from '~/utils/client.js';
+import {
+  QUERY_KEY_CATEGORIES,
+  QUERY_KEY_HIGHLIGHTS
+} from '~/constants/query-keys';
+import { API_CATEGORIES, API_HIGHLIGHTS } from '~/constants/api-url';
 
-class Home extends Component {
-  state = {
-    categories: [],
-    highlights: [],
-    isError: false
-  };
-  async componentDidMount() {
-    try {
-      let highlightsData = await axios.get('/api/highlights');
-      let categoriesData = await axios.get('/api/categories');
-      highlightsData = highlightsData.data;
-      categoriesData = categoriesData.data;
-      this.setState({
-        highlights:
-          highlightsData.message.length > 0 ? highlightsData.message : [],
-        categories:
-          categoriesData.message.length > 0 ? categoriesData.message : [],
-        isError: false
-      });
-    } catch {
-      this.setState({
-        highlights: [],
-        categories: [],
-        isError: true
-      });
-    }
-  }
-  render() {
-    return !this.state.isError ? (
-      <div className="Home">
-        <Carousel banners={this.state.highlights} />
-        <div className="container area">
-          <CategoriesHighlights categories={this.state.categories} />
-        </div>
-        <div
-          className="planAVisit center"
-          style={{ paddingBottom: '70px', width: '100%' }}
-        >
-          <Link
-            to="/itinerary"
-            className="waves-effect waves-light btn btn-large"
-          >
-            Plan A Visit!
-          </Link>
-        </div>
+const Home = () => {
+  const {
+    status: highlightsStatus,
+    data: highlights,
+    error: highlightsError
+  } = useQuery(QUERY_KEY_HIGHLIGHTS, () => client(API_HIGHLIGHTS));
+  const {
+    status: categoriesStatus,
+    data: categories,
+    error: categoriesError
+  } = useQuery(QUERY_KEY_CATEGORIES, () => client(API_CATEGORIES));
+
+  return (
+    <div className="Home">
+      {highlightsStatus === 'loading' ? (
+        <Loading />
+      ) : (
+        !highlightsError && <Carousel banners={highlights} />
+      )}
+      <div className="container area">
+        {categoriesStatus === 'loading' ? (
+          <Loading />
+        ) : (
+          !categoriesError && <CategoriesHighlights categories={categories} />
+        )}
       </div>
-    ) : (
-      <NotFound />
-    );
-  }
-}
+      <div
+        className="planAVisit center"
+        style={{ paddingBottom: '70px', width: '100%' }}
+      >
+        <Link
+          to="/itinerary"
+          className="waves-effect waves-light btn btn-large"
+        >
+          Plan A Visit!
+        </Link>
+      </div>
+    </div>
+  );
+};
 
 export default Home;

@@ -1,33 +1,28 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import M from 'materialize-css';
+import { useQuery } from 'react-query';
+import { client } from '~/utils/client';
+import { API_CATEGORIES_PLANINFO, API_CHECKOUT } from '~/constants/api-url';
+import { QUERY_KEY_PLAN_INFO } from '~/constants/query-keys';
 
 const Checkout = props => {
-  const [itin, setItin] = useState({});
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [organization, setOrganization] = useState('');
   const [visitDate, setVisitDate] = useState('');
   const [remarks, setRemarks] = useState('');
 
-  useEffect(() => {
-    const fetchPlanInfo = async () => {
-      try {
-        let categories = JSON.stringify({ categories: props.itin });
-        const res = await axios.post('/api/categories/plan-info', categories, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        setItin(res.data.message);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchPlanInfo();
-  }, [props.itin]);
+  const { status: itinStatus, data: itin, error: itinError } = useQuery(
+    QUERY_KEY_PLAN_INFO,
+    () =>
+      client(API_CATEGORIES_PLANINFO, {
+        body: {
+          categories: props.itin
+        }
+      })
+  );
 
   useEffect(() => {
     const elems = document.querySelectorAll('.datepicker');
@@ -40,7 +35,7 @@ const Checkout = props => {
   const handleSubmit = e => {
     e.preventDefault();
 
-    let order = JSON.stringify({
+    let order = {
       categories: props.itin,
       orderInfo: {
         name,
@@ -49,19 +44,15 @@ const Checkout = props => {
         organization,
         remarks
       }
-    });
+    };
 
-    const res = axios.post('/checkout', order, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    client(API_CHECKOUT, {
+      body: order,
+      showSuccess: true,
+      showError: true,
+      redirectTo: '/',
+      onSuccess: () => localStorage.removeItem('plan-info')
     });
-
-    M.toast({
-      html: '<div>Booking successful!</div>',
-      classes: 'teal rounded center top'
-    });
-    props.history.push('/');
   };
 
   if (!itin || Object.keys(itin).length < 1) {
@@ -138,7 +129,7 @@ const Checkout = props => {
               />
             </div>
             <div className="input-field">
-              <label htmlFor="visitDate">Visit Date (DD/MM/YYYY) </label>
+              <label htmlFor="visitDate">Visit Date (YYYY-MM-DD) </label>
               <input
                 type="text"
                 id="visitDate"

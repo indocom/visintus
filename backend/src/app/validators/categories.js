@@ -6,6 +6,18 @@ exports.checkoutPlans = async (req, res, next) => {
   try {
     const schemaBody = {
       properties: {
+        categories: {
+          patternProperties: {
+            '[\\w-]': {
+              type: 'array',
+              items: {
+                type: 'string',
+                pattern: validator.regexes.planId
+              }
+            }
+          },
+          additionalProperties: false
+        },
         orderInfo: {
           properties: {
             name: {
