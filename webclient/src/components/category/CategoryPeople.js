@@ -36,7 +36,7 @@ const AreaPeople = props => {
 
   return (
     <div className="people center">
-      <h3>Our Representative</h3>
+      <h4>Our Representatives</h4>
       <div className="col s12">
         <div className="row">{peopleList}</div>
       </div>

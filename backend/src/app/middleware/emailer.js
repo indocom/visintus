@@ -2,7 +2,6 @@ const nodemailer = require('nodemailer');
 const mg = require('nodemailer-mailgun-transport');
 
 const config = require('../../config');
-const User = require('../models/user');
 
 /* create transporter */
 const createTransporter = () => {
@@ -10,7 +9,7 @@ const createTransporter = () => {
     return nodemailer.createTransport(
       mg({
         auth: {
-          api_key: config.get('mailgun.api_key'),
+          api_key: config.get('mailgun.apiKey'),
           domain: config.get('mailgun.domain')
         }
       })

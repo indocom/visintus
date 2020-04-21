@@ -34,7 +34,7 @@ exports.upload = async (req, res) => {
         res,
         buildSuccObject({
           image: {
-            url: config.get('host') + '/api/static/images/' + fileName
+            url: config.get('host') + '/static/images/' + fileName
           }
         })
       );

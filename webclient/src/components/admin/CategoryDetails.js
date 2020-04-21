@@ -29,7 +29,7 @@ export default props => {
     }
   );
 
-  const allDetailsView = fetchStatus === 'success' && (
+  let allDetailsView = fetchStatus === 'success' && (
     <div className="row">
       <div className="col s2">
         <p

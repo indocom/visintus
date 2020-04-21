@@ -1,6 +1,5 @@
 const convict = require('convict');
 const yaml = require('js-yaml');
-const check = require('validator').check;
 
 convict.addParser({ extension: ['yml', 'yaml'], parse: yaml.safeLoad });
 
@@ -12,11 +11,11 @@ const config = convict({
     env: 'NODE_ENV'
   },
 
-  ip: {
-    doc: 'The IP address to bind.',
-    format: 'ipaddress',
-    default: '127.0.0.1',
-    env: 'IP_ADDRESS'
+  host: {
+    doc: 'Server URL',
+    format: '*',
+    default: 'http://localhost:3000',
+    env: 'HOST'
   },
 
   port: {
@@ -45,15 +44,9 @@ const config = convict({
     images: {
       doc: 'File storage location for images',
       format: '*',
-      default: __dirname + '/../../public/images'
+      default: __dirname + '/../../data/images',
+      env: 'IMAGES_STORAGE'
     }
-  },
-
-  host: {
-    doc: 'Server URL',
-    format: '*',
-    default: 'http://localhost:3000',
-    env: 'HOST'
   },
 
   user: {

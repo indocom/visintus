@@ -81,7 +81,7 @@ const AreaDropdown = props => {
 
   return (
     <div className="dropdown">
-      <h4 className="center">Area {props.slug}</h4>
+      <h4 className="center">{props.slug}</h4>
       <ul className="collapsible">{postList}</ul>
     </div>
   );

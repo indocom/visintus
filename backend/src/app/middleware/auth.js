@@ -90,13 +90,17 @@ exports.checkPassword = async (user, password) => {
   Authenticates user.
 */
 exports.requireAuth = async (req, res, next) => {
-  passport.authenticate('jwt', (err, user, info) => {
-    if (err) return handleError(res, buildErrObject(401, 'Unauthenticated'));
-    if (!user) return handleError(res, buildErrObject(401, 'Unauthenticated'));
+  try {
+    passport.authenticate('jwt', (err, user, info) => {
+      if (err) return handleError(res, buildErrObject(401, 'Unauthenticated'));
+      if (!user) return handleError(res, buildErrObject(401, 'Unauthenticated'));
 
-    req.user = user;
-    next();
-  })(req, res, next);
+      req.user = user;
+      next();
+    })(req, res, next);
+  } catch (error) {
+    handleError(res, buildErrObject(401, error.message))
+  }
 };
 
 /* 
@@ -109,12 +113,12 @@ exports.roleAuthorization = roles => async (req, res, next) => {
     .lean()
     .then(user => {
       if (!user) {
-        handleError(res, buildErrObject(401, 'Unauthenticated'));
+        handleError(res, buildErrObject(403, 'User not found'));
       } else if (roles.indexOf(user.role) < 0) {
-        handleError(res, buildErrObject(403, 'Unauthorized'));
+        handleError(res, buildErrObject(403, 'Unauthorized access'));
       } else {
         return next();
       }
     })
-    .catch(err => handleError(res, buildErrObject(403, 'Unauthorized')));
+    .catch(err => handleError(res, buildErrObject(403, err.message)));
 };

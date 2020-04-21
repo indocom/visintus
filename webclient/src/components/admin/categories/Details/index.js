@@ -30,7 +30,6 @@ export default function Details({
         slug={slug}
         detailInfo={detailInfo}
         closeForm={() => setIsActive(!isActive)}
-        refetch={refetch}
       />
     );
   };
