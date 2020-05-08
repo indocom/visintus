@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import queryString from 'query-string';
 import M from 'materialize-css';
+
 import { client } from '~/utils/client';
 import { API_RESET_PSWD } from '~/constants/api-url';
+import { LOGIN } from '~/constants/url';
 
 import ErrorPage from '../404';
 
@@ -74,7 +76,7 @@ function postResetPassword(data, token) {
     headers: {
       Authorization: token
     },
-    redirectTo: '/login',
+    redirectTo: LOGIN,
     showSuccess: true
     // showError: true
   });

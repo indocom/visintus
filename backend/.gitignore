@@ -11,6 +11,9 @@
 /dist
 /data
 
+# static image
+/public/images
+
 # misc
 .DS_Store
 .env.local
