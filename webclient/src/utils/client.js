@@ -1,5 +1,7 @@
 import M from 'materialize-css';
 
+import { LOGIN } from '~/constants/url';
+
 // customConfig params
 // - headers
 // - method
@@ -38,7 +40,7 @@ export async function client(endpoint, { body, file, ...customConfig } = {}) {
   return await fetch(`/${endpoint}`, config).then(async response => {
     if (response.status === 401) {
       logout();
-      window.location.assign('/login');
+      window.location.assign(LOGIN);
       return;
     }
 

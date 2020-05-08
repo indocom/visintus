@@ -4,6 +4,7 @@ import ErrorPage from '../404';
 
 import { client } from '~/utils/client';
 import { API_VERIFY } from '~/constants/api-url';
+import { LOGIN } from '~/constants/url';
 
 function Verify(props) {
   const { email, id } = queryString.parse(props.location.search);
@@ -42,7 +43,7 @@ function Verify(props) {
 function postVerify(data) {
   client(API_VERIFY, {
     body: data,
-    redirectTo: '/login',
+    redirectTo: LOGIN,
     showSuccess: true
     // showError: true
   });
