@@ -3,7 +3,7 @@ import M from 'materialize-css';
 import { LOGIN } from '~/constants/url';
 import { logout } from './auth-client';
 
-export const localStorageKey = 'token';
+export const LOCAL_STORAGE_KEY = 'token';
 
 // customConfig params
 // - headers
@@ -16,7 +16,7 @@ export const localStorageKey = 'token';
 // - redirecTo: string (starting with /)
 
 export async function client(endpoint, { body, file, ...customConfig } = {}) {
-  const token = localStorage.getItem(localStorageKey);
+  const token = localStorage.getItem(LOCAL_STORAGE_KEY);
   const headers = { 'Content-Type': 'application/json' };
 
   if (token) {
