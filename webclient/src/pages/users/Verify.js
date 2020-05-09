@@ -2,9 +2,7 @@ import React from 'react';
 import queryString from 'query-string';
 import ErrorPage from '../404';
 
-import { client } from '~/utils/client';
-import { API_VERIFY } from '~/constants/api-url';
-import { LOGIN } from '~/constants/url';
+import { verify } from '~/utils/auth-client';
 
 function Verify(props) {
   const { email, id } = queryString.parse(props.location.search);
@@ -17,7 +15,7 @@ function Verify(props) {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    postVerify(data);
+    verify(data);
   };
 
   return email && id ? (
@@ -40,12 +38,4 @@ function Verify(props) {
   );
 }
 
-function postVerify(data) {
-  client(API_VERIFY, {
-    body: data,
-    redirectTo: LOGIN,
-    showSuccess: true
-    // showError: true
-  });
-}
 export default Verify;

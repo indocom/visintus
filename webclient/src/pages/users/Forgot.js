@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from 'react-query';
-import { client } from '~/utils/client';
-import { API_FORGOT_PSWD } from '~/constants/api-url';
+import { forget } from '~/utils/auth-client';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [isActive, setIsActive] = useState(false);
-  const [mutate] = useMutation(postForgetRequest, {
+  const [mutate] = useMutation(forget, {
     onSuccess: () => setIsActive(true)
   });
 
@@ -59,15 +58,6 @@ function ForgotPassword() {
       )}
     </div>
   );
-}
-
-function postForgetRequest(email) {
-  client(API_FORGOT_PSWD, {
-    body: {
-      user: { email }
-    }
-    // showError: true
-  });
 }
 
 export default ForgotPassword;
