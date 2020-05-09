@@ -1,6 +1,6 @@
 import { queryCache } from 'react-query';
 
-import { client, localStorageKey } from './client';
+import { client, LOCAL_STORAGE_KEY } from './client';
 import {
   API_LOGIN,
   API_VERIFY,
@@ -10,10 +10,14 @@ import {
   API_REGISTER
 } from '~/constants/api-url';
 import { LOGIN } from '~/constants/url';
+import { ADMIN_ROLE, SUPERADMIN_ROLE } from '~/constants/user-roles';
+
+const roles = [ADMIN_ROLE, SUPERADMIN_ROLE];
 
 function handleUserResponse({ token, ...user }) {
-  window.localStorage.setItem(localStorageKey, token);
-  console.log(user);
+  window.localStorage.setItem(LOCAL_STORAGE_KEY, token);
+
+  // redirect user to homepage
   window.location.replace('/');
   return user;
 }
@@ -41,7 +45,10 @@ function register({ name, email, password }) {
 
 function logout() {
   queryCache.clear();
-  localStorage.removeItem(localStorageKey);
+  localStorage.removeItem(LOCAL_STORAGE_KEY);
+
+  // refreshes the page for the user
+  window.location.assign(window.location);
 }
 
 function verify(data) {
@@ -75,11 +82,19 @@ function forget(email) {
 }
 
 function getToken() {
-  return window.localStorage.getItem(localStorageKey);
+  return window.localStorage.getItem(LOCAL_STORAGE_KEY);
 }
 
 function isLoggedIn() {
   return Boolean(getToken());
+}
+
+function isAdmin(user) {
+  return user && roles.includes(user.role);
+}
+
+function isSuperAdmin(user) {
+  return user && user.role === SUPERADMIN_ROLE;
 }
 
 export {
@@ -91,5 +106,7 @@ export {
   forget,
   getToken,
   getUser,
-  isLoggedIn
+  isLoggedIn,
+  isAdmin,
+  isSuperAdmin
 };
