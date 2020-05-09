@@ -4,6 +4,16 @@ const UsersController = require('../../app/controllers/users');
 const UsersValidator = require('../../app/validators/users');
 
 /*
+ * Who am i route
+ */
+router.get(
+  '/whoami',
+  auth.requireAuth,
+  UsersValidator.whoami,
+  UsersController.whoami
+);
+
+/*
  * Register route
  */
 router.post('/register', UsersValidator.register, UsersController.register);
