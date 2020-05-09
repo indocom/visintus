@@ -1,47 +1,35 @@
 import React, { useEffect } from 'react';
-import { Link, NavLink, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { logOutUser } from '../../store/actions/authActions.js';
+import { Link, NavLink } from 'react-router-dom';
 import M from 'materialize-css';
 import Logo from '../../assets/images/logo.png';
 
-const Navbar = props => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  const token = localStorage.getItem('token');
-  const initials = localStorage.getItem('initials');
-  const role = localStorage.getItem('role');
+import { isLoggedIn, isAdmin } from '~/utils/auth-client';
+import { useUser } from '~/context/user-context.js';
+import { useAuth } from '~/context/auth-context.js';
 
+const Navbar = props => {
+  const user = useUser();
+  const authClient = useAuth();
+
+  // materialize dropdown effect
   useEffect(() => {
     let elems = document.querySelectorAll('.dropdown-trigger');
     M.Dropdown.init(elems);
   }, []);
 
-  useEffect(() => {
-    let elems = document.querySelectorAll('.sidenav');
-    M.Sidenav.init(elems);
-  }, []);
-
   const handleLogout = e => {
-    e.preventDefault();
-
-    const awaitLogOut = new Promise((resolve, reject) => {
-      props.logOutUser(token);
-      localStorage.setItem('token', null);
-      localStorage.setItem('isLoggedIn', false);
-      localStorage.setItem('initials', null);
-      localStorage.setItem('role', null);
-      setTimeout(() => resolve('logout success'));
-    });
-
-    awaitLogOut.then(value => {
-      // console.log(value);
-      window.location.replace('/');
-    });
+    authClient.logout();
   };
 
-  return (
-    <>
+  // Sidenav
+  function SideNav({ user }) {
+    // materialize sidenav effect
+    useEffect(() => {
+      let elems = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elems);
+    }, []);
+
+    return (
       <ul id="nav-mobile" className="sidenav">
         <li style={{ height: 20 }}></li>
         <li>
@@ -62,12 +50,12 @@ const Navbar = props => {
         <li>
           <NavLink to="/itinerary">Itinerary</NavLink>
         </li>
-        {/* {isLoggedIn === 'true' ? (
+        {isLoggedIn() ? (
           <>
             <li>
               <NavLink to="/">Account</NavLink>
             </li>
-            {['admin', 'superadmin'].includes(role) && (
+            {isAdmin(user) && (
               <li>
                 <Link to="/admin">Admin</Link>
               </li>
@@ -83,8 +71,14 @@ const Navbar = props => {
             {' '}
             <NavLink to="/login"> Login </NavLink>{' '}
           </li>
-        )} */}
+        )}
       </ul>
+    );
+  }
+
+  return (
+    <>
+      <SideNav user={user} />
 
       <nav className="nav-wrapper black ">
         <a href="#" data-target="nav-mobile" className="sidenav-trigger">
@@ -110,7 +104,7 @@ const Navbar = props => {
           <li>
             <Link to="/">Account</Link>
           </li>
-          {['admin', 'superadmin'].includes(role) && (
+          {isAdmin(user) && (
             <li>
               <Link to="/admin">Admin</Link>
             </li>
@@ -147,14 +141,14 @@ const Navbar = props => {
             <li>
               <NavLink to="/itinerary">Itinerary</NavLink>
             </li>
-            {/* {isLoggedIn === 'true' ? (
+            {isLoggedIn() ? (
               <li>
                 <a
                   className="dropdown-trigger"
                   href="#!"
                   data-target="dropdownLogout"
                 >
-                  {initials}{' '}
+                  {user?.initials}{' '}
                   <i
                     className="fas fa-chevron-down"
                     style={{ fontSize: '1rem' }}
@@ -166,7 +160,7 @@ const Navbar = props => {
                 {' '}
                 <NavLink to="/login">Login</NavLink>{' '}
               </li>
-            )} */}
+            )}
           </ul>
         </div>
       </nav>
@@ -174,12 +168,4 @@ const Navbar = props => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    logOutUser: token => {
-      dispatch(logOutUser(token));
-    }
-  };
-};
-
-export default compose(withRouter, connect(null, mapDispatchToProps))(Navbar);
+export default Navbar;
