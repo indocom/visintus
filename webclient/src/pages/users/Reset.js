@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import queryString from 'query-string';
 import M from 'materialize-css';
 
-import { client } from '~/utils/client';
-import { API_RESET_PSWD } from '~/constants/api-url';
-import { LOGIN } from '~/constants/url';
+import { reset } from '~/utils/auth-client';
 
 import ErrorPage from '../404';
 
@@ -33,7 +31,7 @@ function ResetPassword(props) {
       return;
     }
 
-    postResetPassword(data, token);
+    reset(data, token);
   };
 
   return email && token ? (
@@ -68,18 +66,6 @@ function ResetPassword(props) {
   ) : (
     <ErrorPage />
   );
-}
-
-function postResetPassword(data, token) {
-  client(API_RESET_PSWD, {
-    body: data,
-    headers: {
-      Authorization: token
-    },
-    redirectTo: LOGIN,
-    showSuccess: true
-    // showError: true
-  });
 }
 
 export default ResetPassword;

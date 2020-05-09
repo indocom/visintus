@@ -1,6 +1,9 @@
 import M from 'materialize-css';
 
 import { LOGIN } from '~/constants/url';
+import { logout } from './auth-client';
+
+export const localStorageKey = 'token';
 
 // customConfig params
 // - headers
@@ -13,7 +16,7 @@ import { LOGIN } from '~/constants/url';
 // - redirecTo: string (starting with /)
 
 export async function client(endpoint, { body, file, ...customConfig } = {}) {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem(localStorageKey);
   const headers = { 'Content-Type': 'application/json' };
 
   if (token) {
@@ -40,8 +43,10 @@ export async function client(endpoint, { body, file, ...customConfig } = {}) {
   return await fetch(`/${endpoint}`, config).then(async response => {
     if (response.status === 401) {
       logout();
+      // TODO: shoule we refresh the page for them or redirect to login page ???
+      // window.location.assign(window.location);
       window.location.assign(LOGIN);
-      return;
+      return Promise.reject({ message: 'Please re-authenticate.' });
     }
 
     const data = await response.json();
@@ -77,8 +82,4 @@ export async function client(endpoint, { body, file, ...customConfig } = {}) {
       return Promise.reject(data);
     }
   });
-}
-
-function logout() {
-  localStorage.removeItem('token');
 }
