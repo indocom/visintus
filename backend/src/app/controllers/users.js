@@ -109,6 +109,15 @@ const updatePassword = async (user, newPassword) => {
   });
 };
 
+/* Create initial from first name and lastname */
+const createInitial = name =>
+  name
+    .split(' ')
+    .map(x => x[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
 /********************
  * Public functions *
  ********************/
@@ -134,7 +143,7 @@ exports.login = async (req, res) => {
         buildSuccObject({
           user: {
             name: user.name,
-            initials: user.name[0],
+            initials: createInitial(user.name),
             email: user.email,
             role: user.role
           },
@@ -236,6 +245,28 @@ exports.logout = async (req, res) => {
     handleSuccess(res, buildSuccObject('User logged out'));
   } catch (err) {
     handleError(res, buildErrObject(422, err.message));
+  }
+};
+
+/* who am i. Should be called after requireAuth */
+exports.whoami = async (req, res) => {
+  try {
+    const user = req.user;
+    handleSuccess(
+      res,
+      buildSuccObject({
+        user: {
+          name: user.name,
+          initials: createInitial(user.name),
+          email: user.email,
+          role: user.role
+        }
+      })
+    );
+  } catch (err) {
+    // to prevent attackers from identifying valid users
+    // change the err message to 'Authentication failed'
+    handleError(res, err);
   }
 };
 

@@ -183,3 +183,7 @@ exports.verify = async (req, res, next) => {
     handleError(res, buildErrObject(422, error.message));
   }
 };
+
+exports.whoami = async (req, res, next) => {
+  next();
+};
