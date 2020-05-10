@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import M from 'materialize-css';
-// import { Link } from 'react-router-dom'
-import { connect } from 'react-redux';
-import { addPlan, removePlan } from '~/store/actions/planActions';
+import { useItin } from '~/context/itin';
 
-const AreaDropdown = props => {
-  const [isAdded, setIsAdded] = useState([]);
-  const { plans, itin, slug, addPlan, removePlan } = props;
+const CategoryDropdown = props => {
+  const [addedIndexes, setAddedIndexes] = useState([]); // array of indexes of user-selected plans
+  const { availablePlans, slug } = props;
+  const { itin, addPlan, removePlan } = useItin();
 
+  // initialize user-selected plans
+  useEffect(() => {
+    if (itin) {
+      let idsInItin = itin?.itin[slug];
+      let status = availablePlans.map(plan => idsInItin?.includes(plan._id));
+      setAddedIndexes(status);
+    }
+  }, [itin, availablePlans.length]);
+
+  // toggle added to plan / add to plan BUTTON
   const toggleButtonMessage = index => {
-    let newIsAdded = [...isAdded];
-    newIsAdded[index] = !newIsAdded[index];
-    setIsAdded(newIsAdded);
+    let newAddedIndexes = [...addedIndexes];
+    newAddedIndexes[index] = !newAddedIndexes[index];
+    setAddedIndexes(newAddedIndexes);
   };
 
   const scrollDown = e => {
@@ -21,17 +30,9 @@ const AreaDropdown = props => {
     });
   };
 
-  useEffect(() => {
-    try {
-      let idsInItin = itin[slug];
-      let status = plans.map(plan => idsInItin.includes(plan._id));
-      setIsAdded(status);
-    } catch {}
-  }, [plans.length]);
-
   const postList =
-    plans && plans.length && plans.length > 0 ? (
-      plans.map((plan, index) => {
+    availablePlans?.length && availablePlans.length > 0 ? (
+      availablePlans.map((plan, index) => {
         return (
           <li key={plan._id} onClick={scrollDown}>
             <div className="collapsible-header">
@@ -43,7 +44,7 @@ const AreaDropdown = props => {
             <div className="collapsible-body">
               <p>{plan.description}</p>
               {/* <Link to= {'/' + plan._id }><button className="btn btn-small indigo darken-4">Know more</button></Link> */}
-              {isAdded[index] ? (
+              {addedIndexes[index] ? (
                 <button
                   className="btn btn-small"
                   onClick={() => {
@@ -72,6 +73,7 @@ const AreaDropdown = props => {
       <div className="center">No data yet</div>
     );
 
+  // initialize dropdown
   useEffect(() => {
     let collapsible = document.querySelectorAll('.collapsible');
     M.Collapsible.init(collapsible, {
@@ -87,21 +89,4 @@ const AreaDropdown = props => {
   );
 };
 
-const mapStateToProps = ({ plan }) => {
-  return {
-    itin: plan.itin
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    addPlan: (plan, slug) => {
-      dispatch(addPlan(plan, slug));
-    },
-    removePlan: (id, slug) => {
-      dispatch(removePlan(id, slug));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AreaDropdown);
+export default CategoryDropdown;
