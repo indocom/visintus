@@ -1,11 +1,12 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import M from 'materialize-css';
 import { useQuery } from 'react-query';
+
 import { client } from '~/utils/client';
 import { API_CATEGORIES_PLANINFO, API_CHECKOUT } from '~/constants/api-url';
 import { QUERY_KEY_PLAN_INFO } from '~/constants/query-keys';
+import { useItin } from '~/context/itin';
 
 const Checkout = props => {
   const [name, setName] = useState('');
@@ -14,12 +15,15 @@ const Checkout = props => {
   const [visitDate, setVisitDate] = useState('');
   const [remarks, setRemarks] = useState('');
 
+  const { itin: itinData } = useItin();
+  console.log(itinData);
+
   const { status: itinStatus, data: itin, error: itinError } = useQuery(
     QUERY_KEY_PLAN_INFO,
     () =>
       client(API_CATEGORIES_PLANINFO, {
         body: {
-          categories: props.itin
+          categories: itinData.itin
         }
       })
   );
@@ -181,10 +185,4 @@ const Checkout = props => {
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    itin: state.plan.itin
-  };
-};
-
-export default connect(mapStateToProps, null)(Checkout);
+export default Checkout;

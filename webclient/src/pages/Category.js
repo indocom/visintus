@@ -27,7 +27,10 @@ const Category = props => {
   return !error ? (
     <div className="container area">
       <Carousel banners={data.banners} />
-      <CategoryDropdown plans={data.plans} slug={props.match.params.slug} />
+      <CategoryDropdown
+        availablePlans={data.plans}
+        slug={props.match.params.slug}
+      />
       <CategoryPeople reps={data.representatives} />
     </div>
   ) : (

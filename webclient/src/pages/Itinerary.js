@@ -1,23 +1,23 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import M from 'materialize-css';
 import { Link } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery, queryCache } from 'react-query';
+
 import { client } from '~/utils/client';
 import { QUERY_KEY_PLAN_INFO } from '~/constants/query-keys';
 import { API_CATEGORIES_PLANINFO } from '~/constants/api-url';
-import M from 'materialize-css';
-
-import { removePlan, removeCategory } from '../store/actions/planActions';
 
 import '../css/itin.css';
+import { useItin } from '~/context/itin';
 
-const Itin = props => {
+function Itinerary(props) {
+  const { itin, removePlan, removeCategory } = useItin();
   const { status: planStatus, data: plan, error: planError } = useQuery(
     QUERY_KEY_PLAN_INFO,
     () =>
       client(API_CATEGORIES_PLANINFO, {
         body: {
-          categories: props.itin
+          categories: itin.itin
         }
       })
   );
@@ -30,11 +30,30 @@ const Itin = props => {
   }, []);
 
   const handleRemoveCategory = slug => {
-    props.removeCategory(slug);
+    const newPlan = { ...plan };
+    delete newPlan[slug];
+
+    // update cache data without refreshing with one of them deleted.
+    queryCache.setQueryData(QUERY_KEY_PLAN_INFO, newPlan);
+
+    // update state in context
+    removeCategory(slug);
   };
 
   const handleRemovePlan = (id, slug) => {
-    props.removePlan(id, slug);
+    const newPlan = {
+      ...plan,
+      [slug]: {
+        ...plan[slug],
+        plans: [...plan[slug].plans].filter(plan => plan._id !== id)
+      }
+    };
+
+    // update cache data without refreshing with one of them deleted.
+    queryCache.setQueryData(QUERY_KEY_PLAN_INFO, newPlan);
+
+    // update state in context
+    removePlan(id, slug);
   };
 
   const handleSave = e => {
@@ -131,23 +150,6 @@ const Itin = props => {
       </div>
     </div>
   );
-};
+}
 
-const mapStateToProps = state => {
-  return {
-    itin: state.plan.itin
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    removePlan: (id, slug) => {
-      dispatch(removePlan(id, slug));
-    },
-    removeCategory: slug => {
-      dispatch(removeCategory(slug));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Itin);
+export default Itinerary;
