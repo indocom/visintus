@@ -28,7 +28,7 @@ function AuthProvider(props) {
   const logout = () => {
     authClient.logout();
     setData({ user: null });
-  }; // clear the token in localStorage and the user data
+  }; // clear the token in window.localStorage and the user data
 
   return (
     <AuthContext.Provider

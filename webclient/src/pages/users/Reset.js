@@ -57,9 +57,7 @@ function ResetPassword(props) {
             required
           />
         </div>
-        <div className="input-field">
-          <button className="btn z-depth-0">Reset Password</button>
-        </div>
+        <input type="submit" value="Reset Password" className="btn z-depth-0" />
       </form>
       <div style={{ minHeight: 30 }}></div>
     </div>

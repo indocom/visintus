@@ -45,7 +45,7 @@ function register({ name, email, password }) {
 
 function logout() {
   queryCache.clear();
-  localStorage.removeItem(LOCAL_STORAGE_KEY);
+  window.localStorage.removeItem(LOCAL_STORAGE_KEY);
 
   // refreshes the page for the user
   window.location.assign(window.location);

@@ -28,9 +28,11 @@ function ForgotPassword() {
             required
           />
         </div>
-        <div className="input-field">
-          <button className="btn z-depth-0">Reset Password</button>
-        </div>
+        <input
+          type="submit"
+          value="Forgot Password"
+          className="btn z-depth-0"
+        />
       </form>
       <Link to="/signup">Create new account! &nbsp;</Link>
       <div style={{ minHeight: 30 }}></div>

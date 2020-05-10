@@ -64,7 +64,7 @@ function Itinerary(props) {
     e.preventDefault();
 
     /* TODO: POST itin data to backend when user is logged in*/
-    /* current implementation just take from localStorage */
+    /* current implementation just take from window.localStorage */
 
     props.history.push('/checkout');
   };

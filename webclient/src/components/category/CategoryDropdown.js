@@ -3,7 +3,7 @@ import M from 'materialize-css';
 import { useItin } from '~/context/itin';
 
 const CategoryDropdown = props => {
-  const [addedIndexes, setAddedIndexes] = useState([]); // array of indexes of user-selected plans
+  const [addedIndexes, setAddedIndexes] = useState([]); // array of booleans of user-selected plans
   const { availablePlans, slug } = props;
   const { itin, addPlan, removePlan } = useItin();
 
