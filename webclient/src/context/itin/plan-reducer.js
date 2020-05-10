@@ -1,8 +1,10 @@
 import { actionTypes } from './plan-actions';
 
+export const LOCAL_STORAGE_KEY = 'plan-info';
+
 export const initPlan = {
-  itin: localStorage.getItem('plan-info')
-    ? JSON.parse(localStorage.getItem('plan-info')).itin
+  itin: window.localStorage.getItem(LOCAL_STORAGE_KEY)
+    ? JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_KEY)).itin
     : {
         // intro: [
         //   {
@@ -19,6 +21,7 @@ export const planReducer = (state = initPlan, action) => {
     case actionTypes.addPlan: {
       const sameSlug = state.itin[action.slug];
       if (typeof sameSlug !== 'undefined') {
+        // we alr have this category before in the state
         if (sameSlug.filter(plan => plan._id === action.plan._id).length > 0) {
           return state;
         } else {
@@ -30,10 +33,14 @@ export const planReducer = (state = initPlan, action) => {
               [action.slug]: newPlan
             }
           };
-          localStorage.setItem('plan-info', JSON.stringify(newPlanInfo));
+          window.localStorage.setItem(
+            LOCAL_STORAGE_KEY,
+            JSON.stringify(newPlanInfo)
+          );
           return newPlanInfo;
         }
       } else {
+        // new category
         let newPlanInfo = {
           ...state,
           itin: {
@@ -41,7 +48,10 @@ export const planReducer = (state = initPlan, action) => {
             [action.slug]: [action.plan._id]
           }
         };
-        localStorage.setItem('plan-info', JSON.stringify(newPlanInfo));
+        window.localStorage.setItem(
+          LOCAL_STORAGE_KEY,
+          JSON.stringify(newPlanInfo)
+        );
         return newPlanInfo;
       }
     }
@@ -57,7 +67,10 @@ export const planReducer = (state = initPlan, action) => {
           [action.slug]: newPlan
         }
       };
-      localStorage.setItem('plan-info', JSON.stringify(newPlanInfo));
+      window.localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify(newPlanInfo)
+      );
       return newPlanInfo;
     }
 
@@ -69,7 +82,10 @@ export const planReducer = (state = initPlan, action) => {
         }
       };
       delete newPlanInfo.itin[action.slug];
-      localStorage.setItem('plan-info', JSON.stringify(newPlanInfo));
+      window.localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify(newPlanInfo)
+      );
       return newPlanInfo;
     }
 

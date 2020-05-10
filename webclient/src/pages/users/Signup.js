@@ -46,9 +46,8 @@ function Signup(props) {
           <label htmlFor="password">Password</label>
           <input type="password" id="password" onChange={handleChange} />
         </div>
-        <div className="input-field">
-          <button className="btn z-depth-0">Sign Up</button>
-        </div>
+
+        <input type="submit" value="Sign Up" className="btn z-depth-0" />
       </form>
     </div>
   );

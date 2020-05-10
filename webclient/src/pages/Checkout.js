@@ -1,12 +1,12 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import M from 'materialize-css';
 import { useQuery } from 'react-query';
 
 import { client } from '~/utils/client';
 import { API_CATEGORIES_PLANINFO, API_CHECKOUT } from '~/constants/api-url';
 import { QUERY_KEY_PLAN_INFO } from '~/constants/query-keys';
 import { useItin } from '~/context/itin';
+import { LOCAL_STORAGE_KEY } from '~/context/itin/plan-reducer';
 
 const Checkout = props => {
   const [name, setName] = useState('');
@@ -16,7 +16,6 @@ const Checkout = props => {
   const [remarks, setRemarks] = useState('');
 
   const { itin: itinData } = useItin();
-  console.log(itinData);
 
   const { status: itinStatus, data: itin, error: itinError } = useQuery(
     QUERY_KEY_PLAN_INFO,
@@ -27,14 +26,6 @@ const Checkout = props => {
         }
       })
   );
-
-  useEffect(() => {
-    const elems = document.querySelectorAll('.datepicker');
-    M.Datepicker.init(elems, {
-      disableWeekends: true,
-      minDate: new Date()
-    });
-  }, [props]);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -55,7 +46,7 @@ const Checkout = props => {
       showSuccess: true,
       showError: true,
       redirectTo: '/',
-      onSuccess: () => localStorage.removeItem('plan-info')
+      onSuccess: () => window.localStorage.removeItem(LOCAL_STORAGE_KEY)
     });
   };
 
@@ -133,14 +124,14 @@ const Checkout = props => {
               />
             </div>
             <div className="input-field">
-              <label htmlFor="visitDate">Visit Date (YYYY-MM-DD) </label>
               <input
-                type="text"
+                type="date"
                 id="visitDate"
                 required
-                className="datepicker"
+                // className="datepicker"
                 onChange={e => setVisitDate(e.target.value)}
               />
+              <label htmlFor="visitDate">Visit Date</label>
             </div>
             <div className="input-field">
               <label htmlFor="organization">Organization</label>
@@ -175,9 +166,11 @@ const Checkout = props => {
             {planList}
           </div>
           <div className="col s12" style={{ padding: '1em 1.5em' }}>
-            <button className="btn btn-large z-depth-0">
-              Book your visit!
-            </button>
+            <input
+              type="submit"
+              value="Book your visit!"
+              className="btn btn-large z-depth-0"
+            />
           </div>
         </form>
       </div>

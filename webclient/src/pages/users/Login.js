@@ -23,6 +23,11 @@ function Login(props) {
     authClient.login(state);
   };
 
+  if (isLoggedIn()) {
+    window.location.replace('/');
+    return;
+  }
+
   return (
     <div className="container">
       <form className="grey lighten-4" onSubmit={handleSubmit}>
@@ -35,14 +40,9 @@ function Login(props) {
           <label htmlFor="password">Password</label>
           <input type="password" id="password" onChange={handleChange} />
         </div>
-        <div className="input-field">
-          {isLoggedIn() ? (
-            <p>You are logged in</p>
-          ) : (
-            <button className="btn z-depth-0">Login</button>
-          )}
-        </div>
+        <input type="submit" value="Login" className="btn z-depth-0" />
       </form>
+      <div style={{ height: 20 }} />
       <Link to="/signup">Do not have an account? &nbsp;</Link>
       <Link to="/forgot">Forgot password?</Link>
     </div>

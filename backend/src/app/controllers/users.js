@@ -252,6 +252,11 @@ exports.logout = async (req, res) => {
 exports.whoami = async (req, res) => {
   try {
     const user = req.user;
+
+    if (!user) {
+      handleError(res, buildErrObject(422, 'Invalid user information!'));
+    }
+
     handleSuccess(
       res,
       buildSuccObject({

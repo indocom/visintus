@@ -16,7 +16,7 @@ export const LOCAL_STORAGE_KEY = 'token';
 // - redirecTo: string (starting with /)
 
 export async function client(endpoint, { body, file, ...customConfig } = {}) {
-  const token = localStorage.getItem(LOCAL_STORAGE_KEY);
+  const token = window.localStorage.getItem(LOCAL_STORAGE_KEY);
   const headers = { 'Content-Type': 'application/json' };
 
   if (token) {
@@ -59,16 +59,16 @@ export async function client(endpoint, { body, file, ...customConfig } = {}) {
         });
       }
 
-      if (customConfig.redirectTo) {
-        window.location.assign(customConfig.redirectTo);
-        return;
-      }
-
       if (
         customConfig.onSuccess &&
         typeof customConfig.onSuccess === 'function'
       ) {
         customConfig.onSuccess();
+      }
+
+      if (customConfig.redirectTo) {
+        window.location.assign(customConfig.redirectTo);
+        return;
       }
 
       return data?.message;

@@ -7,11 +7,14 @@ import {
   User
 } from '../components/admin';
 import { LOGIN } from '~/constants/url';
+import { isAdmin, isSuperAdmin } from '~/utils/auth-client';
+import { useUser } from '~/context/user-context';
 
 export const Dashboard = props => {
   const { match } = props;
-  const role = localStorage.getItem('role');
-  if (role === 'admin' || role === 'superadmin') {
+  const user = useUser();
+
+  if (isAdmin(user)) {
     return (
       <BrowserRouter>
         <div className="row">
@@ -36,7 +39,7 @@ export const Dashboard = props => {
               <li>
                 <Link to={`${match.url}/categories`}>Category</Link>
               </li>
-              {role === 'superadmin' && (
+              {isSuperAdmin(user) && (
                 <li>
                   <Link to={`${match.url}/users`}>Manage Users</Link>
                 </li>
