@@ -222,3 +222,26 @@ Body:
   "message" : ...
 }
 ```
+
+### GET `/users/whoami`
+
+> :warning: **Requires authorization**
+
+Get user info
+
+#### Response
+
+Body:
+
+```
+{
+  "message" : {
+    "user": {
+      "name": ...,
+      "initials": ...,
+      "email": ...,
+      "role": ...
+    }
+  }
+}
+```
