@@ -1,0 +1,33 @@
+version: '3'
+
+services: 
+  backend: 
+    build: ./backend
+    image: visintus-server-img
+    container_name: visintus-server
+    volumes:
+      - ./backend/:/app
+      - /app/node_modules
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=development
+  
+  mongo:
+    image: mongo
+    container_name: visintus-db
+    ports:
+      - "27017:27017"
+
+  webclient:
+    build: ./webclient
+    image: visintus-client-img
+    container_name: visintus-client
+    volumes:
+      - ./client/:/app
+    depends_on:
+      - backend
+    ports:
+      - "3001:3000"
