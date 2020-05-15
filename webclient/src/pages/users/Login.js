@@ -25,7 +25,7 @@ function Login(props) {
 
   if (isLoggedIn()) {
     window.location.replace('/');
-    return;
+    return null;
   }
 
   return (

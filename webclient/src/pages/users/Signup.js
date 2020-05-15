@@ -20,7 +20,11 @@ function Signup(props) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    authClient.register(state);
+    authClient.register({
+      name: state.firstName + ' ' + state.lastName,
+      email: state.email,
+      password: state.password
+    });
   };
 
   return (
