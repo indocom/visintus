@@ -1,13 +1,15 @@
-FROM node:12.16-alpine
+FROM node:12.16.0
 
-WORKDIR /app
+WORKDIR /app/webclient
+
+# add `/app/node_modules/.bin` to $PATH
+# ENV PATH /app/webclient/node_modules/.bin:$PATH
 
 COPY package.json ./
-
-RUN npm install
+RUN yarn install
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]

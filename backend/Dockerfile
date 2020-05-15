@@ -1,11 +1,16 @@
-FROM node:12.16-alpine
+FROM node:12.16.0
 
 # Create app directory
-WORKDIR /app
+WORKDIR /app/backend
 
 # Install Dependencies
 COPY package.json ./
-RUN npm install
+
+# # install git before npm i
+# RUN apk add --no-cache git
+# ENTRYPOINT ["git"]
+
+RUN yarn install
 
 # add app bundle
 COPY . .
@@ -13,4 +18,4 @@ COPY . .
 EXPOSE 8080
 
 # start app
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "dev"]
